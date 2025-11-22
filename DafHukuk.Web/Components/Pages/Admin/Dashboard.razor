@@ -1,0 +1,34 @@
+﻿@page "/admin"
+@using DafHukuk.Web.Components.Layout
+@layout MainLayout  
+@* admin layout yazılıp güncelleştirilecek *@
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+<h3>Hoşgeldiniz, Yönetici!</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Toplam Makale</div>
+            <div class="card-body">
+                <h1 class="card-title">0</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Aktif Avukatlar</div>
+            <div class="card-body">
+                <h1 class="card-title">0</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Okunmamış Mesajlar</div>
+            <div class="card-body">
+                <h1 class="card-title">0</h1>
+            </div>
+        </div>
+    </div>
+</div>
