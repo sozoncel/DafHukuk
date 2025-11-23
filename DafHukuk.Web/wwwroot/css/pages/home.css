@@ -1,0 +1,254 @@
+﻿/**
+ * HOME.CSS - Ana Sayfa Hero Section Stilleri
+ * base.css'ten SONRA yüklenmelidir
+ */
+
+/* =========================================================
+   HERO SECTION ANIMATIONS
+========================================================= */
+@keyframes slideUpFadeIn {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   HERO SECTION
+========================================================= */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    min-height: 550px;
+    display: flex;
+    align-items: flex-end;
+    color: #fff;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("/img/headers/anasayfa.jpg");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 2;
+}
+
+.hero-container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1400px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+.hero-center-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.hero-lead-text {
+    max-width: 750px;
+    font-size: 22px;
+    line-height: 1.5;
+    font-weight: 300;
+    color: #fff;
+    margin-bottom: 40px;
+}
+
+/* =========================================================
+   HERO BOTTOM ROW
+========================================================= */
+.hero-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    padding-bottom: 0;
+}
+
+/* Slogan */
+.slogan-wrapper {
+    padding-bottom: 40px;
+}
+
+.slogan-text-style {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
+    border-left: 4px solid #fff;
+    padding-left: 15px;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+/* =========================================================
+   NEWS WIDGET
+========================================================= */
+.news-widget {
+    display: flex;
+    height: 150px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-bottom: 0;
+    animation: slideUpFadeIn 0.8s ease-out 0.2s backwards;
+}
+
+.news-title-box {
+    background-color: #28406d;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+    .news-title-box span {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 1.3;
+    }
+
+.news-content-box {
+    background-color: #4e5466;
+    width: 420px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+.news-img-wrapper {
+    flex-shrink: 0;
+    width: 120px;
+    height: 80px;
+    overflow: hidden;
+    background: #fff;
+}
+
+    .news-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.news-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.news-date {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 5px;
+    color: #ddd;
+}
+
+.news-link {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1.3;
+    transition: opacity 0.3s;
+}
+
+    .news-link:hover {
+        opacity: 0.8;
+    }
+
+/* =========================================================
+   RESPONSIVE - HOME PAGE
+========================================================= */
+@media (max-width: 1200px) {
+    .hero-container {
+        padding: 0 32px;
+        padding-top: 100px;
+    }
+
+    .news-content-box {
+        width: 350px;
+    }
+}
+
+@media (max-width: 960px) {
+    .hero-section {
+        height: auto;
+        min-height: auto;
+        padding-bottom: 40px;
+    }
+
+    .hero-container {
+        padding: 24px;
+        padding-top: 110px;
+        justify-content: flex-start;
+    }
+
+    .hero-center-content {
+        align-items: flex-end;
+        margin-bottom: 40px;
+    }
+
+    .hero-lead-text {
+        font-size: 18px;
+        max-width: 100%;
+    }
+
+    .hero-bottom-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    .slogan-wrapper {
+        padding-bottom: 0;
+    }
+
+    /* News widget'ı mobilden gizle */
+    .news-widget {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-container {
+        padding: 20px;
+        padding-top: 100px;
+    }
+
+    .hero-lead-text {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .slogan-text-style {
+        font-size: 20px;
+    }
+}

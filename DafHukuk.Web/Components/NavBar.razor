@@ -1,11 +1,13 @@
 ﻿<!--Üst Menü Başlangıcı-->
 <header class="header" id="site-header">
+
     <div class="nav-inner">
-        <div class="logo">Daff Hukuk</div>
+
+        <div class="logo">Daff</div>
 
         <nav class="menu">
             <div class="underline-effect">
-                <a href="/About">Hakkımızda</a>
+                <a href="/hakkimizda">Hakkımızda</a>
                 <a href="#">Hizmetlerimiz</a>
                 <a href="#">Ekibimiz</a>
                 <a href="#">Duyurular</a>
@@ -20,16 +22,18 @@
             <!--Dil Seçim Kısmı-->
             <div class="language-Selection">
                 <a href="#" class="navbar-lang-link">
-                    <img src="img/flag-en.svg" alt="EN" class="flag-icon">
+                    <img src="img/headers/flag-en.svg" alt="EN" class="flag-icon">
                     <span>EN</span>
                 </a>
                 <a href="#" class="navbar-lang-link active">
-                    <img src="img/flag-tr.svg" alt="TR" class="flag-icon">
+                    <img src="img/headers/flag-tr.svg" alt="TR" class="flag-icon">
                     <span>TR</span>
                 </a>
             </div>
             <!--Arama Kısmı-->
-            <span class="search-trigger">🔍</span>
+            <button type="button" class="search-trigger" id="search-trigger">
+                <i class="fa fa-search"></i>
+            </button>
         </div>
 
         <!--Mobile Menu Button-->
@@ -37,6 +41,22 @@
             <span></span>
             <span></span>
             <span></span>
+        </div>
+    </div>
+
+    <!--Desktop Search Bar-->
+    <div class="desktop-search-bar" id="desktop-search-bar">
+        <div class="search-bar-inner">
+            <input type="text"
+                   class="search-input"
+                   placeholder="İçerik Arayın..."
+                   id="desktop-search-input">
+            <button type="button" class="search-close-btn" id="desktop-search-close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
     </div>
 
@@ -49,8 +69,14 @@
             </svg>
         </div>
 
+        <!--Mobile Search Trigger-->
+        <div class="mobile-search-trigger" id="mobile-search-trigger">
+            <i class="fa fa-search"></i>
+            <span>Ara</span>
+        </div>
+
         <a href="/">Ana Sayfa</a>
-        <a href="/about">Hakkımızda</a>
+        <a href="/hakkimizda">Hakkımızda</a>
         <a href="#">Hizmetlerimiz</a>
         <a href="#">Ekibimiz</a>
         <a href="#">Duyurular</a>
@@ -59,20 +85,34 @@
         <a href="#">Kariyer</a>
         <a href="#">İletişim</a>
 
-        <div class="mobile-menu-footer">
             <div class="mobile-lang-links">
                 <a href="#">
-                    <img src="img/flag-en.svg" alt="EN" class="flag-icon">
+                    <img src="img/headers/flag-en.svg" alt="EN" class="flag-icon">
                     <span>EN</span>
                 </a>
                 <a href="#" class="active">
-                    <img src="img/flag-tr.svg" alt="TR" class="flag-icon">
+                <img src="img/headers/flag-tr.svg" alt="TR" class="flag-icon">
                     <span>TR</span>
                 </a>
             </div>
         </div>
-    </div>
 
     <!--Mobile Overlay-->
     <div class="mobile-overlay" id="mobile-overlay"></div>
 </header>
+
+<!--Mobile Search Overlay-->
+<div class="mobile-search-overlay" id="mobile-search-overlay">
+    <div class="mobile-search-close" id="mobile-search-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </div>
+    <div class="mobile-search-content">
+        <input type="text"
+               class="mobile-search-input"
+               placeholder="İçerik Arayın..."
+               id="mobile-search-input">
+    </div>
+</div>

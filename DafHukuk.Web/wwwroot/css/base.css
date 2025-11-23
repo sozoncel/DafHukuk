@@ -1,16 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
 
-/* Font Tanımlaması*/
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/inter-v13-latin_latin-ext-700.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
 /* =========================================================
- GLOBAL STİLLER
+   RESET & GLOBAL STYLES
 ========================================================= */
 * {
     box-sizing: border-box;
@@ -19,7 +10,7 @@
 }
 
 body {
-    font-family: "Source Sans Pro", Arial, sans-serif; /* YENİ HÂL */
+    font-family: "Source Sans Pro", Arial, sans-serif;
     background: #fff;
     overflow-x: hidden;
 }
@@ -29,7 +20,7 @@ a {
 }
 
 /* =========================================================
-   NAVBAR 
+   NAVBAR STYLES
 ========================================================= */
 .header {
     position: fixed;
@@ -48,6 +39,10 @@ a {
         box-shadow: 0 6px 18px rgba(0,0,0,0.07);
     }
 
+        .header.scrolled .underline-effect a:hover {
+            color: #dfb887;
+        }
+
         .header.scrolled .navbar-lang-link {
             color: black;
             border-radius: 4px;
@@ -57,7 +52,7 @@ a {
 
             .header.scrolled .navbar-lang-link:hover,
             .header.scrolled .navbar-lang-link.active {
-                background-color: #e0e0e0
+                background-color: #e0e0e0;
             }
 
 .nav-inner {
@@ -69,18 +64,29 @@ a {
 }
 
 .logo {
+    font-family: "Playfair Display", Georgia, serif;
     font-size: 34px;
     font-weight: 700;
     color: #fff;
     cursor: pointer;
     z-index: 1001;
+    transition: color 0.3s ease;
 }
+
+    .logo:hover {
+        color: #dfb887;
+    }
 
 .header.scrolled .logo {
     color: #6b0000;
+    transition: color 0.3s ease;
 }
 
-/* Menu Kısmı */
+    .header.scrolled .logo:hover {
+        color: #dfb887;
+    }
+
+/* Menu */
 .menu {
     flex: 1;
     display: flex;
@@ -102,6 +108,10 @@ a {
         transition: .25s ease;
     }
 
+        .underline-effect a:hover {
+            color: #dfb887;
+        }
+
         .underline-effect a::after {
             content: '';
             position: absolute;
@@ -109,7 +119,7 @@ a {
             bottom: 0;
             width: 0;
             height: 2px;
-            background-color: #dfed42;
+            background-color: #dfb887;
             transition: width 0.3s ease-in-out;
         }
 
@@ -121,7 +131,7 @@ a {
     color: #111;
 }
 
-/* Sağ Tab */
+/* Right Actions */
 .right-actions {
     display: flex;
     align-items: center;
@@ -159,15 +169,195 @@ a {
 
 .navbar-lang-link:hover,
 .navbar-lang-link.active {
-    color: orange;
+    color: #dfb887;
 }
 
 .search-trigger {
     cursor: pointer;
-    font-size: 18px;
+    font-size: 14px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    transition: color 0.3s ease;
 }
 
-/* Mobil Menü Butonu*/
+    .search-trigger:hover {
+        color: #dfb887;
+    }
+
+.header.scrolled .search-trigger {
+    color: black;
+}
+
+    .header.scrolled .search-trigger:hover {
+        color: #dfb887;
+    }
+
+/* =========================================================
+   DESKTOP SEARCH BAR
+========================================================= */
+.desktop-search-bar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+    .desktop-search-bar.active {
+        max-height: 80px;
+        opacity: 1;
+        background-color: transparent;
+    }
+
+.search-bar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-input {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-family: "Source Sans Pro", Arial, sans-serif;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+    .search-input:focus {
+        border-color: #dfb887;
+    }
+
+.search-close-btn {
+    background: #f0f0f0;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #111;
+    transition: all 0.3s ease;
+}
+
+    .search-close-btn:hover {
+        background: #dfb887;
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+/* =========================================================
+   MOBILE SEARCH
+========================================================= */
+.mobile-search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 18px;
+    color: #111;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .mobile-search-trigger:hover {
+        color: #dfb887;
+        padding-left: 10px;
+    }
+
+    .mobile-search-trigger i {
+        font-size: 18px;
+    }
+
+.mobile-search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+    .mobile-search-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+.mobile-search-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+    .mobile-search-close:hover {
+        background: #dfb887;
+        transform: rotate(90deg);
+    }
+
+.mobile-search-content {
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.mobile-search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 18px 24px;
+    font-size: 18px;
+    font-family: "Source Sans Pro", Arial, sans-serif;
+    color: #fff;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+    .mobile-search-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .mobile-search-input:focus {
+        border-color: #dfb887;
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 .mobile-menu-btn {
     display: none;
     flex-direction: column;
@@ -201,7 +391,6 @@ a {
     transform: rotate(-45deg) translate(7px, -7px);
 }
 
-/* Mobil Menu */
 #mobile-menu {
     position: fixed;
     top: 0;
@@ -221,7 +410,10 @@ a {
         right: 0;
     }
 
-/*  Menü Kapatma Butonu */
+.mobile-menu-btn.active {
+    display: none;
+}
+
 .mobile-menu-close {
     position: absolute;
     top: 30px;
@@ -240,8 +432,7 @@ a {
 }
 
     .mobile-menu-close:hover {
-        background: #6b0000;
-        color: #fff;
+        color: #dfb887;
         transform: rotate(90deg);
     }
 
@@ -257,7 +448,7 @@ a {
 }
 
     #mobile-menu a:hover {
-        color: #6b0000;
+        color: #dfb887;
         padding-left: 10px;
     }
 
@@ -270,27 +461,22 @@ a {
 .mobile-lang-links {
     display: flex;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
     .mobile-lang-links a {
         border: none;
-        padding: 8px 16px;
         background: #f0f0f0;
         border-radius: 4px;
         font-size: 14px;
-        display: flex;
-        align-items: center;
+        width: 70px;
         gap: 6px;
+        transition: all 0.3s ease;
     }
-
         .mobile-lang-links a:hover {
-            background: #6b0000;
-            color: #fff;
-            padding-left: 16px;
+            color: #dfb887;
         }
 
-/* Mobile Katman */
 .mobile-overlay {
     position: fixed;
     top: 0;
@@ -310,182 +496,7 @@ a {
     }
 
 /* =========================================================
-   HERO SECTION & NEWS WIDGET
-========================================================= */
-
-/* News Widget Animasyonu */
-@keyframes slideUpFadeIn {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.hero-section {
-    position: relative;
-    width: 100%;
-    height: 85vh;
-    min-height: 550px;
-    display: flex;
-    align-items: flex-end;
-    color: #fff;
-    overflow: hidden;
-}
-
-.hero-bg {
-    position: absolute;
-    inset: 0;
-    background-image: url("/img/office.jpg");
-    background-size: cover;
-    background-position: center;
-    z-index: 1;
-}
-
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 2;
-}
-
-.hero-container {
-    position: relative;
-    z-index: 3;
-    width: 100%;
-    max-width: 1400px;
-    height: 100%;
-    margin: 0 auto;
-    padding: 0 40px;
-    padding-top: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Orta Metin Alanı */
-.hero-center-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
-.hero-lead-text {
-    max-width: 750px;
-    font-size: 22px;
-    line-height: 1.5;
-    font-weight: 300;
-    color: #fff;
-    margin-bottom: 40px;
-}
-
-/* Alt Satır (Slogan + Haber Kutusu) */
-.hero-bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 100%;
-    padding-bottom: 0;
-}
-
-/* Sol Slogan Tasarımı */
-.slogan-wrapper {
-    padding-bottom: 40px;
-}
-
-.slogan-text-style {
-    font-family: "Inter", sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.1;
-    border-left: 4px solid #fff;
-    padding-left: 15px;
-    color: #fff;
-    text-transform: capitalize;
-}
-
-/* Sağ Haber Widget'ı */
-.news-widget {
-    display: flex;
-    height: 150px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    margin-bottom: 0;
-    /* News Widget Animasyon Uygulaması (Desktop/Tablet) */
-    animation: slideUpFadeIn 0.8s ease-out 0.2s backwards;
-}
-
-.news-title-box {
-    background-color: #28406d;
-    width: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-}
-
-    .news-title-box span {
-        color: #fff;
-        font-size: 18px;
-        font-weight: 300;
-        line-height: 1.3;
-    }
-
-.news-content-box {
-    background-color: #4e5466;
-    width: 420px;
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    gap: 20px;
-}
-
-.news-img-wrapper {
-    flex-shrink: 0;
-    width: 120px;
-    height: 80px;
-    overflow: hidden;
-    background: #fff;
-}
-
-    .news-img-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-.news-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.news-date {
-    font-size: 12px;
-    opacity: 0.8;
-    margin-bottom: 5px;
-    color: #ddd;
-}
-
-.news-link {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    text-decoration: none;
-    line-height: 1.3;
-    transition: opacity 0.3s;
-}
-
-    .news-link:hover {
-        opacity: 0.8;
-    }
-
-/* =========================================================
-   FOOTER 
+   FOOTER STYLES
 ========================================================= */
 .footer {
     background-color: #f0f0f0;
@@ -512,8 +523,9 @@ a {
 }
 
 .footer-title {
+    font-family: "Playfair Display", Georgia, serif;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1rem;
     color: #0e0f11;
 }
@@ -659,10 +671,8 @@ a {
 }
 
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE - NAVBAR & FOOTER
 ========================================================= */
-
-/* Tablet Landscape - 1200px */
 @media (max-width: 1200px) {
     .header {
         padding: 20px 32px;
@@ -684,26 +694,18 @@ a {
             font-size: 14px;
         }
 
-    /* Footer düzenleme */
+    .search-bar-inner {
+        padding: 20px 32px;
+    }
+
     .footer-top {
         grid-template-columns: 1.5fr 1fr 1fr 1fr;
         gap: 2rem;
     }
-
-    /* Hero düzenleme */
-    .hero-container {
-        padding: 0 32px;
-        padding-top: 100px;
-    }
-
-    .news-content-box {
-        width: 350px;
-    }
 }
 
-/* Tablet Portre - 950px */
-@media (max-width: 950px) {
-    /* --- NAVBAR MOBILE --- */
+@media (max-width: 960px) {
+    /* Navbar Mobile */
     .menu, .language-Selection, .search-trigger {
         display: none;
     }
@@ -720,46 +722,7 @@ a {
             padding: 12px 24px;
         }
 
-    /* --- HERO TABLET/MOBILE --- */
-    .hero-section {
-        height: auto;
-        min-height: auto;
-        padding-bottom: 40px;
-    }
-
-    .hero-container {
-        padding: 24px;
-        padding-top: 110px;
-        justify-content: flex-start;
-    }
-
-    .hero-center-content {
-        align-items: flex-end;
-        margin-bottom: 40px;
-    }
-
-    .hero-lead-text {
-        font-size: 18px;
-        max-width: 100%;
-    }
-
-    /* Alt satırı dikey hizala */
-    .hero-bottom-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 30px;
-    }
-
-    .slogan-wrapper {
-        padding-bottom: 0;
-    }
-
-    /* Haber Widget gizle */
-    .news-widget {
-        display: none;
-    }
-
-    /* --- FOOTER --- */
+    /* Footer Mobile */
     .footer-top {
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
@@ -770,8 +733,8 @@ a {
         max-width: 100%;
     }
 
-    /* Footer Başlıkları Tıklanabilir Yap */
-    .footer-column-title {
+    /* Footer Accordion */
+    .footer-column-title[data-target] {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -784,12 +747,17 @@ a {
         margin-left: 0;
     }
 
-    /* + İkonu */
+    .footer-column-title:not([data-target]) {
+        margin-left: 0;
+        cursor: default;
+    }
+
     .mobile-toggle-icon {
         position: relative;
         width: 12px;
         height: 12px;
         display: block;
+        flex-shrink: 0;
     }
 
         .mobile-toggle-icon::before,
@@ -814,7 +782,6 @@ a {
             height: 12px;
         }
 
-    /* İkon dönüşü */
     .footer-column-title.active .mobile-toggle-icon::after {
         transform: rotate(90deg);
     }
@@ -823,10 +790,7 @@ a {
         transform: rotate(180deg);
     }
 
-    /* Link Listeleri Varsayılan: KAPALI */
     .footer-links {
-        display: flex;
-        flex-direction: column;
         max-height: 0;
         overflow: hidden;
         opacity: 0;
@@ -834,15 +798,16 @@ a {
         margin-bottom: 0;
     }
 
-        /* Link Listeleri: AÇIK */
         .footer-links.open {
-            max-height: 300px;
+            max-height: 500px;
             opacity: 1;
             margin-bottom: 1.5rem;
         }
 
     .footer-social {
         padding-top: 10px;
+        max-height: none !important;
+        opacity: 1 !important;
     }
 
     .footer-bottom {
@@ -857,7 +822,6 @@ a {
     }
 }
 
-/* Mobile - 600px */
 @media (max-width: 600px) {
     .header {
         padding: 16px 20px;
@@ -871,7 +835,6 @@ a {
         font-size: 24px;
     }
 
-    /* Footer Mobile */
     .footer {
         padding: 3rem 0 0;
     }
@@ -902,22 +865,6 @@ a {
         margin-left: 0;
     }
 
-    /* Hero Mobile Refinements */
-    .hero-container {
-        padding: 20px;
-        padding-top: 100px;
-    }
-
-    .hero-lead-text {
-        font-size: 16px;
-        line-height: 1.5;
-    }
-
-    .slogan-text-style {
-        font-size: 20px;
-    }
-
-    /* Mobile Menu Internal */
     #mobile-menu {
         padding: 80px 30px 30px;
     }
@@ -926,9 +873,13 @@ a {
             font-size: 16px;
             padding: 12px 0;
         }
+
+    .mobile-search-close {
+        top: 20px;
+        right: 20px;
+    }
 }
 
-/* Small Mobile - 400px */
 @media (max-width: 400px) {
     .header {
         padding: 14px 16px;

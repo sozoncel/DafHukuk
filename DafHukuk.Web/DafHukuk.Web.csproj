@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DafHukuk.Service\DafHukuk.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\pages\" />
+  </ItemGroup>
+
 </Project>
