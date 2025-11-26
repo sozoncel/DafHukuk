@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
 
 /* =========================================================
-   RESET & GLOBAL STYLES
+    RESET & GLOBAL STYLES
 ========================================================= */
 * {
     box-sizing: border-box;
@@ -20,7 +20,7 @@ a {
 }
 
 /* =========================================================
-   NAVBAR STYLES
+    NAVBAR STYLES
 ========================================================= */
 .header {
     position: fixed;
@@ -28,6 +28,7 @@ a {
     left: 0;
     right: 0;
     z-index: 1000;
+    /* max-width kýsýtlamasý olmadan padding'i koru */
     padding: 26px 48px;
     background: transparent;
     transition: background .35s ease, padding .35s ease, box-shadow .35s ease;
@@ -35,7 +36,7 @@ a {
 
     .header.scrolled {
         background: #fff;
-        padding: 16px 48px;
+        padding: 12px 48px;
         box-shadow: 0 6px 18px rgba(0,0,0,0.07);
     }
 
@@ -56,8 +57,9 @@ a {
             }
 
 .nav-inner {
-    max-width: 1400px;
-    margin: auto;
+    /* max-width: 1400px; kaldýrýldý */
+    /* margin: auto; kaldýrýldý, tam geniþlik kullanmak için */
+    width: 100%; /* Tam geniþlik */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -78,8 +80,9 @@ a {
     }
 
 .header.scrolled .logo {
-    color: #6b0000;
+    color: #1F3363;
     transition: color 0.3s ease;
+    font-size: 34px;
 }
 
     .header.scrolled .logo:hover {
@@ -102,7 +105,7 @@ a {
         color: #fff;
         text-decoration: none;
         font-weight: 600;
-        font-size: 15px;
+        font-size: 17px;
         position: relative;
         padding-bottom: 4px;
         transition: .25s ease;
@@ -194,7 +197,7 @@ a {
     }
 
 /* =========================================================
-   DESKTOP SEARCH BAR
+    DESKTOP SEARCH BAR
 ========================================================= */
 .desktop-search-bar {
     position: absolute;
@@ -216,7 +219,8 @@ a {
     }
 
 .search-bar-inner {
-    max-width: 1400px;
+    /* max-width: 1400px; kaldýrýldý */
+    width: 100%; /* Tam geniþlik */
     margin: 0 auto;
     padding: 20px 48px;
     display: flex;
@@ -260,7 +264,7 @@ a {
     }
 
 /* =========================================================
-   MOBILE SEARCH
+    MOBILE SEARCH
 ========================================================= */
 .mobile-search-trigger {
     display: flex;
@@ -356,7 +360,7 @@ a {
     }
 
 /* =========================================================
-   MOBILE MENU
+    MOBILE MENU
 ========================================================= */
 .mobile-menu-btn {
     display: none;
@@ -473,6 +477,7 @@ a {
         gap: 6px;
         transition: all 0.3s ease;
     }
+
         .mobile-lang-links a:hover {
             color: #dfb887;
         }
@@ -496,7 +501,7 @@ a {
     }
 
 /* =========================================================
-   FOOTER STYLES
+    FOOTER STYLES
 ========================================================= */
 .footer {
     background-color: #f0f0f0;
@@ -505,9 +510,14 @@ a {
 }
 
 .footer-container {
-    max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
+}
+.footer-logo {
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: #1F3363;
 }
 
 .footer-top {
@@ -516,10 +526,6 @@ a {
     gap: 3rem;
     padding-bottom: 3rem;
     border-bottom: 1px solid #d0d0d0;
-}
-
-.footer-brand {
-    max-width: 400px;
 }
 
 .footer-title {
@@ -671,7 +677,7 @@ a {
 }
 
 /* =========================================================
-   RESPONSIVE - NAVBAR & FOOTER
+    RESPONSIVE - NAVBAR & FOOTER
 ========================================================= */
 @media (max-width: 1200px) {
     .header {

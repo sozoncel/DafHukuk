@@ -1,0 +1,189 @@
+﻿@page "/iletisim"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+
+<section class="hero-iletisim-section">
+    <div class="hero-iletisim-bg"></div>
+    <div class="hero-iletisim-overlay"></div>
+
+    <div class="hero-iletisim-container">
+        <div class="hero-iletisim-title-content">
+            <h2 class="iletisim-hero-title-upper">İletişim</h2>
+
+            <div class="hero-iletisim-title-wrapper">
+                <h1 class="hero-iletisim-title">Nasıl yardımcı olabiliriz?</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-iletisim-slogan-wrapper">
+                    <div class="hero-iletisim-slogan-text-style">
+                        Your <br> success. <br> Our <br> business.
+                    </div>
+                </div>
+
+                <div class="hero-iletisim-breadcrumb">
+                    <a href="/">Ana Sayfa</a> / <span>İletişim</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="iletisim-icerik">
+    <div class="row">
+        <!-- SOL KOLON: OFİS BİLGİLERİ -->
+        <div class="col-lg-6">
+            <div class="iletisim-card">
+                <div class="iletisim-card-inner">
+
+                    <div class="iletisim-card-top row-card">
+                        <div class="col-sm-6 foto-col">
+                            <img src="img/sayfalar/iletisim/daff-iletisim-01.png" alt="Ankara Ofis" class="ofis-img" />
+                            <a class="link-no-deco haritada-goster" href="#" target="_blank" rel="noopener">
+                                Haritada Göster
+                                <span class="link-external-icon" aria-hidden="true">↗</span>
+                            </a>
+                        </div>
+
+                        <div class="col-sm-6 meta-col">
+                            <p class="ust-baslik">Ankara Ofis</p>
+                            <h5 class="ofis-title">DAF Hukuk ve Danışmanlık</h5>
+                            <span class="ofis-line">Namık Kemal, 94. Cd. 3/6</span>
+                            <span class="ofis-line">06420 Çankaya / Ankara</span>
+
+                            <p class="alt-bilgi">
+                                00:00–07:30, 08:30–00:00 (Her Gün)
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="sep" />
+
+                    <div class="iletisim-card-contact row-card2">
+                        <h6 class="small-heading">Genel Sorular</h6>
+
+                        <div class="contact-line">
+                            <i class="bi bi-envelope" aria-hidden="true"></i>
+                            <div class="contact-meta">
+                                <div class="contact-label">E-posta</div>
+                                <div class="contact-value">contact@dafhukuk.tr</div>
+                            </div>
+                        </div>
+
+                        <div class="contact-line">
+                            <i class="bi bi-telephone" aria-hidden="true"></i>
+                            <div class="contact-meta">
+                                <div class="contact-label">Telefon</div>
+                                <div class="contact-value">0533 738 31 58</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="sep" />
+
+                    <div class="row-card3">
+                        <p>
+                            İş başvurusunda bulunmak isteyen ziyaretçilerimizin <a class="underline-anim" href="/kariyer">Kariyer</a> sayfamız veya
+                            <a class="underline-anim" href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a> hesabımız aracılığıyla CV’lerini göndermelerini rica ederiz.
+                        </p>
+
+                        <a class="linkedin-btn" href="https://www.linkedin.com" target="_blank" rel="noopener">
+                            <span class="ln-icon" aria-hidden="true">in</span> LinkedIn
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SAĞ KOLON: İLETİŞİM FORMU -->
+        <div class="col-lg-6">
+            <div class="contact-form">
+                <div class="form-header">
+                    <div class="form-tag">İLETİŞİM FORMU</div>
+                    <p class="form-intro">İletişim bilgilerimizden bize ulaşabilir veya aşağıdaki formu doldurabilirsiniz.</p>
+                </div>
+
+                <form id="contactForm" onsubmit="return handleContactSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <input type="text" name="ad" placeholder="Ad" required />
+                        <input type="text" name="soyad" placeholder="Soyad" required />
+                    </div>
+
+                    <div class="form-row">
+                        <input type="text" name="sirket" placeholder="Şirket" />
+                        <input type="text" name="pozisyon" placeholder="Pozisyon" />
+                    </div>
+
+                    <div class="form-row">
+                        <input type="email" name="email" placeholder="E-posta adresi" required />
+                        <input type="tel" name="telefon" placeholder="Telefon" />
+                    </div>
+
+                    <div class="form-row single">
+                        <textarea name="konu" rows="6" placeholder="Konu / Mesaj"></textarea>
+                    </div>
+
+                    <div class="form-row checkbox-row">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="kvkk" required />
+                            <span>İşbu iletişim formu aracılığıyla sağlanacak olan kişisel veriler ile ilgili aydınlatma metnini okudum ve anladım.</span>
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <button type="submit" class="btn-send">GÖNDER</button>
+                    </div>
+
+                    <p class="form-note">dataprotection@dafhukuk.tr adresine yazarak her zaman rızanızı geri çekebilirsiniz.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- GOOGLE MAP (YENİ) -->
+    <div class="row-google-map">
+        <div class="col-lg-12">
+
+            <!-- Yeni Harita -->
+            <div class="mapouter">
+                <div class="gmap_canvas">
+                    <iframe class="gmap_iframe"
+                            frameborder="0"
+                            scrolling="no"
+                            marginheight="0"
+                            marginwidth="0"
+                            src="https://maps.google.com/maps?width=1400&amp;height=400&amp;hl=en&amp;q=DAF Hukuk ve Danışmanlık, Namık Kemal, 94. Cd. 3/6, 06420 Çankaya/Ankara&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                    </iframe>
+                </div>
+
+                <style>
+
+                </style>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function handleContactSubmit(e) {
+        e.preventDefault();
+        const form = document.getElementById('contactForm');
+        const required = form.querySelectorAll('[required]');
+        let ok = true;
+
+        required.forEach(r => {
+            if (!r.value || (r.type === 'checkbox' && !r.checked)) ok = false;
+        });
+
+        if (!ok) {
+            alert('Lütfen zorunlu alanları doldurun.');
+            return false;
+        }
+
+        alert('Form gönderildi (demo).');
+        form.reset();
+        return false;
+    }
+</script>

@@ -1,0 +1,767 @@
+﻿/* =========================================================
+   EKIBIMIZ.CSS - Görünüm Güncellemesi (Gemini örneğine göre)
+   Not: HTML / class isimleri değiştirilmedi. Sadece stil uygulanmıştır.
+   Mobile-first yaklaşımla düzenlenmiştir.
+========================================================= */
+
+/* Temel renk değişkenleri */
+:root {
+    --accent: #1F3363;
+    --muted: #f5f5f5;
+    --card-bg: #ffffff;
+    --card-border: #eee;
+    --text-dark: #222;
+    --muted-text: #666;
+    --hero-overlay-start: rgba(0,0,0,0.55);
+    --container-max: 1200px;
+}
+
+/* ---------------------------
+   Ana bölüm (container genel)
+   --------------------------- */
+.ourteam-content {
+    padding: 48px 0;
+    background-color: #fff;
+}
+
+.ourteam-page-content {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* ---------------------------
+   HERO - başlık ve overlay
+   --------------------------- */
+.hero-ourteam-section {
+    position: relative;
+    width: 100%;
+    height: 44vh;
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    color: #fff;
+}
+
+.hero-ourteam-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("/img/sayfalar/ekibimiz/daff-ekibimiz-office.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.hero-ourteam-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--hero-overlay-start) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.2) 100%);
+    z-index: 2;
+}
+
+.hero-ourteam-container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: var(--container-max);
+    padding: 18px 20px;
+    box-sizing: border-box;
+}
+
+.hero-ourteam-title-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* küçük üst başlık */
+.ourteam-hero-title-upper {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    font-weight: 300;
+    color: rgba(226,223,210,0.95);
+    text-transform: uppercase;
+    opacity: 0.95;
+}
+
+/* büyük ana başlık */
+.hero-ourteam-title {
+    font-size: clamp(22px, 4.5vw, 42px);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+/* ---------------------------
+   Bilgilendirme metni
+   --------------------------- */
+.info-row {
+    margin: 36px 0 28px;
+    text-align: center;
+}
+
+.team-info-text {
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    font-weight: 400;
+    color: var(--muted-text);
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ---------------------------
+   Filtre / Arama satırı
+   --------------------------- */
+.filter-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+/* sütunlar bootstrap tarafından verildiğinden padding'i buradan denetliyoruz */
+.search-col, .filter-col {
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+/* Arama kutusu */
+.name-filter .input-group {
+    display: flex;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.name-filter .form-control {
+    border: none;
+    box-shadow: none;
+    padding: 10px 14px;
+    font-size: .95rem;
+    color: var(--text-dark);
+    min-width: 0;
+}
+
+/* arama butonu */
+.btn-search-icon {
+    background-color: var(--accent);
+    color: #fff;
+    height: 100%;
+    border: none;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+    .btn-search-icon:hover{
+        background-color: transparent;
+        color: #1F3363;
+        border: 1px solid; 
+    }
+/* ---------------------------
+   Özel filtre (custom select) görünümleri
+   --------------------------- */
+.my_filter_select {
+    width: 100%;
+    max-width: 260px;
+    box-sizing: border-box;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: box-shadow .15s, border-color .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    overflow: visible;
+}
+
+.my_filter_selected {
+    padding: 10px 14px;
+    font-size: .95rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+    .my_filter_selected span {
+        color: var(--muted-text);
+        font-weight: 400;
+        font-size: .9rem;
+    }
+
+.my_filter_select.open {
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(31,51,99,0.08);
+}
+
+/* dropdown liste */
+.my_filter_select ul {
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    background: #fff;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    max-height: 260px;
+    overflow: auto;
+    z-index: 200;
+    display: none;
+}
+
+.my_filter_select.open ul {
+    display: block;
+}
+
+.my_filter_select ul li {
+    padding: 8px 12px;
+    font-size: .95rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+    .my_filter_select ul li:last-child {
+        border-bottom: none;
+    }
+
+    .my_filter_select ul li:hover {
+        background: #f7f7f7;
+    }
+
+/* ---------------------------
+   Team cards grid
+   --------------------------- */
+
+/* container for cards row already uses .row.team-cards-row */
+.team-cards-row {
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    /* Negative margin to balance column padding */
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+/* Column Wrapper (Responsive Grid Item) */
+.team-card-col {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+    CARD VISUAL STYLE
+========================================================= */
+
+/* Card visual style */
+.avukat-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 18px 14px;
+    transition: .2s;
+    height: 100%;
+    margin: 0 auto;
+}
+
+    /* Hover effect */
+    .avukat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 40px rgba(18,24,40,0.06);
+    }
+
+/* Portrait image */
+.avukat-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+/* Name & Link Wrapper */
+.avukat-name-link {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+}
+
+/* Name Text */
+.avukat-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark, #222);
+    margin: 4px 0 2px;
+}
+
+/* Position Text */
+.avukat-position {
+    font-size: .88rem;
+    color: var(--muted-text, #666);
+    margin-bottom: 10px;
+}
+
+/* Divider Line */
+.card-divider {
+    width: 42px;
+    height: 3px;
+    background-color: #dfb887;
+    margin: 10px auto;
+    border: none;
+    border-radius: 2px;
+}
+
+/* Email Icon Link */
+.mail-box-link {
+    color: var(--accent, #1F3363);
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+/* ---------------------------
+   Genel responsive davranış
+   --------------------------- */
+
+/* Desktop: 4 sütun (col-lg-3) zaten var, burada sadece spacing kontrolü */
+@media (min-width: 1200px) {
+    .team-card-col {
+        width: 25%;
+    }
+    /* col-lg-3 görünüme denk */
+    .ourteam-page-content {
+        padding: 0 28px;
+    }
+}
+
+/* Laptop: 3 sütun */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .team-card-col {
+        width: 33.3333%;
+    }
+}
+
+/* Tablet: 2 sütun */
+@media (max-width: 991px) and (min-width: 576px) {
+    .team-card-col {
+        width: 50%;
+        padding: 0 12px;
+    }
+
+    .avukat-img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* Mobile: 1 sütun */
+@media (max-width: 575px) {
+    .team-card-col {
+        width: 100%;
+        padding: 0 8px;
+    }
+
+    .avukat-card {
+        padding: 16px;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+        text-align: left;
+    }
+
+    .avukat-img {
+        width: 84px;
+        height: 84px;
+        margin: 0;
+    }
+
+    .avukat-name {
+        font-size: 0.98rem;
+    }
+
+    .avukat-position {
+        font-size: .85rem;
+    }
+
+    .card-divider {
+        display: none;
+    }
+
+    .mail-box-link {
+        margin-left: auto;
+    }
+}
+
+/* ---------------------------
+   Page content / biography areas (if used)
+   --------------------------- */
+.page-content {
+    max-width: var(--container-max);
+    padding: 26px 20px;
+    margin: 0 auto;
+}
+
+.info-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+/* small helpers */
+.text-muted {
+    color: var(--muted-text);
+    font-size: .95rem;
+}
+
+.btn-search-icon:focus, .my_filter_selected:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(31,51,99,0.08);
+}
+
+/* =========================================================
+   HERO - Avukat Detay (Template)
+========================================================= */
+
+.hero-lawyer-section {
+    position: relative;
+    width: 100%;
+    height: 70vh; /* Yeni */
+    min-height: 520px; /* Yeni */
+    display: flex;
+    flex-direction: column;
+    color: white;
+    overflow: hidden;
+    justify-content: flex-end;
+}
+
+.hero-lawyer-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.hero-lawyer-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top; /* Yeni — yüzü tam gösterir */
+}
+
+.hero-lawyer-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+    z-index: 2;
+}
+
+.hero-lawyer-container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 100px 40px;
+}
+
+.lawyer-hero-name-upper {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.hero-lawyer-name {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    font-weight: 300;
+    color: #E2DFD2;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Sub Navigation Bar */
+.hero-lawyer-sub-nav-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-left: 20%;
+    background-color: #1F3363;
+    z-index: 4;
+}
+
+.hero-nav-row {
+    width: 100%; 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding-left: 20px; 
+    padding-right: 20px;
+    box-sizing: border-box; 
+}
+
+.nav-item-col {
+    padding: 15px 20px;
+    color: #fff;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+    .nav-item-col:last-child {
+        border-right: none;
+    }
+
+.hero-lawyer-sub-nav-bar span {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 2px;
+}
+
+.hero-lawyer-sub-nav-bar p {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* =========================================================
+   PAGE CONTENT
+========================================================= */
+
+.page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 40px;
+}
+
+.info-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.info-col {
+    padding-bottom: 30px;
+}
+
+.info-tag {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.award-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+    .award-list li {
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 5px;
+        font-size: 1rem;
+        color: #555;
+    }
+
+        .award-list li::before {
+            content: "\2022";
+            color: #dfb887;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+.biography-heading {
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.biography-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* =========================================================
+   RELATED CONTENT
+========================================================= */
+
+.related-content-heading {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.custom-tabs {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 40px;
+}
+
+    .custom-tabs .nav-link {
+        color: #666;
+        border: none;
+        padding: 8px 15px;
+        margin-bottom: -1px;
+        font-size: 1rem;
+        transition: color 0.3s;
+    }
+
+        .custom-tabs .nav-link:hover {
+            color: #999;
+            border-bottom: 2px solid #999;
+        }
+
+        .custom-tabs .nav-link.active {
+            color: #dfb887;
+            border-bottom: 2px solid #1F3363;
+            font-weight: 600;
+            background-color: transparent;
+        }
+
+/* Content Cards */
+.content-card {
+    padding: 20px;
+    border: 1px solid #eee;
+    height: 100%;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s;
+}
+
+    .content-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+.created-Date {
+    font-size: 0.9rem;
+    color: #999;
+    margin-bottom: 5px;
+}
+
+.content-title-link {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+    display: block;
+}
+
+    .content-title-link:hover {
+        color: #1F3363;
+    }
+
+.textContent {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.content-tag-button {
+    background-color: #dfb887;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.slug-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Hepsini Göster Button */
+.show-all-button {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid #666;
+    padding: 10px 30px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+    .show-all-button:hover {
+        background-color: #1F3363;
+        color: white;
+        border-color: #1F3363;
+        cursor: pointer;
+    }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 992px) {
+    .page-content {
+        padding: 40px 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-lawyer-section {
+        height: 50vh;
+        min-height: 350px;
+    }
+
+    .lawyer-hero-name-upper {
+        font-size: 2.4rem;
+    }
+
+    .info-title {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-lawyer-container {
+        padding: 0 24px 120px 24px;
+    }
+
+    .page-content {
+        padding: 30px 18px;
+    }
+
+    .content-card {
+        padding: 18px;
+    }
+}

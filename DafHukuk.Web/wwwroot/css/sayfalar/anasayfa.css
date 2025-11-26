@@ -4,7 +4,7 @@
  */
 
 /* =========================================================
-   HERO SECTION ANIMATIONS
+    HERO SECTION ANIMATIONS
 ========================================================= */
 @keyframes slideUpFadeIn {
     from {
@@ -19,15 +19,16 @@
 }
 
 /* =========================================================
-   HERO SECTION
+    HERO SECTION
 ========================================================= */
 .hero-section {
     position: relative;
     width: 100%;
-    height: 80vh;
-    min-height: 550px;
+    height: 90vh; /* Ekranı daha fazla kaplasın */
+    min-height: 600px;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end; /* İçeriği alta hizala */
     color: #fff;
     overflow: hidden;
 }
@@ -35,7 +36,8 @@
 .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/headers/anasayfa.jpg");
+    /* Resim yolunu kontrol ediniz */
+    background-image: url("/img/sayfalar/anasayfa/daf-anasayfa-office2k.png");
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -44,7 +46,8 @@
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    /* Görseldeki gibi sol tarafı daha koyu yapan bir gradyan */
+    background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
     z-index: 2;
 }
 
@@ -52,75 +55,73 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1400px;
-    height: 100%;
+    max-width: 1600px; /* Daha geniş bir konteyner */
     margin: 0 auto;
-    padding: 0 40px;
-    padding-top: 100px;
+    padding: 0 60px;
+    padding-bottom: 0; /* Alt boşluk yok, widget yapışık */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    height: 100%;
+    justify-content: flex-end; /* İçerikleri en alta it */
 }
 
 /* =========================================================
-   HERO CONTENT
+    HERO CONTENT (Üst Metin)
 ========================================================= */
-.hero-center-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
+.hero-content-col {
+    margin-bottom: 40px; /* Slogan/Widget ile arasındaki boşluk */
 }
 
 .hero-lead-text {
-    max-width: 750px;
     font-size: 22px;
-    line-height: 1.5;
+    line-height: 1.6;
     font-weight: 300;
     color: #fff;
-    margin-bottom: 40px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    max-width: 800px;
 }
 
 /* =========================================================
-   HERO BOTTOM ROW
+    HERO BOTTOM ROW (Slogan + Widget)
 ========================================================= */
 .hero-bottom-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     width: 100%;
-    padding-bottom: 0;
 }
 
 /* Slogan */
 .slogan-wrapper {
-    padding-bottom: 40px;
+    padding-bottom: 60px; /* Widget ile hizalamak için biraz yukarıda */
 }
 
 .slogan-text-style {
     font-family: "Playfair Display", Georgia, serif;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 1.1;
-    border-left: 4px solid #fff;
-    padding-left: 15px;
+    border-left: 5px solid #fff;
+    padding-left: 20px;
     color: #fff;
     text-transform: capitalize;
 }
 
 /* =========================================================
-   NEWS WIDGET
+    NEWS WIDGET (Sağ Alt Kutu)
 ========================================================= */
 .news-widget {
     display: flex;
-    height: 150px;
+    height: 160px; /* Sabit yükseklik */
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    margin-bottom: 0;
     animation: slideUpFadeIn 0.8s ease-out 0.2s backwards;
+    /* Sağ kenara yapışık gibi durması için margin-right negatif verilebilir 
+       veya container padding'i ayarlanabilir. Şimdilik standart bırakıyorum. */
 }
 
 .news-title-box {
-    background-color: #28406d;
-    width: 200px;
+    background-color: #28406d; /* Mavi */
+    width: 240px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -130,26 +131,26 @@
 
     .news-title-box span {
         color: #fff;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 300;
         line-height: 1.3;
     }
 
 .news-content-box {
-    background-color: #4e5466;
-    width: 420px;
+    background-color: #4e5466; /* Gri/Lacivert */
+    width: 500px;
     display: flex;
     align-items: center;
-    padding: 20px;
-    gap: 20px;
+    padding: 25px;
+    gap: 25px;
 }
 
 .news-img-wrapper {
     flex-shrink: 0;
-    width: 120px;
-    height: 80px;
+    width: 140px;
+    height: 90px;
     overflow: hidden;
-    background: #fff;
+    background: #000;
 }
 
     .news-img-wrapper img {
@@ -165,18 +166,18 @@
 }
 
 .news-date {
-    font-size: 12px;
+    font-size: 13px;
     opacity: 0.8;
     margin-bottom: 5px;
     color: #ddd;
 }
 
 .news-link {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: #fff;
     text-decoration: none;
-    line-height: 1.3;
+    line-height: 1.4;
     transition: opacity 0.3s;
 }
 
@@ -185,70 +186,65 @@
     }
 
 /* =========================================================
-   RESPONSIVE - HOME PAGE
+    RESPONSIVE - HOME PAGE
 ========================================================= */
 @media (max-width: 1200px) {
     .hero-container {
-        padding: 0 32px;
-        padding-top: 100px;
+        padding: 0 30px;
     }
 
     .news-content-box {
-        width: 350px;
+        width: 400px;
     }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 992px) {
     .hero-section {
         height: auto;
-        min-height: auto;
-        padding-bottom: 40px;
+        padding-bottom: 0;
     }
 
     .hero-container {
-        padding: 24px;
-        padding-top: 110px;
+        padding: 120px 24px 0 24px;
         justify-content: flex-start;
-    }
-
-    .hero-center-content {
-        align-items: flex-end;
-        margin-bottom: 40px;
     }
 
     .hero-lead-text {
         font-size: 18px;
-        max-width: 100%;
+        margin-bottom: 40px;
     }
 
     .hero-bottom-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 30px;
+        gap: 40px;
+        width: 100%;
+        margin-top: auto; /* Alt kısmı aşağı it */
     }
 
     .slogan-wrapper {
-        padding-bottom: 0;
+        display:none;
     }
 
-    /* News widget'ı mobilden gizle */
     .news-widget {
-        display: none;
+        width: 100%; /* Mobilde tam genişlik */
+        height: auto;
+        flex-direction: column; /* Kutular alt alta */
     }
-}
 
-@media (max-width: 600px) {
-    .hero-container {
+    .news-title-box,
+    .news-content-box {
+        width: 100%;
+        height: auto;
         padding: 20px;
-        padding-top: 100px;
     }
 
-    .hero-lead-text {
-        font-size: 16px;
-        line-height: 1.5;
+    .news-title-box {
+        justify-content: flex-start;
+        text-align: left;
     }
 
-    .slogan-text-style {
-        font-size: 20px;
-    }
+        .news-title-box span br {
+            display: none; /* Mobilde yan yana olsun */
+        }
 }

@@ -1,0 +1,216 @@
+﻿@page "/kariyer"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+
+<section class="hero-kariyer-section">
+
+    <div class="hero-kariyer-bg"></div>
+    <div class="hero-kariyer-overlay"></div>
+
+    <div class="hero-kariyer-container">
+
+        <div class="hero-kariyer-title-content">
+            <h2 class="kariyer-hero-title-upper">Kariyer</h2>
+
+            <div class="hero-kariyer-title-wrapper">
+                <h1 class="hero-kariyer-title">Daf Hukuk'da Kariyer</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="hero-kariyer-slogan-wrapper">
+                    <div class="hero-kariyer-slogan-text-style">
+                        Your <br> success. <br> Our <br> business.
+                    </div>
+                </div>
+
+                <div class="hero-kariyer-breadcrumb">
+                    <a href="/">Ana Sayfa</a> / <span>Kariyer</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SEKMELER -->
+<section class="kariyer-sub-nav-bar">
+    <div class="kariyer-sub-nav-container">
+        <button class="button active" onclick="showTab('kariyer')">Daf Hukuk’da Kariyer</button>
+        <button class="button" onclick="showTab('pozisyon')">Genel İş Başvurusu</button>
+    </div>
+</section>
+
+
+
+<section class="kariyer-icerik">
+
+    <!-- ========================= TAB 1 ========================= -->
+    <div class="tab-content" id="kariyer">
+
+        <div class="row">
+            <div class="col-lg-6">
+                <span>
+                    Paksoy’da çalışan herkese, mesleki gelişimlerinde ihtiyaç duydukları beceri, fırsat ve deneyimi sağlıyoruz.
+                </span>
+
+                <p>
+                    Görev ve sorumluluk alanları ne olursa olsun, stajyer, uzman, kıdemli avukat ya da destek hizmetleri görevli herkese Daf Hukuk’ta ideal bir iş ortamında heyecan dolu ve ilgi çekici bir deneyim fırsatı sunuyoruz. Her bir çalışanımızın mesleki ve kişisel potansiyelinin açığa çıkması için ekibimize yatırım yapıyoruz.
+                </p>
+            </div>
+
+            <div class="col-lg-6">
+
+                <a href="#" class="apply-btn">
+                    <i class="linkedin-icon"></i> Ekibimize Hemen Katıl
+                </a>
+
+                <div class="kariyer-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Muhasebe ve Finans Uzmanı</h5>
+                        <h6 class="card-subtitle">Pozisyon Özet Yazısı</h6>
+                        <p class="card-text">Tam Zamanlı – Ankara</p>
+
+                        <a href="#" class="card-link underline-anim">
+                            Kolay Başvuru
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================= TAB 2 ========================= -->
+    <div class="tab-content hidden" id="pozisyon">
+
+        <div class="row positions-row">
+
+            <!-- AVUKAT -->
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>Avukat</h5></a>
+                    <a href="#" class="underline-anim small-link">Detayları Görüntüle</a>
+                </div>
+            </div>
+
+            <!-- DESTEK EKİBİ -->
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>Destek Ekibi</h5></a>
+                    <a href="#" class="underline-anim small-link">Detayları Görüntüle</a>
+                </div>
+            </div>
+
+            <!-- YASAL STAJYER -->
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>Yasal Stajyer</h5></a>
+                    <a href="#" class="underline-anim small-link">Detayları Görüntüle</a>
+                </div>
+            </div>
+
+            <!-- YAZ STAJYERİ -->
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>Yaz Stajyeri</h5></a>
+                    <a href="#" class="underline-anim small-link">Detayları Görüntüle</a>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-4">
+
+                <a href="#" class="apply-btn">
+                    <i class="linkedin-icon"></i> Ekibimize Hemen Katıl
+                </a>
+
+                <div class="kariyer-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Pozisyon</h5>
+                        <h6 class="card-subtitle">Pozisyon Özet Yazısı</h6>
+                        <p class="card-text">Tam Zamanlı – Kızılay, Ankara</p>
+
+                        <a href="#" class="card-link underline-anim">
+                            Kolay Başvuru
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- DEĞİŞMEYEN SABİT İÇERİK -->
+    <div class="row degismeyen-icerik">
+
+        <div class="down-description">
+
+            <div class="row">
+                <div class="centered-header col-12">
+                    <h2>Değerlerimiz</h2>
+                </div>
+            </div>
+
+            <!-- row 1 -->
+            <div class="row values-row-1">
+                <div class="col-lg-3 value-box">
+                    <div class="value-img-wrapper">
+                        <img src="/img/sayfalar/kariyer/daff-kariyer-01.png" class="value-img" alt="Değer Görseli 1">
+                    </div>
+                </div>
+                <div class="col-lg-3 value-box"><h2>Müvekkil odaklı</h2><p>...</p></div>
+                <div class="col-lg-3 value-box"><h2>Profesyonel hizmet anlayışı</h2><p>...</p></div>
+                <div class="col-lg-3 value-box"><h2>Sürekli gelişim ve eğitim</h2><p>...</p></div>
+            </div>
+
+            <!-- row 2 -->
+            <div class="row values-row-2">
+                <div class="col-lg-3 value-box"><h2>Verimli ve saygın iş ortamı</h2><p>...</p></div>
+
+                <div class="col-lg-3 value-box">
+                    <div class="value-img-wrapper">
+                        <img src="/img/sayfalar/kariyer/daff-kariyer-02.png" class="value-img" alt="Değer Görseli 2">
+                    </div>
+                </div>
+
+                <div class="col-lg-3 value-box"><h2>İletişim ve erişebilirlik</h2><p>...</p></div>
+
+                <div class="col-lg-3 value-box">
+                    <div class="value-img-wrapper">
+                        <img src="/img/sayfalar/kariyer/daff-kariyer-01.png" class="value-img" alt="Değer Görseli 3">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+
+<script>
+    function showTab(id) {
+        document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+        document.getElementById(id).classList.remove("hidden");
+
+        document.querySelectorAll(".kariyer-sub-nav-container .button")
+            .forEach(btn => btn.classList.remove("active"));
+
+        event.target.classList.add("active");
+    }
+</script>

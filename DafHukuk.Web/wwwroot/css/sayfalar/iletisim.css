@@ -1,0 +1,463 @@
+﻿/* =========================================================
+   ILETİŞİM SAYFASI STİLLERİ
+   - Bu dosya base.css ve örnek.css sonrası yüklenmelidir.
+========================================================= */
+
+/* Temel font/renk değişkenleri */
+:root {
+    --accent: #1F3363;
+    --muted: #e6e6e6;
+    --hero-overlay-start: rgba(0,0,0,0.55);
+}
+
+/* Grid (örnek.css ile uyumlu) */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.col-sm-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* HERO */
+.hero-iletisim-section {
+    position: relative;
+    width: 100%;
+    height: 42vh;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    overflow: visible;
+}
+
+.hero-iletisim-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("/img/sayfalar/iletisim/daff-iletisim-office.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.hero-iletisim-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.35));
+    z-index: 2;
+}
+
+.hero-iletisim-container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 140px 40px 40px 40px;
+}
+
+.iletisim-hero-title-upper {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    font-weight: 400;
+    color: #E2DFD2;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.hero-iletisim-title {
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 700;
+}
+
+.hero-iletisim-breadcrumb {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    justify-content: flex-start;
+}
+
+    .hero-iletisim-breadcrumb a {
+        color: #ddd;
+        text-decoration: none;
+    }
+
+        .hero-iletisim-breadcrumb a:hover {
+            color: #dfb887;
+        }
+
+    .hero-iletisim-breadcrumb span {
+        color: #fff;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+
+.hero-iletisim-slogan-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 25px;
+}
+
+.hero-iletisim-slogan-text-style {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 3vw, 24px);
+    font-weight: 700;
+    line-height: 1.1;
+    border-left: 4px solid #fff;
+    padding-left: 15px;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+/* ILETISIM KART (sol) */
+.iletisim-card {
+    background: #fff;
+    padding: 0;
+    border: 0;
+    margin-bottom: 30px;
+}
+
+.iletisim-card-inner {
+    border: 1px solid #eee;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+/* ROW CARD TOP */
+.row-card {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.foto-col {
+    flex: 0 0 45%;
+    max-width: 45%;
+}
+
+.meta-col {
+    flex: 1;
+    padding-left: 10px;
+}
+
+.ofis-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+}
+
+.haritada-goster {
+    display: inline-block;
+    font-size: .95rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+    .haritada-goster:hover {
+        text-decoration: underline;
+        color: var(--accent);
+    }
+
+/* Üst başlık ve meta */
+.ust-baslik {
+    font-size: .85rem;
+    letter-spacing: 2px;
+    color: #8b8b8b;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+}
+
+.ofis-title {
+    margin: 0 0 6px 0;
+    font-size: 1.05rem;
+    color: #111;
+    font-weight: 700;
+}
+
+.ofis-line {
+    display: block;
+    color: #555;
+    font-size: .95rem;
+    margin-bottom: 2px;
+}
+
+.alt-bilgi {
+    font-size: .9rem;
+    color: #777;
+    margin-top: 10px;
+}
+
+/* İletişim satırları */
+.row-card2 {
+    margin-top: 18px;
+}
+
+.small-heading {
+    font-size: .95rem;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.contact-line {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+    .contact-line i {
+        display: inline-flex;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        background: #f3f3f3;
+        border-radius: 6px;
+        font-style: normal;
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+.contact-meta .contact-label {
+    font-size: .85rem;
+    color: #777;
+}
+
+.contact-meta .contact-value {
+    font-size: .95rem;
+    color: #111;
+    font-weight: 600;
+}
+
+/* LinkedIn buton */
+.linkedin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    text-decoration: none;
+    background: #eef3fb;
+    color: var(--accent);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.ln-icon {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background: #1f2b45;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+/* AÇIKLAMA METNİ ALTINDA */
+.row-card3 {
+    margin-top: 18px;
+    color: #555;
+    font-size: .95rem;
+    line-height: 1.6;
+}
+
+    .row-card3 a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+        .row-card3 a:hover {
+            text-decoration: underline;
+        }
+
+/* SAĞ - FORM */
+.contact-form {
+    background: transparent;
+    padding: 28px 20px;
+}
+
+.form-header .form-tag {
+    display: inline-block;
+    background: #f1f1f1;
+    padding: 6px 10px;
+    font-size: .8rem;
+    border-radius: 4px;
+    color: #777;
+    font-weight: 700;
+}
+
+.form-header .form-intro {
+    margin-top: 8px;
+    color: #666;
+    font-size: .95rem;
+    margin-bottom: 18px;
+}
+
+/* Form layout */
+form {
+    max-width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+    .form-row.single {
+        flex-direction: column;
+    }
+
+    .form-row input, .form-row textarea {
+        flex: 1;
+        padding: 12px 14px;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        font-size: 1rem;
+        color: #222;
+        background: #fff;
+    }
+
+        .form-row input::placeholder, textarea::placeholder {
+            color: #a8a8a8;
+        }
+
+.checkbox-row {
+    align-items: center;
+}
+
+.checkbox-inline {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: .9rem;
+    color: #666;
+}
+
+/* GÖNDER BUTONU */
+.btn-send {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .btn-send:hover {
+        opacity: .95;
+        transform: translateY(-1px);
+        transition: all .15s ease;
+    }
+
+/* FORM NOT */
+.form-note {
+    font-size: .85rem;
+    color: #888;
+    margin-top: 12px;
+}
+
+/* UNDERLINE ANIMATION (linkler için) */
+.underline-anim {
+    position: relative;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+    .underline-anim::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        height: 2px;
+        width: 0;
+        background: var(--accent);
+        transition: width .28s ease;
+    }
+
+    .underline-anim:hover::after {
+        width: 100%;
+    }
+
+/* MAP - responsive */
+.mapouter {
+    position: relative;
+    text-align: right;
+    width: 100%;
+    height: 400px;
+}
+
+.gmap_canvas {
+    overflow: hidden;
+    background: none !important;
+    width: 100%;
+    height: 100%;
+}
+
+.gmap_iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: 0;
+}
+
+/* Mobil responsive ayarlar */
+@media (max-width: 992px) {
+    .col-lg-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .foto-col, .meta-col {
+        max-width: 100%;
+        flex-basis: 100%;
+    }
+
+    .row-card {
+        flex-direction: column;
+    }
+
+    .hero-iletisim-container {
+        padding: 100px 24px 24px 24px;
+    }
+
+    .hero-iletisim-slogan-text-style {
+        display: none;
+    }
+    /* mobilde slogan gizlenebilir */
+}
+
+/* Küçük ekranlarda form satırlarını dikey yap */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .haritada-goster {
+        display: block;
+    }
+}
