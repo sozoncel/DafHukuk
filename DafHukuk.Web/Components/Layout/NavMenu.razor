@@ -1,6 +1,8 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">DafHukuk.Web</a>
+        <a class="navbar-brand fw-bold tracking-wide" href="">
+            <i class="bi bi-shield-shaded me-2"></i>DAF HUKUK
+        </a>
     </div>
 </div>
 
@@ -8,38 +10,42 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
+
+        <div class="nav-category">GENEL BAKIŞ</div>
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Anasayfa
+            <NavLink class="nav-link" href="/admin" Match="NavLinkMatch.All">
+                <span class="bi bi-speedometer2" aria-hidden="true"></span> Özet Paneli (Dashboard)
+            </NavLink>
+        </div>
+
+        <div class="nav-category">İÇERİK YÖNETİMİ</div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/yonetim">
+                <span class="bi bi-pen-fill" aria-hidden="true"></span> Yönetim Paneli
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="admin/hizmet-yonetimi">
+                <span class="bi bi-briefcase-fill" aria-hidden="true"></span> Çalışma Alanları
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Avukat Paneli
+            <NavLink class="nav-link" href="admin/ekip-yonetimi">
+                <span class="bi bi-people-fill" aria-hidden="true"></span> Ekip Üyeleri
             </NavLink>
         </div>
-                <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Duyuru Paneli
-            </NavLink>
-        </div>
+
+        <div class="nav-category">SİSTEM</div>
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Yayın Paneli
+            <NavLink class="nav-link text-danger" href="">
+                <span class="bi bi-box-arrow-left" aria-hidden="true"></span> Çıkış Yap
             </NavLink>
         </div>
-                <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Etkinlik Paneli
-            </NavLink>
-        </div>
+
     </nav>
 </div>
-

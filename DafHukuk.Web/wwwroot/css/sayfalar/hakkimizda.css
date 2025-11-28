@@ -1,13 +1,6 @@
-﻿/**
- * ABOUT.CSS - Hakkımızda Sayfası Stilleri
- * base.css'ten SONRA yüklenmelidir
- * Global Font Family: "Source Sans Pro", Arial, sans-serif olarak ayarlandı.
- */
+﻿/* ABOUT.CSS - Hakkımızda Sayfası Stilleri */
 
-/* =========================================================
-    GENEL STİLLER VE FONT AYARLARI
-========================================================= */
-/* Font Ayarı: Tüm içerik metinlerine uygulanır. */
+/* GENEL STİLLER */
 .hero-about-section,
 .about-page-content,
 .content-container,
@@ -21,10 +14,7 @@
 }
 
 
-/* =========================================================
-    VARSAYILAN GRID YAPISI (Bootstrap benzeri)
-========================================================= */
-/* İçerik bölümü için genişlik ve ortalama */
+/* VARSAYILAN GRID YAPISI */
 .content-container,
 .down-description,
 .counter-with-js,
@@ -71,9 +61,7 @@
 }
 
 
-/* =========================================================
-    HERO ABOUT SECTION
-========================================================= */
+/* HERO SECTION */
 .hero-about-section {
     position: relative;
     width: 100%;
@@ -85,24 +73,21 @@
     overflow: visible;
 }
 
-/* Hakkımızda Sayfası BG */
 .hero-about-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/sayfalar/hakkimizda/daff-hakkimizda-office.jpg");
+    background-image: url("/img/sayfalar/hakkimizda/daf-hakkimizda-office.jpg");
     background-size: cover;
     background-position: center;
     z-index: 1;
 }
 
-/* Ödüller Sayfası BG */
 .award-bg {
-    background-image: url("/img/sayfalar/hakkimizda/daff-hakkimizda-office-03.jpg");
+    background-image: url("/img/sayfalar/hakkimizda/daf-hakkimizda-office-02.jpg");
 }
 
-/* Sosyal Sorumluluk Sayfası BG */
 .social-bg {
-    background-image: url("/img/sayfalar/hakkimizda/daff-hakkimizda-office-02.jpg");
+    background-image: url("/img/sayfalar/hakkimizda/daf-hakkimizda-office-02.jpg");
 }
 
 .hero-about-overlay {
@@ -126,7 +111,7 @@
     padding-top: 120px;
 }
 
-/* HERO ABOUT TITLE & BREADCRUMB */
+/* HERO BAŞLIK VE NAVİGASYON */
 .hero-about-title-content {
     flex: 1;
     display: flex;
@@ -135,7 +120,6 @@
     justify-content: center;
 }
 
-/* Üst Başlık Stili */
 .about-hero-title-upper {
     font-family: "Helvetica Neue", Arial, sans-serif;
     font-size: 14px;
@@ -177,7 +161,7 @@
         margin-left: 5px;
     }
 
-/* HERO ABOUT SLOGAN */
+/* HERO SLOGAN */
 .hero-about-slogan-wrapper {
     width: 100%;
     display: flex;
@@ -195,7 +179,7 @@
     text-transform: capitalize;
 }
 
-/* HERO ABOUT SUB-NAVIGATION BAR */
+/* HERO ALT NAVİGASYON */
 .hero-about-sub-nav-bar {
     position: relative;
     width: 100%;
@@ -252,11 +236,7 @@
         }
 
 
-/* =========================================================
-    CONTENT CONTAINER (Biz Kimiz & Vizyonumuz)
-========================================================= */
-
-/* Genel Konteyner Stili */
+/* İÇERİK KONTEYNERİ (BİZ KİMİZ & VİZYON) */
 .content-container {
     max-width: 100%;
     padding-left: 5%;
@@ -292,14 +272,14 @@
     color: #444;
 }
 
-/* Görsel Alanı */
+/* GÖRSEL ALANI */
 .about-img-col {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.img-placeholder .img{
+.img-placeholder .img {
     width: 100%;
     padding-bottom: 60%;
     background-color: #ddd;
@@ -314,9 +294,7 @@
 }
 
 
-/* =========================================================
-    AWARDS SECTION (Ödüllerimiz Sayfası)
-========================================================= */
+/* ÖDÜLLER BÖLÜMÜ */
 .about-awards-section {
     padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: clamp(3rem, 8vw, 6rem);
@@ -410,9 +388,7 @@
             left: 0;
         }
 
-/* =========================================================
-    SOCIAL RESPONSIBILITY SECTION (Sosyal Sorumluluk) 
-========================================================= */
+/* SOSYAL SORUMLULUK BÖLÜMÜ */
 .about-social-section {
     max-width: 100%;
     margin: 1% auto 6rem;
@@ -443,7 +419,6 @@
 }
 
 .social-row-header {
-    /* Proje Başlıkları: Geleceğin Avukatları vb. */
     font-size: clamp(1.3rem, 3vw, 2rem);
     font-weight: 500;
     color: #111;
@@ -464,9 +439,7 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-/* =========================================================
-    COUNTER WITH JS (Sayıcı)
-========================================================= */
+/* SAYICI (COUNTER) */
 .counter-with-js {
     text-align: center;
     padding: clamp(3rem, 8vw, 6rem) 5%;
@@ -524,13 +497,10 @@
     color: #111;
 }
 
-/* =========================================================
-    DOWN DESCRIPTION (Değerlerimiz)
-========================================================= */
+/* DEĞERLERİMİZ BÖLÜMÜ */
 .down-description {
     max-width: 100%;
     padding: clamp(3rem, 8vw, 6rem) 5%;
-
 }
 
 .centered-header h2 {
@@ -554,9 +524,7 @@
     color: #444;
 }
 
-/* =========================================================
-    RESPONSIVE STYLES
-========================================================= */
+/* RESPONSIVE STİLLER */
 @media (max-width: 1200px) {
     .hero-about-container {
         padding: 0 32px;
@@ -626,6 +594,7 @@
     .about-award-box {
         flex: 0 0 calc(50% - 10px);
         max-width: calc(50% - 10px);
+        margin-bottom: 10px;
     }
 
     .content-container,

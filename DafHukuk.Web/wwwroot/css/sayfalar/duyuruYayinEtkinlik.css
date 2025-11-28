@@ -1,0 +1,379 @@
+﻿/* GENEL KONTEYNER */
+.services-page-content {
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.icerikBolumu {
+    padding: 60px 0;
+}
+
+/* ANA GÖRSEL (HERO) BÖLÜMÜ */
+.hero-news-section {
+    position: relative;
+    width: 100%;
+    height: 41vh;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    overflow: hidden;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.hero-services-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("/img/sayfalar/hizmetlerimiz/daf-hizmetlerimiz-office.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.hero-services-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.45) 100%);
+    z-index: 2;
+}
+
+.hero-services-container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1400px;
+    flex: 1;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: 150px;
+}
+
+/* HERO BAŞLIK VE YOL STİLLERİ */
+.hero-services-title-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.services-hero-title-upper {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    font-weight: 300;
+    color: #E2DFD2;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.hero-services-title-wrapper {
+    margin-bottom: 15px;
+}
+
+.hero-services-title {
+    font-size: 56px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.hero-services-breadcrumb,
+.hero-about-breadcrumb {
+    font-size: 13px;
+    font-weight: 400;
+    color: #ddd;
+    margin-top: 15px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-bottom: 30px;
+}
+
+    .hero-services-breadcrumb a,
+    .hero-about-breadcrumb a {
+        color: #ddd;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+        .hero-services-breadcrumb a:hover,
+        .hero-about-breadcrumb a:hover {
+            color: #dfb887;
+        }
+
+    .hero-services-breadcrumb span,
+    .hero-about-breadcrumb span {
+        color: #fff;
+        font-weight: 400;
+        margin-left: 8px;
+    }
+
+.hero-about-slogan-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 0;
+}
+
+.hero-about-slogan-text-style {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
+    border-left: 4px solid #fff;
+    padding-left: 15px;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+
+/* ARAMA VE DROPDOWN */
+.search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+    .search-bar .form-control-lg {
+        border-radius: 0;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        height: 48px;
+    }
+
+    .search-bar .btn-primary {
+        background-color: #000;
+        border-color: #000;
+        border-radius: 0;
+        height: 48px;
+    }
+
+.modern-dropdown-toggle {
+    border-radius: 0;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    text-align: left;
+    padding: 10px 15px;
+    font-weight: 500;
+    height: 48px;
+}
+
+    .modern-dropdown-toggle:hover,
+    .modern-dropdown-toggle:focus {
+        background-color: #f8f8f8;
+        border-color: #999;
+    }
+
+.modern-dropdown-menu {
+    border-radius: 0;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modern-dropdown-item {
+    font-size: 0.95rem;
+    padding: 8px 15px;
+}
+
+/* İÇERİK KARTLARI */
+.icerik-Kart {
+    margin-top: 40px;
+}
+
+.content-card-item {
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s;
+    height: 100%;
+}
+
+    .content-card-item:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+.post-cover-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+/* Tarih */
+.created-Date {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Başlık */
+.textTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.content-card-item a {
+    text-decoration: none;
+}
+
+    .content-card-item a:hover .textTitle {
+        color: #dfb887;
+    }
+
+/* Özet/Slug */
+.slugText {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+    display: block;
+    margin-bottom: 15px;
+    min-height: 75px;
+}
+
+/* Ayırıcı */
+.content-card-item hr {
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+/* Devamını Oku */
+.read-more-link {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+    .read-more-link:hover {
+        color: #dfb887;
+    }
+
+/* KART OFSET STİLİ */
+.icerik-Kart .card-offset-style {
+    transform: translateY(20px);
+}
+
+
+/* İLGİLİ ALANLAR (SAĞ BLOK) */
+.related-area-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+.related-area-title {
+    color: #343a40;
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #007bff;
+}
+
+.related-area-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+    .related-area-list li {
+        margin-bottom: 8px;
+    }
+
+        /* LİSTE NOKTASI STİLİ */
+        .related-area-list li a {
+            position: relative;
+            padding-left: 15px;
+            color: #495057;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+            .related-area-list li a:hover {
+                color: #007bff;
+            }
+
+            .related-area-list li a::before {
+                content: ">";
+                position: absolute;
+                left: 0;
+                color: #007bff;
+                font-weight: bold;
+                font-size: 0.9rem;
+                top: 0;
+            }
+
+/* SOSYAL MEDYA PAYLAŞIM */
+.post-share-section {
+    padding-top: 15px !important;
+    border-top: 1px solid #e9ecef !important;
+}
+
+.share-text {
+    color: #212529;
+    font-size: 1rem;
+}
+
+.social-share-links a {
+    color: #6c757d;
+    transition: color 0.3s;
+    font-size: 1.25rem;
+}
+
+    .social-share-links a:hover {
+        color: #007bff;
+    }
+
+/* İLİŞKİLİ İÇERİKLER */
+.related-content-heading {
+    color: #343a40;
+    font-size: 2rem;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.separator-line {
+    width: 100px;
+    height: 3px;
+    background-color: #007bff;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.content-card-sm {
+    transition: box-shadow 0.3s, border-color 0.3s;
+    border: 1px solid #e9ecef !important;
+}
+
+    .content-card-sm:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+        border-color: #007bff !important;
+    }
+
+    .content-card-sm .content-title-link {
+        text-decoration: none;
+        color: #212529;
+    }
+
+        .content-card-sm .content-title-link:hover {
+            color: #007bff;
+        }
+
+/* MOBİL STİL */
+@media (max-width: 991px) {
+    .icerik-Kart .card-offset-style {
+        transform: none;
+    }
+}

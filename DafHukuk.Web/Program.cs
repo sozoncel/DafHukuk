@@ -1,5 +1,7 @@
 using DafHukuk.Core.Entities;
 using DafHukuk.Data;
+using DafHukuk.Service;
+using DafHukuk.Service.Interfaces;
 using DafHukuk.Web.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 // --- 1. SERVISLERIN EKLENMESI ---
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IPostService, PostService>();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

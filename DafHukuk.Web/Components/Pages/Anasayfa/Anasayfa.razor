@@ -1,15 +1,11 @@
 ﻿@page "/"
 @layout DafHukuk.Web.Components.Layout.MainLayout
+@inject IPostService PostService
 
 <section class="hero-section">
-    <!-- Arka plan görseli -->
     <div class="hero-bg"></div>
-    <!-- Karartma efekti -->
     <div class="hero-overlay"></div>
-
     <div class="hero-container">
-
-        <!-- 1. Sol Üst: Ana Metin -->
         <div class="row">
             <div class="col-lg-8 hero-content-col">
                 <p class="hero-lead-text">
@@ -19,37 +15,56 @@
                 </p>
             </div>
         </div>
-
-        <!-- 2. Alt Satır (Sol: Slogan, Sağ: Haber Widget) -->
         <div class="hero-bottom-row">
-
-            <!-- Sol: Slogan -->
             <div class="slogan-wrapper">
                 <div class="slogan-text-style">
                     Your <br> success. <br> Our <br> business.
                 </div>
             </div>
 
-            <!-- Sağ: Haber Widget'ı -->
             <div class="news-widget">
-                <!-- Mavi Kutu (Başlık) -->
                 <div class="news-title-box">
                     <span>Duyurular & <br> Yayınlar</span>
                 </div>
 
-                <!-- Gri Kutu (İçerik) -->
                 <div class="news-content-box">
-                    <div class="news-img-wrapper">
-                        <!-- Örnek Resim -->
-                        <img src="img/sayfalar/anasayfa/daff-haber-01.jpg" alt="Haber" />
-                    </div>
-                    <div class="news-info">
-                        <span class="news-date">9 Kasım 2025</span>
-                        <a href="img/sayfalar/anasayfa/daff-haber-02.jpg" class="news-link">Saygıyla Anıyoruz</a>
-                    </div>
+                    @if (lastPost != null)
+                    {
+                        <div class="news-img-wrapper">
+                            <img src="@lastPost.CoverImageUrl" alt="@lastPost.Title_TR" />
+                        </div>
+
+                        <div class="news-info">
+                            <span class="news-date">
+                                @lastPost.PublishedDate.ToString("dd MMMM yyyy")
+                            </span>
+
+                            <a href="/@lastPost.Category.Name_TR/@lastPost.Slug_TR" class="news-link">
+                                @lastPost.Title_TR
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Henüz yayınlanmış bir haber bulunmuyor.</p>
+                    }
                 </div>
+
             </div>
 
         </div>
     </div>
 </section>
+
+@code {
+    private Post lastPost;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var posts = await PostService.GetAll();
+
+        lastPost = posts
+            .OrderByDescending(p => p.PublishedDate)
+            .FirstOrDefault();
+    }
+}

@@ -1,0 +1,143 @@
+﻿@page "/etkinlikler"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@inject IPostService PostService
+
+@code {
+    private List<Post> currentCategoryPosts = new();
+    private List<Post> otherPostsInSameCategory = new();
+    private Category currentCategory;
+
+    private const string PageCategoryNameTR = "Etkinlikler";
+    private const int PageCategoryId = 16;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allPosts = await PostService.GetAll();
+
+        currentCategoryPosts = allPosts
+            .Where(p => p.CategoryId == PageCategoryId)
+            .OrderByDescending(p => p.PublishedDate)
+            .ToList();
+
+        currentCategory = allPosts.FirstOrDefault(p => p.CategoryId == PageCategoryId)?.Category;
+        otherPostsInSameCategory = currentCategoryPosts.ToList();
+    }
+
+    private string GetPostUrl(Post p)
+    {
+        if (p?.Category?.Name_TR == null) return "#";
+        string category = p.Category.Name_TR.Trim().ToLowerInvariant();
+
+        if (string.Equals(category, "hizmetlerimiz", StringComparison.OrdinalIgnoreCase))
+            return $"/hizmetlerimiz/{p.Slug_TR}";
+        else if (string.Equals(category, "duyurular", StringComparison.OrdinalIgnoreCase))
+            return $"/duyurular/{p.Slug_TR}";
+        else if (string.Equals(category, "etkinlikler", StringComparison.OrdinalIgnoreCase))
+            return $"/etkinlikler/{p.Slug_TR}";
+        else if (string.Equals(category, "yayınlar", StringComparison.OrdinalIgnoreCase))
+            return $"/yayinlar/{p.Slug_TR}";
+
+        return $"/etkinlikler/{p.Slug_TR}";
+    }
+
+    private string GetSummary(Post p)
+    {
+        if (string.IsNullOrWhiteSpace(p.Content_TR)) return "";
+        var content = p.Content_TR.Replace(Environment.NewLine, " ").Trim();
+        return content.Length > 120 ? content.Substring(0, 120) + "..." : content;
+    }
+}
+
+<PageTitle>@PageCategoryNameTR</PageTitle>
+
+<section class="hero-news-section">
+    <div class="hero-services-bg"></div>
+    <div class="hero-services-overlay"></div>
+
+    <div class="hero-services-container">
+        <div class="hero-services-title-content">
+            <h2 class="services-hero-title-upper">@PageCategoryNameTR</h2>
+            <div class="hero-services-title-wrapper">
+                <h1 class="hero-services-title">@PageCategoryNameTR</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-slogan-wrapper">
+                    <div class="hero-about-slogan-text-style">
+                        Your <br> success. <br> Our <br> business.
+                    </div>
+                </div>
+                <div class="hero-about-breadcrumb">
+                    <a href="/">Ana Sayfa</a> / <span>@PageCategoryNameTR</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="icerikBolumu services-page-content">
+
+    <div class="row mb-5">
+        
+        <div class="col-lg-6">
+            <div class="search-bar">
+                <input class="form-control form-control-lg" type="search" placeholder="Kelime Ara" aria-label="Search">
+                <button class="btn btn-primary px-4" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="dropdown modern-dropdown w-100">
+                <button class="btn dropdown-toggle modern-dropdown-toggle w-100"
+                        type="button"
+                        id="etkinlikDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Diğer Etkinlikleri Gör
+                </button>
+
+                <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="etkinlikDropdown">
+                    @foreach (var post in otherPostsInSameCategory)
+                    {
+                        <li><a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">@post.Title_TR</a></li>
+                    }
+                    @if (!otherPostsInSameCategory.Any())
+                    {
+                        <li><span class="dropdown-item text-muted">Bu kategoride içerik bulunamadı.</span></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row icerik-Kart">
+        @if (!currentCategoryPosts.Any())
+        {
+            <div class="col-12 text-center my-5"><p>Bu kategoride yayınlanmış içerik bulunmamaktadır.</p></div>
+        }
+        else
+        {
+            @for (int i = 0; i < currentCategoryPosts.Count; i++)
+            {
+                var post = currentCategoryPosts[i];
+                var url = GetPostUrl(post);
+                string columnClass = "col-lg-4 mb-5";
+                if (i % 3 == 1) { columnClass += " card-offset-style"; }
+
+                <div class="@columnClass">
+                    <div class="content-card-item">
+                        <a href="@url"><img src="@post.CoverImageUrl" alt="@post.Title_TR" class="img-fluid post-cover-image"></a>
+                        <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy")</p>
+                        <a href="@url"><h2 class="textTitle">@post.Title_TR</h2></a>
+                        <p class="slugText">@GetSummary(post)</p>
+                        <hr>
+                        <a href="@url" class="read-more-link">Devamını Oku</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>

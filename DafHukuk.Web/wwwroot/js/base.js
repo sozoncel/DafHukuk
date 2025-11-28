@@ -1,13 +1,8 @@
-/**
- * BASE.JS - Global Navbar & Footer Functionality
- * Bu dosya tüm sayfalarda yüklenmelidir
- */
+/* GENEL FONKSÝYONLAR */
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* =========================================================
-       NAVBAR SCROLL EFFECT
-    ========================================================= */
+    /* NAVBAR KAYDIRMA ETKÝSÝ */
     window.addEventListener("scroll", () => {
         const header = document.getElementById("site-header");
         if (!header) return;
@@ -19,9 +14,40 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    /* =========================================================
-       MOBILE MENU
-    ========================================================= */
+    /* KATEGORÝ RENKLENDÝRME */
+
+    function colorizeCategoryButtons() {
+        document.querySelectorAll(".content-tag-button").forEach(btn => {
+            let text = btn.innerText.trim();
+
+            let bgColor = "#dfb899";
+            let txtColor = "white";
+
+            if (text === "Hizmetlerimiz") {
+                bgColor = "#366C80";
+            }
+            else if (text === "Duyurular") {
+                bgColor = "#5c7341";
+            }
+            else if (text === "Etkinlikler") {
+                bgColor = "#78514A";
+            }
+
+            btn.style.background = bgColor;
+            btn.style.color = txtColor;
+            btn.style.borderColor = bgColor;
+
+        });
+    }
+
+    const observer = new MutationObserver(() => {
+        colorizeCategoryButtons();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    setTimeout(colorizeCategoryButtons, 200);
+
+    /* MOBÝL MENÜ */
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
     const mobileMenu = document.getElementById("mobile-menu");
     const mobileOverlay = document.getElementById("mobile-overlay");
@@ -35,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileOverlay.classList.add("active");
         mobileMenuBtn.classList.add("active");
 
-        // Logo blur efekti
         if (window.innerWidth <= 550 && logo) {
             logo.style.display = "none";
         } else if (logo) {
@@ -51,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileOverlay.classList.remove("active");
         mobileMenuBtn.classList.remove("active");
 
-        // Logo'yu normale döndür
         if (logo) {
             logo.style.display = "";
             logo.style.filter = "";
@@ -66,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
         isOpen ? closeMobileMenu() : openMobileMenu();
     }
 
-    // Mobile Menu Event Listeners
     if (mobileMenuBtn && mobileMenu && mobileOverlay) {
         mobileMenuBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -82,16 +105,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         mobileOverlay.addEventListener("click", closeMobileMenu);
 
-        // Menü linklerine týklandýðýnda menüyü kapat
         const mobileLinks = mobileMenu.querySelectorAll("a");
         mobileLinks.forEach(link => {
             link.addEventListener("click", closeMobileMenu);
         });
     }
 
-    /* =========================================================
-       DESKTOP SEARCH
-    ========================================================= */
+    /* MASAÜSTÜ ARAMA */
     const searchTrigger = document.getElementById("search-trigger");
     const desktopSearchBar = document.getElementById("desktop-search-bar");
     const desktopSearchClose = document.getElementById("desktop-search-close");
@@ -124,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Desktop Search - Enter ile arama
     if (desktopSearchInput) {
         desktopSearchInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter") {
@@ -136,9 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* =========================================================
-       MOBILE SEARCH
-    ========================================================= */
+    /* MOBÝL ARAMA */
     const mobileSearchTrigger = document.getElementById("mobile-search-trigger");
     const mobileSearchOverlay = document.getElementById("mobile-search-overlay");
     const mobileSearchClose = document.getElementById("mobile-search-close");
@@ -150,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             e.stopPropagation();
 
-            closeMobileMenu(); // Önce mobil menüyü kapat
+            closeMobileMenu();
 
             setTimeout(() => {
                 mobileSearchOverlay.classList.add("active");
@@ -177,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Mobile Search - Enter ile arama
     if (mobileSearchInput) {
         mobileSearchInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter") {
@@ -189,25 +205,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* =========================================================
-       SEARCH FUNCTION (Özelleþtirilebilir)
-    ========================================================= */
+    /* ARAMA FONKSÝYONU */
     function performSearch(query, source) {
         console.log(`Arama yapýlýyor (${source}):`, query);
 
-        // TODO: Kendi arama mantýðýnýzý buraya ekleyin
-        // Örnek: window.location.href = `/search?q=${encodeURIComponent(query)}`;
-
-        // Geçici olarak console'a yazdýr
         alert(`Arama: "${query}" (Kaynak: ${source})`);
     }
 
-    /* =========================================================
-       ESC KEY HANDLER
-    ========================================================= */
+    /* ESC TUÞU ÝÞLEMCÝSÝ */
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-            // Desktop search kapatma
             if (desktopSearchBar && desktopSearchBar.classList.contains("active")) {
                 desktopSearchBar.classList.remove("active");
                 if (desktopSearchInput) {
@@ -215,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Mobile search kapatma
             if (mobileSearchOverlay && mobileSearchOverlay.classList.contains("active")) {
                 mobileSearchOverlay.classList.remove("active");
                 body.style.overflow = "";
@@ -224,43 +230,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Mobile menu kapatma
             if (mobileMenu && mobileMenu.classList.contains("open")) {
                 closeMobileMenu();
             }
         }
     });
 
-    /* =========================================================
-       WINDOW RESIZE HANDLER
-    ========================================================= */
+    /* PENCERE BOYUTLANDIRMA ÝÞLEMCÝSÝ */
     let resizeTimer;
     window.addEventListener("resize", () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            // Büyük ekrana geçildiðinde mobil menüyü kapat
             if (window.innerWidth > 950 && mobileMenu && mobileMenu.classList.contains("open")) {
                 closeMobileMenu();
             }
         }, 250);
     });
 
-    /* =========================================================
-       FOOTER ACCORDION (Mobile Only)
-    ========================================================= */
+    /* ALT BÝLGÝ AKORDÝYON */
     const footerTitles = document.querySelectorAll('.footer-column-title[data-target]');
 
     footerTitles.forEach(title => {
         title.addEventListener('click', function (e) {
             e.preventDefault();
 
-            // Sadece mobilde çalýþ
             if (window.innerWidth <= 950) {
                 const targetId = this.getAttribute('data-target');
                 const targetElement = document.getElementById(targetId);
 
                 if (targetElement) {
-                    // Toggle active ve open class'larý
                     this.classList.toggle("active");
                     targetElement.classList.toggle("open");
                 }
@@ -268,4 +266,88 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-}); // DOMContentLoaded end
+});
+
+/* ÝÇERÝK ÞABLONU */
+const MAX_VISIBLE = 6;
+let currentCategory = 0;
+
+
+/* KATEGORÝ FÝLTRELEME */
+function filterCategory(categoryId) {
+    currentCategory = categoryId;
+
+    const cards = document.querySelectorAll('.content-card-wrapper');
+    const showAllButton = document.getElementById("showAllButton");
+    const noContentMessage = document.getElementById("noContentMessage");
+
+    let visibleCount = 0;
+    let categoryItemCount = 0;
+
+    cards.forEach(card => {
+        const cat = parseInt(card.getAttribute("data-category"));
+        const isMatch = (categoryId === 0 || cat === categoryId);
+
+        if (isMatch) {
+            categoryItemCount++;
+
+            if (visibleCount < MAX_VISIBLE) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+
+            visibleCount++;
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    if (categoryItemCount === 0) {
+        noContentMessage.style.display = "block";
+        showAllButton.style.display = "none";
+    } else {
+        noContentMessage.style.display = "none";
+        showAllButton.style.display =
+            categoryItemCount > MAX_VISIBLE ? "inline-block" : "none";
+    }
+
+    document.querySelectorAll('#categoryTabs .nav-link').forEach(el => {
+        el.classList.remove("active");
+    });
+
+    const activeTab = [...document.querySelectorAll('#categoryTabs .nav-link')]
+        .find(x => x.getAttribute("onclick") === `filterCategory(${categoryId})`);
+
+    if (activeTab) activeTab.classList.add("active");
+}
+
+
+/* TÜMÜNÜ GÖSTER */
+function showAll() {
+    const cards = document.querySelectorAll('.content-card-wrapper');
+
+    cards.forEach(card => {
+        const cat = parseInt(card.getAttribute("data-category"));
+        const isMatch = (currentCategory === 0 || cat === currentCategory);
+
+        if (isMatch) {
+            card.style.display = "block";
+        }
+    });
+
+    document.getElementById("showAllButton").style.display = "none";
+}
+
+
+/* YÜKLEMEDE FÝLTRE UYGULA */
+document.addEventListener("DOMContentLoaded", () => {
+    filterCategory(0);
+});
+
+/* SAYFA ÖNBELLEK ÝÞLEMCÝSÝ */
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+        filterCategory(currentCategory || 0);
+    }
+});

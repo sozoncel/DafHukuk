@@ -1,5 +1,15 @@
 ﻿@page "/hizmetlerimiz"
 @layout DafHukuk.Web.Components.Layout.MainLayout
+@inject IPostService PostService
+
+@code {
+    private List<Post> posts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await PostService.GetAll();
+    }
+}
 
 <section class="hero-services-section">
     <div class="hero-services-bg"></div>
@@ -38,12 +48,11 @@
                         uzman kadromuz ve geniş tecrübemizle kapsamlı ve stratejik çözümler sunuyoruz.
                         Hukukun her alanında yetkinliğimizle yanınızdayız.
                     </p>
-                    @* Buton, Çalışma Alanları başlığına kayacak şekilde güncellendi. *@
                     <a href="#practiceAreas" class="pageMove">Çalışma Alanları</a>
                 </div>
 
                 <div class="col-lg-6">
-                    <img src="/img/sayfalar/hizmetlerimiz/daff-hizmetlerimiz.png" alt="Modern Ofis Koridoru">
+                    <img src="/img/sayfalar/hizmetlerimiz/daf-hizmetlerimiz.png" alt="Modern Ofis Koridoru">
                 </div>
 
             </div>
@@ -55,13 +64,21 @@
             </div>
         </div>
 
-        <div class="row practice-cards-row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="practice-card">
-                    <img src="img/sayfalar/hizmetlerimiz/daff-calismaalanlari-01.jpg" alt="Çalışma Alanı Görseli">
-                    <a href="/hizmetlerimiz/template"><h3 class="practice-title">Çalışma Alanı Başlığı (Kılavuz)</h3></a>
-                </div>
-            </div>
+        <div class="row g-4 practice-cards-row">
+            @foreach (var post in posts)
+            {
+                @if (post.CategoryId == 18)
+                {
+                    <div class="col-lg-3">
+                        <div class="practice-card">
+                            <img src="@post.CoverImageUrl" alt="@post.Title_TR" />
+                            <a href="/hizmetlerimiz/@post.Slug_TR">
+                                <h3 class="practice-title">@post.Title_TR</h3>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
         </div>
 
         <div class="row-contact">

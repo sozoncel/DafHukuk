@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\js\pages\**" />
+    <Content Remove="wwwroot\js\pages\**" />
+    <EmbeddedResource Remove="wwwroot\js\pages\**" />
+    <None Remove="wwwroot\js\pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.16">
       <PrivateAssets>all</PrivateAssets>
@@ -19,10 +26,6 @@
     <ProjectReference Include="..\DafHukuk.Core\DafHukuk.Core.csproj" />
     <ProjectReference Include="..\DafHukuk.Data\DafHukuk.Data.csproj" />
     <ProjectReference Include="..\DafHukuk.Service\DafHukuk.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\js\pages\" />
   </ItemGroup>
 
 </Project>

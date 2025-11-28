@@ -1,9 +1,62 @@
 ﻿@page "/ekibimiz/template"
 @layout DafHukuk.Web.Components.Layout.MainLayout
+@inject IPostService PostService
+
+@code {
+    private List<Post> relatedPosts = new();
+    private List<Category> distinctCategories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var all = await PostService.GetAll();
+
+        // Son içerikler
+        relatedPosts = all
+            .Where(p => p.Category == null || !p.Category.Name_TR.Equals("Hizmetlerimiz", StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(p => p.PublishedDate)
+            .ToList();
+
+        // Tekil kategoriler
+        distinctCategories = relatedPosts
+            .Where(p => p.Category != null)
+            .Select(p => p.Category!)
+            .Distinct()
+            .OrderBy(c => c.Name_TR)
+            .Where(c => !c.Name_TR.Equals("Hizmetlerimiz", StringComparison.OrdinalIgnoreCase)) 
+            .ToList();
+    }
+
+    // ------------------------------------------------------------
+    //  POST → URL üretici (en önemli düzeltme)
+    // ------------------------------------------------------------
+    private string GetPostUrl(Post p)
+    {
+        if (p?.Category?.Name_TR == null)
+            return "#";
+
+        string category = p.Category.Name_TR.Trim().ToLower();
+
+        return category switch
+        {
+            "hizmetlerimiz" => $"/hizmetlerimiz/{p.Slug_TR}",
+            "duyurular" => $"/duyurular/{p.Slug_TR}",
+            "etkinlikler" => $"/etkinlikler/{p.Slug_TR}",
+            "yayınlar" => $"/yayinlar/{p.Slug_TR}",
+            _ => $"/hizmetlerimiz/{p.Slug_TR}"
+        };
+    }
+
+    private string GetSummary(Post p)
+    {
+        if (string.IsNullOrWhiteSpace(p.Content_TR)) return "";
+        return p.Content_TR.Length > 120 ? p.Content_TR.Substring(0, 120) + "..." : p.Content_TR;
+    }
+}
+
 
 <section class="hero-lawyer-section">
     <div class="hero-lawyer-bg">
-        <img src="/img/sayfalar/ekibimiz/daff-ekip-01.jpg" alt="Serdar Bek" class="hero-lawyer-photo">
+        <img src="/img/sayfalar/ekibimiz/daf-ekip-01.jpg" class="hero-lawyer-photo">
     </div>
     <div class="hero-lawyer-overlay"></div>
 
@@ -18,125 +71,107 @@
 
     <div class="hero-lawyer-sub-nav-bar">
         <div class="row hero-nav-row">
-            <div class="col-sm-3 col-6 nav-item-col">
-                <span>E-posta</span>
-                <p>ornekposta@mail.com</p>
-            </div>
-            <div class="col-sm-3 col-6 nav-item-col">
-                <span>Mobil Telefon</span>
-                <p>+90 055 444 33 22</p>
-            </div>
-            <div class="col-sm-3 col-6 nav-item-col">
-                <span>Ofis Telefon</span>
-                <p>+90 055 333 44 22</p>
-            </div>
-            <div class="col-sm-3 col-6 nav-item-col">
-                <span>Konum</span>
-                <p>İstanbul / Türkiye</p>
-            </div>
+            <div class="col-sm-3 col-6 nav-item-col"><span>E-posta</span><p>ornekposta@mail.com</p></div>
+            <div class="col-sm-3 col-6 nav-item-col"><span>Mobil Telefon</span><p>+90 055 444 33 22</p></div>
+            <div class="col-sm-3 col-6 nav-item-col"><span>Ofis Telefon</span><p>+90 055 333 44 22</p></div>
+            <div class="col-sm-3 col-6 nav-item-col"><span>Konum</span><p>İstanbul / Türkiye</p></div>
         </div>
     </div>
 </section>
 
+
+
 <section class="page-content container">
-    <div class="row lawyer-info-row">
-        <div class="col-md-6 info-col pr-lg-5">
-            <h1 class="info-title">Çalışma Alanları</h1>
-            <p class="info-tag">Dava Takibi ve Uyuşmazıkların Çözümü</p>
-            <p class="info-tag">Yolsuzlukla Mücadele ve Beyaz Yaka Suçları</p>
-            <p class="info-tag">Mevzuata Uyum ve Soruşturma</p>
 
-            <h1 class="info-title mt-4">Eğitim</h1>
-            <p class="info-tag">İstanbul Üniversitesi, İşletme Fakültesi - MBA, 1987</p>
-            <p class="info-tag">İstanbul Üniversitesi, Hukuk Fakültesi - Lisans, 1984</p>
-        </div>
-        <div class="col-md-6 info-col pl-lg-5">
-            <h1 class="info-title">Dil</h1>
-            <p class="info-tag">İngilizce, Türkçe</p>
-
-            <h1 class="info-title mt-4">Baro</h1>
-            <p class="info-tag">İstanbul, 1999</p>
-
-            <h1 class="info-title mt-4">Ödüller</h1>
-            <ul class="award-list">
-                <li>Top Ranked by Chambers and Partners</li>
-                <li>Recognised as Highly Regarded by IFLR 1000</li>
-                <li>Recognised as Hall of Fame by Legal 500</li>
-            </ul>
-        </div>
-    </div>
-
+    <!-- BİYOGRAFİ -->
     <div class="row biography-row mt-5">
         <div class="col-lg-12">
             <h1 class="info-title biography-heading">Biyografi</h1>
-            <p class="biography-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime illum molestiae in rem ab illo, minus quisquam pariatur doloribus inventore doloremque optio quae officiis sequi quo eius? Quod, nesciunt omnis.</p>
+            <p class="biography-text">Lorem ipsum dolor...</p>
         </div>
     </div>
 
+
+    <!-- KATEGORİ TABS -->
     <div class="row related-content-nav-row mt-5 mb-3">
         <div class="col-sm-12">
             <h3 class="related-content-heading">İlişkili İçerikler</h3>
-            <ul class="nav nav-tabs custom-tabs">
+
+            <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
+
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Hepsini Göster</a>
+                    <a class="nav-link active" href="javascript:void(0)" onclick="filterCategory(0)">Hepsini Göster</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Duyurular</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Etkinlikler</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Yayınlar</a>
-                </li>
+
+                @* Filtrelenmiş distinctCategories listesi kullanılır *@
+                @foreach (var cat in distinctCategories)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0)"
+                           onclick="filterCategory(@cat.Id)">
+                            @cat.Name_TR
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
     </div>
 
-    <div class="row content-cards-row">
-        <div class="col-lg-4 mb-4">
-            <div class="content-card">
-                <p class="created-Date">18 Kasım</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        Türk Şirketleri İçin Yeni Risk: Birleşik Krallık’ta ‘Dolandırıcılığı Önleyememe’ Suçu
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Yayınlar</button></a>
-                <p class="slug-text">Birleşik Krallık ekonomik suçlarla mücadele mevzuatında önemli bir dönüm noktası olan Ekonomik Suçlar ve Kurumsal Şeffaflık Kanunu…</p>
+
+    <!-- İÇERİK LİSTESİ -->
+    <div class="row content-cards-row" id="contentContainer">
+
+        @foreach (var p in relatedPosts)
+        {
+            var url = GetPostUrl(p);
+
+            <div class="col-lg-4 mb-4 content-card-wrapper"
+                 data-category="@p.CategoryId">
+
+                <div class="content-card">
+
+                    <p class="created-Date">@p.PublishedDate.ToString("dd MMMM")</p>
+
+                    <a href="@url" class="content-title-link">
+                        <h3 class="textContent">@p.Title_TR</h3>
+                    </a>
+
+                    <a href="@url">
+                        <button class="content-tag-button">@p.Category?.Name_TR</button>
+                    </a>
+
+                    <p class="slug-text">@GetSummary(p)</p>
+
+                </div>
             </div>
-        </div>
-        <div class="col-lg-4 mb-4 mt-content-offset">
-            <div class="content-card">
-                <p class="created-Date">7 Kasım</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        IFLR1000 2025'te Tüm Alanlarda Tier 1 Derecemizi Koruduk
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Duyurular</button></a>
-                <p class="slug-text">IFLR1000 2025’te tüm alanlarda Tier 1 derecemizi koruduk.</p>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="content-card">
-                <p class="created-Date">28 Ekim</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        Dava Takibi ve Uyuşmazlıkların Çözümü - Sonbahar Sayısı
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Yayınlar</button></a>
-                <p class="slug-text">Yazımızın devamı uyuşmazlıklar ve dava takibi...</p>
-            </div>
+        }
+
+    </div>
+
+
+    <!-- BOŞ MESAJ -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <p id="noContentMessage"
+               style="display:none; font-weight:bold; margin-top:20px;">
+                Henüz içerik eklenmemiştir.
+            </p>
         </div>
     </div>
 
-    <div class="row mt-5 mb-5">
+
+    <!-- TÜMÜNÜ GÖSTER -->
+    <div class="row mt-4 mb-5">
         <div class="col-lg-12 text-center">
-            <a href="#">
-                <button type="button" class="show-all-button">Hepsini Göster</button>
-            </a>
+
+            <button id="showAllButton"
+                    class="show-all-button"
+                    style="display:none"
+                    onclick="showAll()">
+                Tümünü Göster
+            </button>
+
         </div>
     </div>
+
 </section>

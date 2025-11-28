@@ -1,56 +1,143 @@
-﻿@page "/hizmetlerimiz/template"
+﻿@page "/hizmetlerimiz/{slug}"
 @layout DafHukuk.Web.Components.Layout.MainLayout
 
+@inject IPostService PostService
+
+@code {
+    [Parameter] public string slug { get; set; }
+
+    private Post currentPost;
+    private Post featuredPost;
+
+    private List<Post> allPosts = new();
+    private List<Post> servicePosts = new(); // CategoryId=18 → Hizmetler
+
+    protected override async Task OnInitializedAsync()
+    {
+        allPosts = await PostService.GetAll();
+
+        // 1) Aktif sayfanın postu
+        currentPost = allPosts.FirstOrDefault(
+            x => string.Equals(x.Slug_TR, slug, StringComparison.OrdinalIgnoreCase)
+        );
+
+        // 2) Hizmet kategorisindeki tüm içerikler (currentPost?.Id kontrolü ekledik)
+        servicePosts = allPosts
+            .Where(p => p.CategoryId == 18 && p.Id != currentPost?.Id)
+            .OrderBy(p => p.Title_TR)
+            .ToList();
+
+        // 3) FEATURED POST — son 12 ay içinden rastgele, yoksa tümünden rastgele
+        var dateCutOff = DateTime.Now.AddMonths(-12);
+
+        var recent = allPosts
+            .Where(p => p.Id != currentPost?.Id && p.PublishedDate >= dateCutOff)
+            .ToList();
+
+        var candidateList = recent.Any()
+            ? recent
+            : allPosts.Where(p => p.Id != currentPost?.Id).ToList();
+
+        if (candidateList.Any())
+        {
+            var rnd = new Random();
+            featuredPost = candidateList[rnd.Next(candidateList.Count)];
+        }
+    }
+
+    // Featured url belirleme
+    private string GetFeaturedUrl()
+    {
+        if (featuredPost == null || featuredPost.Category == null)
+            return "#";
+
+        return featuredPost.Category.Name_TR switch
+        {
+            "Hizmetlerimiz" => $"/hizmetlerimiz/{featuredPost.Slug_TR}",
+            "Duyurular" => $"/duyurular/{featuredPost.Slug_TR}",
+            "Etkinlikler" => $"/etkinlikler/{featuredPost.Slug_TR}",
+            "Yayınlar" => $"/yayinlar/{featuredPost.Slug_TR}",
+            _ => $"/hizmetlerimiz/{featuredPost.Slug_TR}"
+        };
+    }
+}
+
+<PageTitle>@currentPost?.Title_TR</PageTitle>
+
+
 <section class="hero-servicesTemplate-section">
-    <div class="hero-servicesTemplate-bg"></div>
+
+    <div class="hero-servicesTemplate-bg"
+         style="background-image: url('@currentPost?.CoverImageUrl');">
+    </div>
+
     <div class="hero-servicesTemplate-overlay"></div>
 
     <div class="hero-servicesTemplate-container">
         <div class="hero-servicesTemplate-title-content">
             <h2 class="servicesTemplate-hero-title-upper">Hizmetlerimiz</h2>
+
             <div class="hero-servicesTemplate-title-wrapper">
-                <h1 class="hero-servicesTemplate-title">Altyapı, Kamu-Özel Ortaklığı ve İnşaat</h1>
+
+                <h1 class="hero-servicesTemplate-title">
+                    @currentPost?.Title_TR
+                </h1>
 
                 <div class="hero-servicesTemplate-breadcrumb">
-                    <a href="/">Ana Sayfa</a> / <a href="#">Hizmetlerimiz</a> / <span>Altyapı, Kamu-Özel Ortaklığı ve İnşaat</span>
+                    <a href="/">Ana Sayfa</a> /
+                    <a href="/hizmetlerimiz">Hizmetlerimiz</a> /
+                    <span>@currentPost?.Title_TR</span>
                 </div>
+
             </div>
         </div>
     </div>
 </section>
 
+
 <section class="page-content service-page-content">
     <div class="row">
+
         <div class="col-lg-9">
-            <p>
-                Altyapı projeleri, kamu-özel sektör ortaklıkları ve inşaat yönetimi ile bakım alanlarında kapsamlı ve çok yönlü hukuki danışmanlık hizmeti sunuyoruz. Bu konulardaki uzmanlığımız; projenin tüm yaşam döngüsü boyunca yapısal, uygunluk, yönetim ve bakım konularında proje sahiplerini ve yüklenicilerini danışmanlık vermekteyiz.
-            </p>
-            <p>
-                Hizmetlerimiz arasında proje sözleşmelerinin hazırlanması, izin ve onay süreçlerinin yürütülmesi, proje hukuku, konuya ilişkin tüm mevzuat ve düzenleyici kurallara uyumun sağlanması, finansman temini ve vergi yapısı, mülk edinimi, çevresel değerlendirme, iş hukuku, ilgili hukuki süreç yönetimi sayılabilir. Ayrıca, proje sahiplerinin ve yüklenicilerin olası hukuki yükümlülükler hakkında bilgilendirilmesi, lisans ve ruhsat işlemlerini yapmalarında destek ve anlaşmazlık çözümü sunuyoruz.
-            </p>
-            <p>
-                Projelerin finansmanı ile yerel ve uluslararası mevzuat, düzenleme ve standartlara uygunluğunun sağlanması da hizmetlerimiz kapsamındadır. Amacımız; projelerin sorunsuz ilerlemesi, risklerin minimize edilmesi, yasal düzenlemelere uyumun sağlanması ve mevzuata uygun bir şekilde ilerlenmesi, projelerin her aşamasında sorunsuz ve mevzuata uygun bir şekilde ilerlemesini sağlamayı hedefliyoruz.
-            </p>
+            <p>@((MarkupString)currentPost?.Content_TR)</p> 
         </div>
+
         <div class="col-lg-3">
-            <div class="position-filter-wrapper">
-                <div class="my_filter_item my_filter_select my_filter_service">
-                    <div class="my_filter_selected">Hizmet konusu seçin <span></span></div>
-                    <ul>
-                        <li data-filter="template-placeholder"><input type="checkbox"> <span>Kurumsal Hukuk</span></li>
-                        <li data-filter="template-placeholder"><input type="checkbox"> <span>Enerji</span></li>
-                        <li data-filter="template-placeholder"><input type="checkbox"> <span>Gayrimenkul</span></li>
-                    </ul>
-                </div>
+
+            <div class="dropdown modern-dropdown w-100 mb-3">
+                <button class="btn dropdown-toggle modern-dropdown-toggle w-100"
+                        type="button"
+                        id="hizmetDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Hizmet konusu seçin
+                </button>
+
+                <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="hizmetDropdown">
+                    @foreach (var post in servicePosts)
+                    {
+                        <li>
+                            <a class="dropdown-item modern-dropdown-item"
+                               href="/hizmetlerimiz/@post.Slug_TR">
+                                @post.Title_TR
+                            </a>
+                        </li>
+                    }
+
+                    @if (!servicePosts.Any())
+                    {
+                        <li><span class="dropdown-item text-muted">Diğer hizmet bulunamadı.</span></li>
+                    }
+                </ul>
             </div>
 
-            <div class="placeholderText">
-                <p>
-                    “ The firm’s energy and projects department is one of its core strengths. ”
-                </p>
+            <div class="tanitimText">
+                <p>“ The firm’s energy and projects department is one of its core strengths. ”</p>
                 <span>IFLR 1000</span>
             </div>
+
         </div>
+
     </div>
 
     <div class="row section-separator">
@@ -61,132 +148,153 @@
             <h5 class="featured-publications-title">Öne Çıkan Yayınlar</h5>
         </div>
     </div>
-    <div class="row related-people-publications">
+
+    <div class="row featured">
+
         <div class="col-md-9">
-            <div id="lawyerCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row g-4">
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="lawyer-card">
-                                    <div class="lawyer-photo">
-                                        <img src="https://via.placeholder.com/300x400" alt="Zekican Somay" />
-                                    </div>
-                                    <h5 class="lawyer-name">Zekican Somay</h5>
-                                    <span class="lawyer-title">Kurucu ve Yönetici Ortak</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="lawyer-card">
-                                    <div class="lawyer-photo">
-                                        <img src="https://via.placeholder.com/300x400" alt="Evrim Somay Ergun" />
-                                    </div>
-                                    <h5 class="lawyer-name">Evrim Somay Ergun</h5>
-                                    <span class="lawyer-title">Kıdemli Ortak Avukat</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="lawyer-card">
-                                    <div class="lawyer-photo">
-                                        <img src="https://via.placeholder.com/300x400" alt="Mine Yılmaz" />
-                                    </div>
-                                    <h5 class="lawyer-name">Mine Yılmaz</h5>
-                                    <span class="lawyer-title">Kıdemli Avukat</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-6 col-md-3">
-                                <div class="lawyer-card">
-                                    <div class="lawyer-photo">
-                                        <img src="https://via.placeholder.com/300x400" alt="Burak Özyıldırım" />
-                                    </div>
-                                    <h5 class="lawyer-name">Burak Özyıldırım</h5>
-                                    <span class="lawyer-title">Avukat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @* İlgili Kişiler İçeriği Buraya Gelecek *@
         </div>
 
         <div class="col-md-3">
-            <div class="content-card featured-publication-card">
-                <p class="created-Date">17 Haziran 2022</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        Belediyelerin Yap-İşlet-Devret Modeliyle Altyapı Yatırımları Yapmasının Önü Açıldı
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Duyurular</button></a>
-                <p class="slug-text">29899 sayılı "Yap-İşlet-Devret Kanununda yapılacak değişiklikler ile belediyelerin belirli altyapı hizmetlerini Yap-İşlet-Devret modeli ile gerçekleştirmelerine imkan tanınmıştır."</p>
-            </div>
+
+            @if (featuredPost != null)
+            {
+                <div class="content-card featured-publication-card">
+
+                    <p class="created-Date">
+                        @featuredPost.PublishedDate.ToString("dd MMMM yyyy")
+                    </p>
+
+                    <img class="featured-img" src="@featuredPost.CoverImageUrl" alt="@featuredPost.Title_TR">
+
+                    <a href="@GetFeaturedUrl()" class="content-title-link">
+                        <h3 class="textContent">@featuredPost.Title_TR</h3>
+                    </a>
+
+                    @if (!string.IsNullOrEmpty(featuredPost.Category?.Name_TR))
+                    {
+                        <a href="@GetFeaturedUrl()" class="content-tag-button">
+                            @featuredPost.Category?.Name_TR
+                        </a>
+                    }
+
+                    <p class="slug-text">@featuredPost.Slug_TR</p>
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    Öne çıkan yayın bulunamadı.
+                </div>
+            }
+
         </div>
+
     </div>
+
+    @*      İÇERİKLER BÖLÜMÜ     *@
+
 
     <div class="row related-content-nav-row mt-5 mb-3">
         <div class="col-sm-12">
             <h3 class="related-content-heading">İlişkili İçerikler</h3>
-            <ul class="nav nav-tabs custom-tabs">
+
+            <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
+
+                @* TÜMÜ *@
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Hepsini Göster</a>
+                    <a class="nav-link active" href="javascript:void(0)" onclick="filterCategory(0)">
+                        Hepsini Göster
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Duyurular</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Etkinlikler</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Yayınlar</a>
-                </li>
+
+                @* KATEGORİ TABS *@
+                @foreach (var cat in allPosts
+                                .Where(x => x.Category != null)
+                                .Select(x => x.Category)
+                                .Distinct()
+                                .OrderBy(x => x.Name_TR))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="javascript:void(0)"
+                           onclick="filterCategory(@cat.Id)">
+
+                            @cat.Name_TR
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
     </div>
 
-    <div class="row content-cards-row">
-        <div class="col-lg-4 mb-4">
-            <div class="content-card">
-                <p class="created-Date">18 Kasım</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        Türk Şirketleri İçin Yeni Risk: Birleşik Krallık’ta ‘Dolandırıcılığı Önleyememe’ Suçu
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Yayınlar</button></a>
-                <p class="slug-text">Birleşik Krallık ekonomik suçlarla mücadele mevzuatında önemli bir dönüm noktası olan Ekonomik Suçlar ve Kurumsal Şeffaflık Kanunu…</p>
+    @*      İÇERİK KART LİSTESİ     *@
+    <div class="row content-cards-row" id="contentContainer">
+
+        @foreach (var p in allPosts
+                .Where(x => x.CategoryId != null)
+                .OrderByDescending(x => x.PublishedDate))
+        {
+            var categoryName = p.Category?.Name_TR?.ToLower() ?? "";
+
+            string url = categoryName switch
+            {
+                "hizmetlerimiz" => $"/hizmetlerimiz/{p.Slug_TR}",
+                "duyurular" => $"/duyurular/{p.Slug_TR}",
+                "etkinlikler" => $"/etkinlikler/{p.Slug_TR}",
+                "yayınlar" => $"/yayinlar/{p.Slug_TR}",
+                _ => $"/hizmetlerimiz/{p.Slug_TR}"
+            };
+
+            <div class="col-lg-4 mb-4 content-card-wrapper"
+                 data-category="@p.CategoryId">
+
+                <div class="content-card">
+
+                    <p class="created-Date">
+                        @p.PublishedDate.ToString("dd MMMM yyyy")
+                    </p>
+
+                    <a href="@url" class="content-title-link">
+                        <h3 class="textContent">@p.Title_TR</h3>
+                    </a>
+
+                    <a href="@url">
+                        <button class="content-tag-button">@p.Category?.Name_TR</button>
+                    </a>
+
+                    <p class="slug-text">
+                        @((p.Content_TR?.Length ?? 0) > 120
+                                            ? p.Content_TR.Substring(0, 120) + "..."
+                                            : p.Content_TR)
+                </p>
+
+                </div>
             </div>
-        </div>
-        <div class="col-lg-4 mb-4 mt-content-offset">
-            <div class="content-card">
-                <p class="created-Date">7 Kasım</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        IFLR1000 2025'te Tüm Alanlarda Tier 1 Derecemizi Koruduk
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Duyurular</button></a>
-                <p class="slug-text">IFLR1000 2025’te tüm alanlarda Tier 1 derecemizi koruduk.</p>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="content-card">
-                <p class="created-Date">28 Ekim</p>
-                <a href="#" class="content-title-link">
-                    <h3 class="textContent">
-                        Dava Takibi ve Uyuşmazlıkların Çözümü - Sonbahar Sayısı
-                    </h3>
-                </a>
-                <a href="#"><button type="button" class="content-tag-button">Yayınlar</button></a>
-                <p class="slug-text">Yazımızın devamı uyuşmazlıklar ve dava takibi...</p>
-            </div>
+                }
+    </div>
+
+    @* BOŞ İÇERİK MESAJI *@
+    <div class="row">
+        <div class="col-12 text-center">
+            <p id="noContentMessage"
+               style="display:none; font-weight:bold; margin-top:20px;">
+                Henüz içerik eklenmemiştir.
+            </p>
         </div>
     </div>
 
-    <div class="row mt-5 mb-5">
+    @* TÜMÜNÜ GÖSTER *@
+    <div class="row mt-4 mb-5">
         <div class="col-lg-12 text-center">
-            <a href="#">
-                <button type="button" class="show-all-button">Hepsini Göster</button>
-            </a>
+            <button id="showAllButton"
+                    class="show-all-button"
+                    style="display:none"
+                    onclick="showAll()">
+                Tümünü Göster
+            </button>
         </div>
     </div>
+
 </section>

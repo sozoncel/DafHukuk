@@ -1,0 +1,200 @@
+﻿@page "/duyurular/{slug}"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@inject IPostService PostService
+
+@code {
+    [Parameter] public string slug { get; set; }
+
+    private Post currentPost;
+    private List<Post> allPosts = new();
+    private List<Post> relatedServicePosts = new();
+    private const int HizmetlerCategoryId = 18;
+
+    protected override async Task OnInitializedAsync()
+    {
+        allPosts = await PostService.GetAll();
+
+        currentPost = allPosts.FirstOrDefault(
+            x => string.Equals(x.Slug_TR, slug, StringComparison.OrdinalIgnoreCase)
+        );
+
+        var servicePosts = allPosts
+            .Where(p => p.CategoryId == HizmetlerCategoryId && p.Id != currentPost?.Id)
+            .ToList();
+
+        if (servicePosts.Any())
+        {
+            var rnd = new Random();
+            relatedServicePosts = servicePosts.OrderBy(_ => rnd.Next())
+                                              .Take(4)
+                                              .ToList();
+        }
+    }
+
+    private string GetPostUrl(Post p)
+    {
+        if (p == null || p.Category == null) return "#";
+        string category = p.Category.Name_TR.Trim().ToLowerInvariant();
+
+        return category switch
+        {
+            "hizmetlerimiz" => $"/hizmetlerimiz/{p.Slug_TR}",
+            "duyurular" => $"/duyurular/{p.Slug_TR}",
+            "etkinlikler" => $"/etkinlikler/{p.Slug_TR}",
+            "yayınlar" => $"/yayinlar/{p.Slug_TR}",
+            _ => $"/{category.ToLowerInvariant()}/{p.Slug_TR}"
+        };
+    }
+
+    private string GetSummary(Post p, int maxLength = 100)
+    {
+        string content = p.Content_TR ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(content)) return string.Empty;
+
+        string plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", String.Empty);
+
+        if (plainText.Length > maxLength)
+        {
+            return plainText.Substring(0, maxLength).Trim() + "...";
+        }
+        return plainText;
+    }
+}
+
+<PageTitle>@currentPost?.Title_TR</PageTitle>
+
+@if (currentPost == null)
+{
+    <div class="alert alert-danger my-5 services-page-content">İçerik bulunamadı veya yetkisiz erişim.</div>
+    return;
+}
+
+<section class="hero-servicesTemplate-section">
+
+    <div class="hero-servicesTemplate-bg"
+         style="background-image: url('@currentPost.CoverImageUrl');">
+    </div>
+
+    <div class="hero-servicesTemplate-overlay"></div>
+
+    <div class="hero-servicesTemplate-container">
+        <div class="hero-servicesTemplate-title-content">
+            <h2 class="servicesTemplate-hero-title-upper">@currentPost.Category?.Name_TR</h2>
+
+            <div class="hero-servicesTemplate-title-wrapper">
+
+                <h1 class="hero-servicesTemplate-title">
+                    @currentPost.Title_TR
+                </h1>
+
+                <p class="hero-post-date">@currentPost.PublishedDate.ToString("dd MMMM yyyy")</p>
+
+                <div class="hero-servicesTemplate-breadcrumb">
+                    <a href="/">Ana Sayfa</a> /
+                    <a href="/duyurular">@currentPost.Category?.Name_TR</a> /
+                    <span>@currentPost.Title_TR</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-content service-page-content">
+    <div class="row">
+
+        <div class="col-lg-9">
+            <div class="main-post-content mb-4">
+                <p>@((MarkupString)currentPost.Content_TR)</p>
+            </div>
+
+            <div class="post-share-section d-flex justify-content-start align-items-center border-top pt-3">
+                <span class="share-text me-3 fw-bold">Paylaş</span>
+                <div class="social-share-links">
+                    @{
+                        var currentUrl = $"https://dafhukuk.com/duyurular/{currentPost.Slug_TR}";
+                        var encodedTitle = Uri.EscapeDataString(currentPost.Title_TR);
+                        var encodedUrl = Uri.EscapeDataString(currentUrl);
+                    }
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=@encodedUrl" target="_blank" class="social-icon-link me-3">
+                        <i class="fab fa-facebook-f fa-lg"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url=@encodedUrl&text=@encodedTitle" target="_blank" class="social-icon-link me-3">
+                        <i class="fab fa-twitter fa-lg"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=@encodedUrl&title=@encodedTitle" target="_blank" class="social-icon-link me-3">
+                        <i class="fab fa-linkedin-in fa-lg"></i>
+                    </a>
+                    <a href="mailto:?subject=@encodedTitle&body=Bu duyuruya göz atın: @currentUrl" class="social-icon-link">
+                        <i class="fas fa-envelope fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+            <div class="related-area-box">
+                <h4 class="related-area-title">İlgili Alanlar</h4>
+                <ul class="related-area-list">
+                    @if (relatedServicePosts.Any())
+                    {
+                        @foreach (var servicePost in relatedServicePosts)
+                        {
+                            <li class="mb-2">
+                                <a href="@GetPostUrl(servicePost)" class="text-decoration-none d-block">
+                                    <p class="mb-0 small">@servicePost.Title_TR</p>
+                                </a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li><p class="text-muted small">İlgili hizmet bulunamadı.</p></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row section-separator mt-5">
+        <div class="col-lg-12 text-center">
+            <h3 class="related-content-heading">İlişkili İçerikler</h3>
+            <div class="mx-auto separator-line"></div>
+        </div>
+    </div>
+
+    <div class="row content-cards-row">
+        @foreach (var p in allPosts
+                .Where(x => x.Id != currentPost.Id && x.Category != null)
+                .OrderByDescending(x => x.PublishedDate)
+                .Take(3))
+        {
+            <div class="col-lg-4 mb-4 content-card-wrapper">
+                <div class="content-card content-card-sm p-3 rounded h-100">
+                    <p class="created-Date small text-muted">@p.PublishedDate.ToString("dd MMMM yyyy")</p>
+
+                    <a href="@GetPostUrl(p)" class="content-title-link">
+                        <h3 class="textContent h5 fw-bold">@p.Title_TR</h3>
+                    </a>
+
+                    @if (p.Category != null)
+                    {
+                        <a href="@GetPostUrl(p)">
+                            <button class="content-tag-button">@p.Category.Name_TR</button>
+                        </a>
+                    }
+
+                    <p class="slug-text small">
+                        @GetSummary(p)
+                    </p>
+                </div>
+            </div>
+        }
+        @if (!allPosts.Where(x => x.Id != currentPost.Id).Any())
+        {
+            <div class="col-12 text-center text-muted mt-3">İlişkili başka içerik bulunmamaktadır.</div>
+        }
+    </div>
+
+</section>

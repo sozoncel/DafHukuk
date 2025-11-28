@@ -1,8 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
-
-/* =========================================================
-    RESET & GLOBAL STYLES
-========================================================= */
+/* SIFIRLAMA & GENEL STÝLLER */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -19,16 +16,13 @@ a {
     text-decoration: none;
 }
 
-/* =========================================================
-    NAVBAR STYLES
-========================================================= */
+/* NAVÝGASYON ÇUBUÐU STÝLLERÝ */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    /* max-width kýsýtlamasý olmadan padding'i koru */
     padding: 26px 48px;
     background: transparent;
     transition: background .35s ease, padding .35s ease, box-shadow .35s ease;
@@ -57,9 +51,7 @@ a {
             }
 
 .nav-inner {
-    /* max-width: 1400px; kaldýrýldý */
-    /* margin: auto; kaldýrýldý, tam geniþlik kullanmak için */
-    width: 100%; /* Tam geniþlik */
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -89,7 +81,6 @@ a {
         color: #dfb887;
     }
 
-/* Menu */
 .menu {
     flex: 1;
     display: flex;
@@ -134,7 +125,6 @@ a {
     color: #111;
 }
 
-/* Right Actions */
 .right-actions {
     display: flex;
     align-items: center;
@@ -196,9 +186,7 @@ a {
         color: #dfb887;
     }
 
-/* =========================================================
-    DESKTOP SEARCH BAR
-========================================================= */
+/* MASAÜSTÜ ARAMA ÇUBUÐU */
 .desktop-search-bar {
     position: absolute;
     top: 100%;
@@ -219,8 +207,7 @@ a {
     }
 
 .search-bar-inner {
-    /* max-width: 1400px; kaldýrýldý */
-    width: 100%; /* Tam geniþlik */
+    width: 100%;
     margin: 0 auto;
     padding: 20px 48px;
     display: flex;
@@ -263,9 +250,7 @@ a {
         transform: rotate(90deg);
     }
 
-/* =========================================================
-    MOBILE SEARCH
-========================================================= */
+/* MOBÝL ARAMA */
 .mobile-search-trigger {
     display: flex;
     align-items: center;
@@ -359,9 +344,7 @@ a {
         background: rgba(255, 255, 255, 0.15);
     }
 
-/* =========================================================
-    MOBILE MENU
-========================================================= */
+/* MOBÝL MENÜ */
 .mobile-menu-btn {
     display: none;
     flex-direction: column;
@@ -500,9 +483,7 @@ a {
         visibility: visible;
     }
 
-/* =========================================================
-    FOOTER STYLES
-========================================================= */
+/* ALT BÝLGÝ STÝLLERÝ */
 .footer {
     background-color: #f0f0f0;
     padding: 4rem 0 0;
@@ -513,6 +494,7 @@ a {
     margin: 0 auto;
     padding: 0 2rem;
 }
+
 .footer-logo {
     font-family: "Playfair Display", Georgia, serif;
     font-weight: 700;
@@ -633,6 +615,7 @@ a {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    color: black;
 }
 
 .footer-lang-link {
@@ -676,9 +659,86 @@ a {
     color: #68676a;
 }
 
-/* =========================================================
-    RESPONSIVE - NAVBAR & FOOTER
-========================================================= */
+/* KATEGORÝ RENKLERÝ */
+
+.content-tag-button {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.80rem;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 5px;
+    cursor: default;
+    border: 1px solid;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+    .content-tag-button:hover {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        opacity: 0.9;
+    }
+
+/* MODERN AÇILIR LÝSTE */
+
+.modern-dropdown-toggle {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #d9d9d9;
+    padding: 12px 16px;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    text-align: left;
+}
+
+    .modern-dropdown-toggle:hover,
+    .modern-dropdown-toggle:focus {
+        background-color: #f7f7f7;
+        border-color: #c5c5c5;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+.modern-dropdown-menu {
+    border-radius: 8px;
+    padding: 8px 0;
+    border: 1px solid #e3e3e3;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    max-height: 280px;
+    overflow-y: auto;
+    animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modern-dropdown-item {
+    padding: 10px 16px;
+    font-size: 15px;
+    color: #333;
+    transition: background-color 0.2s ease, padding-left 0.2s ease;
+    border-radius: 6px;
+}
+
+    .modern-dropdown-item:hover {
+        background-color: #f0f0f0;
+        padding-left: 22px;
+    }
+
+/* RESPONSIVE - NAVÝGASYON & ALT BÝLGÝ */
+
 @media (max-width: 1200px) {
     .header {
         padding: 20px 32px;
@@ -711,7 +771,6 @@ a {
 }
 
 @media (max-width: 960px) {
-    /* Navbar Mobile */
     .menu, .language-Selection, .search-trigger {
         display: none;
     }
@@ -728,7 +787,6 @@ a {
             padding: 12px 24px;
         }
 
-    /* Footer Mobile */
     .footer-top {
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
@@ -739,7 +797,6 @@ a {
         max-width: 100%;
     }
 
-    /* Footer Accordion */
     .footer-column-title[data-target] {
         display: flex;
         justify-content: space-between;
@@ -884,6 +941,14 @@ a {
         top: 20px;
         right: 20px;
     }
+}
+
+.modern-dropdown-toggle {
+    font-size: 14px;
+}
+
+.modern-dropdown-item {
+    font-size: 14px;
 }
 
 @media (max-width: 400px) {

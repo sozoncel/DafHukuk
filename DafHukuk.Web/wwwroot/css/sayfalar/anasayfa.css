@@ -1,11 +1,4 @@
-﻿/**
- * HOME.CSS - Ana Sayfa Hero Section Stilleri
- * base.css'ten SONRA yüklenmelidir
- */
-
-/* =========================================================
-    HERO SECTION ANIMATIONS
-========================================================= */
+﻿/* ANİMASYON */
 @keyframes slideUpFadeIn {
     from {
         transform: translateY(30px);
@@ -18,17 +11,15 @@
     }
 }
 
-/* =========================================================
-    HERO SECTION
-========================================================= */
+/* ANA GÖRSEL (HERO) BÖLÜMÜ */
 .hero-section {
     position: relative;
     width: 100%;
-    height: 90vh; /* Ekranı daha fazla kaplasın */
+    height: 90vh;
     min-height: 600px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* İçeriği alta hizala */
+    justify-content: flex-end;
     color: #fff;
     overflow: hidden;
 }
@@ -36,7 +27,6 @@
 .hero-bg {
     position: absolute;
     inset: 0;
-    /* Resim yolunu kontrol ediniz */
     background-image: url("/img/sayfalar/anasayfa/daf-anasayfa-office2k.png");
     background-size: cover;
     background-position: center;
@@ -46,7 +36,6 @@
 .hero-overlay {
     position: absolute;
     inset: 0;
-    /* Görseldeki gibi sol tarafı daha koyu yapan bir gradyan */
     background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
     z-index: 2;
 }
@@ -55,21 +44,19 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1600px; /* Daha geniş bir konteyner */
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 60px;
-    padding-bottom: 0; /* Alt boşluk yok, widget yapışık */
+    padding-bottom: 0;
     display: flex;
     flex-direction: column;
     height: 100%;
-    justify-content: flex-end; /* İçerikleri en alta it */
+    justify-content: flex-end;
 }
 
-/* =========================================================
-    HERO CONTENT (Üst Metin)
-========================================================= */
+/* HERO İÇERİK (ÜST METİN) */
 .hero-content-col {
-    margin-bottom: 40px; /* Slogan/Widget ile arasındaki boşluk */
+    margin-bottom: 40px;
 }
 
 .hero-lead-text {
@@ -81,9 +68,7 @@
     max-width: 800px;
 }
 
-/* =========================================================
-    HERO BOTTOM ROW (Slogan + Widget)
-========================================================= */
+/* HERO ALT SATIR (SLOGAN + WIDGET) */
 .hero-bottom-row {
     display: flex;
     justify-content: space-between;
@@ -93,7 +78,7 @@
 
 /* Slogan */
 .slogan-wrapper {
-    padding-bottom: 60px; /* Widget ile hizalamak için biraz yukarıda */
+    padding-bottom: 60px;
 }
 
 .slogan-text-style {
@@ -107,20 +92,16 @@
     text-transform: capitalize;
 }
 
-/* =========================================================
-    NEWS WIDGET (Sağ Alt Kutu)
-========================================================= */
+/* HABER WIDGETI (SAĞ ALT KUTU) */
 .news-widget {
     display: flex;
-    height: 160px; /* Sabit yükseklik */
+    height: 160px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     animation: slideUpFadeIn 0.8s ease-out 0.2s backwards;
-    /* Sağ kenara yapışık gibi durması için margin-right negatif verilebilir 
-       veya container padding'i ayarlanabilir. Şimdilik standart bırakıyorum. */
 }
 
 .news-title-box {
-    background-color: #28406d; /* Mavi */
+    background-color: #28406d;
     width: 240px;
     display: flex;
     align-items: center;
@@ -137,7 +118,7 @@
     }
 
 .news-content-box {
-    background-color: #4e5466; /* Gri/Lacivert */
+    background-color: #4e5466;
     width: 500px;
     display: flex;
     align-items: center;
@@ -185,9 +166,7 @@
         opacity: 0.8;
     }
 
-/* =========================================================
-    RESPONSIVE - HOME PAGE
-========================================================= */
+/* RESPONSIVE (MOBİL) STİLLERİ */
 @media (max-width: 1200px) {
     .hero-container {
         padding: 0 30px;
@@ -219,17 +198,17 @@
         align-items: flex-start;
         gap: 40px;
         width: 100%;
-        margin-top: auto; /* Alt kısmı aşağı it */
+        margin-top: auto;
     }
 
     .slogan-wrapper {
-        display:none;
+        display: none;
     }
 
     .news-widget {
-        width: 100%; /* Mobilde tam genişlik */
+        width: 100%;
         height: auto;
-        flex-direction: column; /* Kutular alt alta */
+        flex-direction: column;
     }
 
     .news-title-box,
@@ -245,6 +224,6 @@
     }
 
         .news-title-box span br {
-            display: none; /* Mobilde yan yana olsun */
+            display: none;
         }
 }

@@ -1,7 +1,4 @@
-﻿/* =========================================================
-   HERO – KARİYER
-========================================================= */
-
+﻿/* HERO - KARİYER SEKSİYONU */
 .hero-kariyer-section {
     position: relative;
     width: 100%;
@@ -15,7 +12,7 @@
 .hero-kariyer-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/sayfalar/kariyer/daff-kariyer-office.png");
+    background-image: url("/img/sayfalar/kariyer/daf-kariyer-office.png");
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -87,10 +84,7 @@
 }
 
 
-
-/* =========================================================
-   SUB NAV (TAB BAR)
-========================================================= */
+/* ALT NAVİGASYON (SEKME ÇUBUĞU) */
 
 .kariyer-sub-nav-bar {
     width: 100%;
@@ -123,10 +117,7 @@
         }
 
 
-
-/* =========================================================
-   TAB İÇERİKLER
-========================================================= */
+/* SEKME İÇERİKLERİ */
 
 .tab-content {
     padding: 60px 40px 40px 40px;
@@ -165,8 +156,7 @@
     }
 
 
-
-/* APPLY BUTTON */
+/* BAŞVURU BUTONU */
 .apply-btn {
     display: inline-block;
     background: #1F3363;
@@ -182,8 +172,7 @@
     }
 
 
-
-/* UNDERLINE ANIMATION */
+/* ALT ÇİZGİ ANİMASYONU */
 .underline-anim {
     position: relative;
     text-decoration: none;
@@ -207,10 +196,7 @@
     }
 
 
-
-/* =========================================================
-   DEĞERLERİMİZ – GÖRSELLER
-========================================================= */
+/* DEĞERLERİMİZ - GÖRSELLER */
 
 .value-img-wrapper {
     width: 100%;
@@ -227,10 +213,7 @@
 }
 
 
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* RESPONSIVE STİLLER */
 
 @media (max-width: 992px) {
 
