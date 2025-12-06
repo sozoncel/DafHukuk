@@ -1,51 +1,139 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold tracking-wide" href="">
-            <i class="bi bi-shield-shaded me-2"></i>DAF HUKUK
-        </a>
+﻿@inject NavigationManager Navigation
+
+<div class="admin-sidebar">
+    <div class="sidebar-header">
+        <div class="brand-container">
+            <div class="brand-icon">
+                <i class="bi bi-shield-shaded"></i>
+            </div>
+            <div class="brand-text">
+                <h1 class="brand-title">DAF HUKUK</h1>
+                <p class="brand-subtitle">Yönetim Paneli</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <!-- GENEL BAKIŞ -->
+        <div class="nav-section">
+            <div class="nav-section-title">
+                <i class="bi bi-speedometer2"></i>
+                <span>Genel Bakış</span>
+            </div>
+
+            <NavLink class="nav-link" href="/admin" Match="NavLinkMatch.All">
+                <div class="nav-link-icon">
+                    <i class="bi bi-house-door"></i>
+                </div>
+                <div class="nav-link-content">
+                    <span class="nav-link-title">Dashboard</span>
+                    <span class="nav-link-desc">Özet paneli</span>
+                </div>
+                <div class="nav-link-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+            </NavLink>
+        </div>
+
+        <!-- İÇERİK YÖNETİMİ -->
+        <div class="nav-section">
+            <div class="nav-section-title">
+                <i class="bi bi-collection"></i>
+                <span>İçerik Yönetimi</span>
+            </div>
+
+            <NavLink class="nav-link" href="/admin/yonetim">
+                <div class="nav-link-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="nav-link-content">
+                    <span class="nav-link-title">İçerikler</span>
+                    <span class="nav-link-desc">Yazılar & Duyurular</span>
+                </div>
+                <div class="nav-link-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+            </NavLink>
+
+            <NavLink class="nav-link" href="/admin/hizmet-yonetimi">
+                <div class="nav-link-icon">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+                <div class="nav-link-content">
+                    <span class="nav-link-title">Çalışma Alanları</span>
+                    <span class="nav-link-desc">Hizmet yönetimi</span>
+                </div>
+                <div class="nav-link-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+            </NavLink>
+
+            <NavLink class="nav-link" href="/admin/ekip-yonetimi">
+                <div class="nav-link-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="nav-link-content">
+                    <span class="nav-link-title">Ekip Üyeleri</span>
+                    <span class="nav-link-desc">Avukat yönetimi</span>
+                </div>
+                <div class="nav-link-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+            </NavLink>
+        </div>
+
+        <!-- SİSTEM -->
+        <div class="nav-section">
+            <div class="nav-section-title">
+                <i class="bi bi-gear"></i>
+                <span>Sistem</span>
+            </div>
+
+            <NavLink class="nav-link" href="/admin/ayarlar">
+                <div class="nav-link-icon">
+                    <i class="bi bi-sliders"></i>
+                </div>
+                <div class="nav-link-content">
+                    <span class="nav-link-title">Ayarlar</span>
+                    <span class="nav-link-desc">Site ayarları</span>
+                </div>
+                <div class="nav-link-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+            </NavLink>
+
+            <button class="nav-link nav-link-logout" @onclick="Logout">
+                <div class="nav-link-icon">
+                    <i class="bi bi-box-arrow-left"></i>
+                </div>
+                <div class="nav-link-content">
+                    <span class="nav-link-title">Çıkış Yap</span>
+                    <span class="nav-link-desc">Oturumu kapat</span>
+                </div>
+                <div class="nav-link-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <!-- FOOTER -->
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <div class="user-info">
+                <p class="user-name">Yönetici</p>
+                <p class="user-role">Admin</p>
+            </div>
+        </div>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-
-        <div class="nav-category">GENEL BAKIŞ</div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/admin" Match="NavLinkMatch.All">
-                <span class="bi bi-speedometer2" aria-hidden="true"></span> Özet Paneli (Dashboard)
-            </NavLink>
-        </div>
-
-        <div class="nav-category">İÇERİK YÖNETİMİ</div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/admin/yonetim">
-                <span class="bi bi-pen-fill" aria-hidden="true"></span> Yönetim Paneli
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="admin/hizmet-yonetimi">
-                <span class="bi bi-briefcase-fill" aria-hidden="true"></span> Çalışma Alanları
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="admin/ekip-yonetimi">
-                <span class="bi bi-people-fill" aria-hidden="true"></span> Ekip Üyeleri
-            </NavLink>
-        </div>
-
-        <div class="nav-category">SİSTEM</div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link text-danger" href="">
-                <span class="bi bi-box-arrow-left" aria-hidden="true"></span> Çıkış Yap
-            </NavLink>
-        </div>
-
-    </nav>
-</div>
+@code {
+    private void Logout()
+    {
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
