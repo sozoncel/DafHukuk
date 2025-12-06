@@ -1,35 +1,43 @@
-﻿/* HİZMETLERİMİZ SAYFASI STİLLERİ */
+﻿/**
+ * HİZMETLERİMİZ SAYFASI STİLLERİ
+ * Tam Responsive - Paksoy Referans
+ */
 
-/* GENEL KONTEYNER VE SEKSİYONLAR */
-.services-content {
-    background-color: #f7f7f7;
+/* =========================================================
+    GENEL AYARLAR
+========================================================= */
+body {
+    font-family: "Source Sans Pro", Arial, sans-serif;
+    color: #444;
 }
 
-.services-page-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px;
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
 }
 
 .section-title {
-    font-size: 36px;
+    font-size: clamp(28px, 4vw, 36px);
     font-weight: 700;
     color: #000;
     margin-bottom: 40px;
     text-align: center;
 }
 
-/* HİZMETLERİMİZ SAYFASI HERO SEKSİYONU */
-.hero-services-section {
+/* =========================================================
+    HERO SECTION
+========================================================= */
+.hero-services-section,
+.hero-news-section {
     position: relative;
     width: 100%;
-    height: 41vh;
-    min-height: 350px;
+    height: 50vh;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     color: #fff;
     overflow: hidden;
-    justify-content: flex-end;
 }
 
 .hero-services-bg {
@@ -44,7 +52,7 @@
 .hero-services-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.45) 100%);
+    background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.6) 100%);
     z-index: 2;
 }
 
@@ -52,187 +60,249 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1400px;
-    flex: 1;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 0 60px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    padding-top: 150px;
+    justify-content: space-between;
+    flex: 1;
+    padding-top: 140px;
+    padding-bottom: 40px;
 }
 
-/* HERO BAŞLIK VE YOL GÖSTERİCİ */
 .hero-services-title-content {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-end;
+    margin-bottom: 30px;
 }
 
 .services-hero-title-upper {
     font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 14px;
-    letter-spacing: 4px;
-    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 400;
     color: #E2DFD2;
     text-transform: uppercase;
-    opacity: 0.8;
-}
-
-.hero-services-title-wrapper {
-    margin-bottom: 15px;
+    opacity: 0.9;
+    margin-bottom: 8px;
 }
 
 .hero-services-title {
-    font-size: 56px;
+    font-size: clamp(32px, 5vw, 48px);
     font-weight: 700;
     color: #fff;
-    margin-bottom: 5px;
+    margin: 0;
+    line-height: 1.2;
 }
 
-/* YOL GÖSTERİCİ DÜZELTMESİ */
-.hero-services-breadcrumb,
-.hero-about-breadcrumb {
+.hero-about-breadcrumb,
+.hero-services-breadcrumb {
     font-size: 13px;
     font-weight: 400;
     color: #ddd;
     margin-top: 15px;
-    margin-bottom: 0;
     display: flex;
     align-items: center;
 }
 
-    .hero-services-breadcrumb a,
-    .hero-about-breadcrumb a {
+    .hero-about-breadcrumb a,
+    .hero-services-breadcrumb a {
         color: #ddd;
         text-decoration: none;
         transition: color 0.3s;
     }
 
-        .hero-services-breadcrumb a:hover,
-        .hero-about-breadcrumb a:hover {
+        .hero-about-breadcrumb a:hover,
+        .hero-services-breadcrumb a:hover {
             color: #dfb887;
         }
 
-    .hero-services-breadcrumb span,
-    .hero-about-breadcrumb span {
+    .hero-about-breadcrumb span,
+    .hero-services-breadcrumb span {
         color: #fff;
         font-weight: 400;
         margin-left: 8px;
     }
 
+.hero-about-slogan-wrapper,
 .hero-services-slogan-wrapper {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
-    padding-bottom: 0;
+    justify-content: flex-start;
+    margin-top: 20px;
 }
 
+.hero-about-slogan-text-style,
 .hero-services-slogan-text-style {
     font-family: "Playfair Display", Georgia, serif;
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.1;
-    border-left: 4px solid #fff;
-    padding-left: 15px;
+    font-size: clamp(18px, 2.5vw, 22px);
+    font-weight: 600;
+    line-height: 1.3;
+    border-left: 3px solid #fff;
+    padding-left: 18px;
     color: #fff;
     text-transform: capitalize;
 }
 
-/* GİRİŞ SEKSİYONU */
-.content-container {
-    max-width: 1200px;
-    margin: 0 auto 80px auto;
+/* =========================================================
+    CONTENT SECTION
+========================================================= */
+.services-content {
+    background-color: #fff;
 }
 
-    .content-container h3 {
-        color: #1F3363;
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
+.services-page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
 
-    .content-container p {
-        font-size: 16px;
-        line-height: 1.6;
-        color: #444;
+.intro-container {
+    padding-top: 80px;
+    padding-bottom: 60px;
+}
+
+.content-container h3 {
+    color: #1F3363;
+    font-size: clamp(20px, 3vw, 24px);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.content-container p {
+    font-size: clamp(15px, 2vw, 16px);
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.content-container .pageMove {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 32px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    background-color: #1F3363;
+    border: 2px solid #1F3363;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 992px) {
+    .content-container .pageMove {
+        margin-bottom: 0.75rem;
+    }
+}
+
+.content-container .pageMove:hover {
+    background-color: transparent;
+    color: #1F3363;
+    box-shadow: 0 0 0 6px rgba(31, 51, 99, 0.1);
+}
+
+.content-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* =========================================================
+    PRACTICE CARDS - Grid System
+========================================================= */
+.practice-cards-row {
+    margin-bottom: 80px;
+    padding-top: 20px;
+}
+
+    .practice-cards-row .col-lg-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+        padding: 0 15px;
         margin-bottom: 30px;
     }
 
-    .content-container .pageMove {
-        display: inline-flex;
-        align-items: center;
-        padding: 12px 30px;
-        font-weight: 600;
-        font-size: 14px;
-        color: #fff;
-        background-color: #1F3363;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background-color 0.3s;
-    }
-
-        .content-container .pageMove:hover {
-            background-color: transparent;
-            color: #1F3363;
-            border: 1px solid;
-            box-shadow: 0 0 0 6px rgba(11, 26, 55, 0.15);
-        }
-
-    .content-container img {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        object-fit: cover;
-    }
-
-/* ÇALIŞMA ALANLARI KARTLARI */
-.practice-cards-row {
-    margin-bottom: 50px;
-}
-
-/* KART GÖRÜNÜMÜ */
 .practice-card {
     background: #fff;
-    border: 1px solid #eee;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
     overflow: hidden;
-    text-align: center;
-    padding: 0;
-    transition: .2s;
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     height: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
     .practice-card:hover {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        transform: translateY(-8px);
+        border-color: #1F3363;
     }
 
     .practice-card img {
         width: 100%;
-        height: 250px;
+        height: 200px;
         object-fit: cover;
         display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .practice-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .practice-card a {
+        text-decoration: none;
+        color: inherit;
     }
 
 .practice-title {
     font-size: 16px;
-    font-weight: 700;
-    color: #000;
-    padding: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+    padding: 20px 18px;
     margin: 0;
+    text-align: center;
+    line-height: 1.4;
+    transition: color 0.3s;
 }
 
-/* İLETİŞİM SATIRI SEKSİYONU */
+.practice-card:hover .practice-title {
+    color: #1F3363;
+}
+
+/* Android/Mobile için özel küçük görünüm */
+@media (max-width: 480px) {
+    .practice-card {
+        max-width: 100%;
+    }
+
+        .practice-card img {
+            height: 140px;
+        }
+
+    .practice-title {
+        font-size: 13px;
+        padding: 12px 10px;
+        line-height: 1.3;
+    }
+}
+
+/* =========================================================
+    CONTACT SECTION
+========================================================= */
 .row-contact {
-    margin-top: 40px;
-    padding: 0 15px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -240,7 +310,7 @@
 
 .contact-text {
     font-size: 16px;
-    color: #444;
+    color: #555;
     margin-bottom: 20px;
 }
 
@@ -248,25 +318,23 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 30px;
-    font-weight: 500;
+    padding: 14px 32px;
+    font-weight: 600;
     font-size: 13px;
     color: white;
     background-color: #1F3363;
-    border: 1px solid #1F3363;
+    border: 2px solid #1F3363;
     border-radius: 4px;
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.3s ease;
-    position: relative;
-    margin-bottom: 20px;
 }
 
     .contact-button:hover {
         background-color: transparent;
         color: #1F3363;
-        box-shadow: 0 0 0 6px rgba(11, 26, 55, 0.15);
+        box-shadow: 0 0 0 6px rgba(31, 51, 99, 0.1);
     }
 
 .arrow-icon {
@@ -281,38 +349,35 @@
 }
 
 .contact-button:hover .arrow-icon {
-    border-left-color: #0b1a37;
+    border-left-color: #1F3363;
 }
 
-
-/* TEKİL HİZMET SAYFASI STİLLERİ */
-
-/* HERO SEKSİYONU */
+/* =========================================================
+    SERVICE TEMPLATE - Detail Page
+========================================================= */
 .hero-servicesTemplate-section {
     position: relative;
     width: 100%;
     height: 50vh;
-    min-height: 350px;
+    min-height: 400px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     color: #fff;
     overflow: hidden;
-    justify-content: center;
 }
 
 .hero-servicesTemplate-bg {
     position: absolute;
     inset: 0;
-    width: auto;
     background-size: cover;
-    height: auto;
+    background-position: center;
     z-index: 1;
 }
 
 .hero-servicesTemplate-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.35) 100%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.4) 100%);
     z-index: 2;
 }
 
@@ -322,39 +387,35 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0 60px;
 }
 
-/* SOL TARAF BAŞLIKLAR VE YOL GÖSTERİCİ */
 .hero-servicesTemplate-title-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 60%;
+    max-width: 100%;
 }
 
 .servicesTemplate-hero-title-upper {
     font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 14px;
-    letter-spacing: 4px;
-    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 400;
     color: #E2DFD2;
     text-transform: uppercase;
-    opacity: 0.8;
+    opacity: 0.9;
+    margin-bottom: 8px;
 }
 
 .hero-servicesTemplate-title {
-    font-size: 3rem;
+    font-size: clamp(28px, 4vw, 42px);
     font-weight: 700;
     color: #fff;
     margin-bottom: 15px;
     line-height: 1.2;
 }
 
-/* YOL GÖSTERİCİ DÜZELTMESİ */
 .hero-servicesTemplate-breadcrumb {
     font-size: 13px;
     font-weight: 400;
@@ -380,12 +441,13 @@
         margin-left: 8px;
     }
 
-/* ANA İÇERİK */
-
+/* =========================================================
+    PAGE CONTENT
+========================================================= */
 .page-content {
     max-width: 1200px;
-    margin: 0 auto 80px auto;
-    padding: 60px 40px;
+    margin: 0 auto;
+    padding: 60px 60px 80px;
 }
 
 .service-page-content {
@@ -394,30 +456,29 @@
 }
 
     .service-page-content p {
-        font-size: 1rem;
+        font-size: clamp(15px, 2vw, 16px);
         line-height: 1.8;
-        color: #333;
+        color: #555;
         margin-bottom: 20px;
     }
 
-/* TANITIM KISMI */
+/* =========================================================
+    TANITIM BOX
+========================================================= */
 .tanitimText {
-    background-color: #0b1a37;
     color: white;
-    padding: 30px 25px;
-    border-radius: 4px;
-    margin-top: 1rem;
-    margin-left: 1.3rem;
-    height: auto;
-    width: auto;
-    max-width: 250px;
+    background-color: #1F3363;
+    padding: 35px 30px;
+    border-radius: 6px;
+    margin-top: 0;
     min-height: 200px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
     .tanitimText p {
-        font-size: 1.05rem;
+        font-size: 17px;
         font-style: italic;
         line-height: 1.7;
         color: #fff;
@@ -427,51 +488,160 @@
     .tanitimText span {
         display: block;
         text-align: right;
-        font-size: 0.95rem;
+        font-size: 15px;
         font-weight: 600;
         color: #dfb887;
         margin-top: auto;
     }
 
-/* BÖLÜM AYIRICI */
+/* =========================================================
+    SECTION SEPARATOR
+========================================================= */
 .section-separator {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-    margin-bottom: 20px;
-}
-/* ÖNERİLEN İÇERİK */
-.featured {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #e5e7eb;
+    margin-bottom: 30px;
     display: flex;
-    margin-bottom: 50px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-    .featured img {
-        width: 100%;
-        height: auto;
+    .section-separator h4 {
+        font-size: clamp(18px, 2.5vw, 22px);
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
     }
 
-.featured-img {
+/* =========================================================
+    AVUKAT KARTLARI
+========================================================= */
+.hizmetlerimiz-avukat-col {
+    padding: 0 15px;
+    margin-bottom: 30px;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.hizmetlerimiz-avukat-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 0;
+    transition: all 0.3s ease;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+    .hizmetlerimiz-avukat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    }
+
+.hizmetlerimiz-avukat-img {
     width: 100%;
-    height: auto;
+    height: 320px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+
+.hizmetlerimiz-avukat-name-link {
+    text-decoration: none;
     display: block;
-    margin-bottom: 15px;
+    padding: 20px 15px 15px;
 }
 
-/* İLGİLİ KİŞİLER BAŞLIĞI */
-.service-page-content h4 {
-    font-size: 1.3rem;
+.hizmetlerimiz-avukat-name {
+    font-size: 18px;
     font-weight: 700;
-    color: #333;
-    margin-bottom: 15px;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+    transition: color 0.3s;
 }
 
-/* ÖNE ÇIKAN YAYINLAR BAŞLIĞI */
+.hizmetlerimiz-avukat-card:hover .hizmetlerimiz-avukat-name {
+    color: #1F3363;
+}
+
+.avukat-title {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.card-divider {
+    background-color: #dfb887;
+    margin: 0 auto 15px;
+    border: none;
+    width: 60px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.mail-box-link {
+    font-size: 20px;
+    color: #666;
+    transition: color 0.3s;
+    padding-bottom: 15px;
+    display: inline-block;
+}
+
+    .mail-box-link:hover {
+        color: #1F3363;
+    }
+
+/* Telefon için geniş avukat kartları */
+@media (max-width: 768px) {
+    .hizmetlerimiz-avukat-col {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    .hizmetlerimiz-avukat-card {
+        max-width: 100%;
+        margin: 0 auto 30px;
+    }
+
+    .hizmetlerimiz-avukat-img {
+        height: 280px;
+        width: 100%;
+    }
+
+    .hizmetlerimiz-avukat-name-link {
+        padding: 25px 20px 20px;
+    }
+
+    .hizmetlerimiz-avukat-name {
+        font-size: 20px;
+    }
+
+    .avukat-title {
+        font-size: 15px;
+    }
+
+    .card-divider {
+        width: 70px;
+        height: 4px;
+        margin: 15px auto 20px;
+    }
+}
+
+/* =========================================================
+    FEATURED PUBLICATIONS
+========================================================= */
 .featured-publications-title {
-    font-size: 1.3rem;
+    font-size: clamp(18px, 2.5vw, 22px);
     font-weight: 700;
-    color: #333;
-    margin-bottom: 15px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
     position: relative;
     display: inline-block;
 }
@@ -481,205 +651,349 @@
         display: block;
         width: 100%;
         height: 3px;
-        background-color: #0b1a37;
+        background-color: #e5e7eb;
         position: absolute;
-        bottom: -5px;
+        bottom: -8px;
         left: 0;
     }
 
-/* İLGİLİ KİŞİ KARTLARI */
-.lawyer-card {
-    text-align: center;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding-bottom: 15px;
-    height: 100%;
-    transition: box-shadow 0.3s;
-}
-
-    .lawyer-card:hover {
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-.lawyer-photo {
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-    .lawyer-photo img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-.lawyer-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #000;
-    margin-bottom: 5px;
-}
-
-.lawyer-title {
-    font-size: 0.9rem;
-    color: #777;
-    display: block;
-}
-
-/* KAROUSEL İÇİN ÖZEL AYAR */
-.carousel-inner .row.g-4 {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;
-}
-
-    .carousel-inner .row.g-4 > [class*="col-"] {
-        flex: 0 0 auto;
-        width: 25%;
-        padding: 0 10px;
-    }
-
-/* İÇERİK KARTLARI ORTAK STİL */
-.content-card {
+.featured-publication-card {
     padding: 20px;
-    border: 1px solid #eee;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    border-radius: 8px;
     height: 100%;
-    background-color: #f9f9f9;
-    transition: box-shadow 0.3s;
+}
+
+.featured-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+/* Telefon için featured-publication-card center */
+@media (max-width: 768px) {
+    .featured-publication-card {
+        text-align: center;
+        padding: 30px 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+        .featured-publication-card .content-tag-button {
+            margin: 0 auto 15px;
+            display: inline-block;
+        }
+
+    .featured-img {
+        margin: 0 auto 20px;
+    }
+}
+
+/* =========================================================
+    RELATED CONTENT TABS
+========================================================= */
+.related-content-heading {
+    font-size: clamp(20px, 3vw, 24px);
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 50px;
+    color: #1a1a1a;
+}
+
+.custom-tabs {
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    list-style: none;
+    gap: 5px;
+}
+
+    .custom-tabs .nav-item {
+        margin-bottom: -2px;
+    }
+
+    .custom-tabs .nav-link {
+        color: #666;
+        border: none;
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s;
+        background: transparent;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+    }
+
+        .custom-tabs .nav-link:hover {
+            color: #1a1a1a;
+            border-bottom-color: #cbd5e1;
+        }
+
+        .custom-tabs .nav-link.active {
+            color: #1F3363;
+            border-bottom-color: #1F3363;
+            font-weight: 600;
+        }
+
+/* =========================================================
+    CONTENT CARDS
+========================================================= */
+.content-card {
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+    background-color: #fff;
+    border-radius: 8px;
+    height: 100%;
+    transition: all 0.3s ease;
 }
 
     .content-card:hover {
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
     }
 
 .created-Date {
-    font-size: 0.9rem;
-    color: #999;
-    margin-bottom: 5px;
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 10px;
+    font-weight: 500;
 }
-
-.content-title-link {
-    text-decoration: none;
-    color: #333;
-    transition: color 0.3s;
-    display: block;
-}
-
-    .content-title-link:hover {
-        color: #1F3363;
-    }
 
 .textContent {
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 700;
     margin-bottom: 15px;
     line-height: 1.4;
+    color: #1a1a1a;
 }
 
 .slug-text {
-    font-size: 0.9rem;
-    color: #666;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.6;
 }
 
-/* HEPSİNİ GÖSTER BUTONU */
+@media (max-width: 768px) {
+    .content-card {
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+        .content-card img {
+            margin: 0 auto 15px;
+        }
+}
+
 .show-all-button {
-    background-color: #f7f7f7;
-    color: #333;
-    border: 1px solid #ddd;
-    padding: 10px 30px;
-    font-size: 1rem;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    background-color: transparent;
+    color: #1F3363;
+    border: 2px solid #1F3363;
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: all 0.3s;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
     .show-all-button:hover {
         background-color: #1F3363;
         color: white;
-        border-color: #1F3363;
-        cursor: pointer;
+        box-shadow: 0 0 0 6px rgba(31, 51, 99, 0.1);
     }
 
-/* İÇERİK KARTLARI ÖZEL AYAR */
-.mt-content-offset {
-    margin-top: -15px !important;
-}
-
-
-/* İLİŞKİLİ İÇERİKLER */
-
-.related-content-heading {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.custom-tabs {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 40px;
-}
-
-    .custom-tabs .nav-link {
-        color: #666;
-        border: none;
-        padding: 8px 15px;
-        margin-bottom: -1px;
-        font-size: 1rem;
-        transition: color 0.3s;
-    }
-
-        .custom-tabs .nav-link:hover {
-            color: #999;
-            border: none;
-            border-bottom: 2px solid #999;
-        }
-
-        .custom-tabs .nav-link.active {
-            color: #dfb887;
-            border-bottom: 2px solid #dfb887;
-            font-weight: 600;
-            background-color: transparent;
-        }
-
-/* RESPONSIVE STİLLER */
+/* =========================================================
+    RESPONSIVE - TABLET (992px - 768px)
+========================================================= */
 @media (max-width: 992px) {
-    .carousel-inner .row.g-4 {
-        flex-wrap: wrap;
+    .hero-services-container,
+    .hero-servicesTemplate-container,
+    .services-page-content,
+    .page-content {
+        padding-left: 40px;
+        padding-right: 40px;
     }
 
-        .carousel-inner .row.g-4 > [class*="col-"] {
-            width: 50%;
-            margin-bottom: 20px;
+    .practice-cards-row .col-lg-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .section-separator {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+        .section-separator h4,
+        .featured-publications-title {
+            width: 100%;
         }
 
-    .hero-servicesTemplate-title-content {
+    .hizmetlerimiz-avukat-col {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+    }
+
+    .hizmetlerimiz-avukat-col {
+        flex: 0 0 100%;
         max-width: 100%;
     }
 
-    .hero-servicesTemplate-title {
-        font-size: 2rem;
+    .hizmetlerimiz-avukat-card {
+        max-width: 100%;
     }
 
-    .placeholderText {
-        margin-top: 30px;
-        min-height: auto;
+    .hizmetlerimiz-avukat-img {
+        height: 380px;
     }
 }
 
+/* =========================================================
+    RESPONSIVE - MOBILE (768px and below)
+========================================================= */
 @media (max-width: 768px) {
-    .carousel-inner .row.g-4 > [class*="col-"] {
-        width: 100%;
+    .hero-services-section,
+    .hero-servicesTemplate-section {
+        min-height: 350px;
+        height: auto;
     }
 
-    .hero-services-title,
-    .hero-servicesTemplate-title {
-        font-size: 2rem;
+    .hero-services-container,
+    .hero-servicesTemplate-container {
+        padding: 30px 25px;
+        padding-top: 120px;
+        padding-bottom: 30px;
     }
 
     .services-page-content,
     .page-content {
-        padding: 30px 20px;
+        padding: 40px 25px;
+    }
+
+    .intro-container {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .practice-cards-row {
+        margin-bottom: 40px;
+    }
+
+        .practice-cards-row .col-lg-3 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding: 0 0;
+            margin-bottom: 20px;
+        }
+
+    .practice-card img {
+        height: 220px;
+    }
+
+    .practice-title {
+        font-size: 15px;
+        padding: 18px 15px;
+    }
+
+    .row-contact {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .tanitimText {
+        margin-top: 30px;
+        padding: 25px 20px;
+    }
+
+    .hizmetlerimiz-avukat-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .hizmetlerimiz-avukat-card {
+        margin: 0 auto;
+    }
+
+    .hizmetlerimiz-avukat-img {
+        height: 340px;
+    }
+
+    .featured-img {
+        height: 200px;
+    }
+
+    .custom-tabs {
+        justify-content: center;
+    }
+
+        .custom-tabs .nav-link {
+            font-size: 14px;
+            padding: 10px 15px;
+        }
+}
+
+/* =========================================================
+    RESPONSIVE - SMALL MOBILE (480px and below)
+========================================================= */
+@media (max-width: 480px) {
+    .hero-services-container,
+    .hero-servicesTemplate-container,
+    .services-page-content,
+    .page-content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .practice-cards-row .col-lg-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 0 8px;
+    }
+
+    .practice-card {
+        max-width: 100%;
+    }
+
+        .practice-card img {
+            height: 140px;
+        }
+
+    .practice-title {
+        font-size: 13px;
+        padding: 12px 10px;
+        line-height: 1.3;
+    }
+
+    .hizmetlerimiz-avukat-col {
+        padding: 0 10px;
+    }
+
+    .hizmetlerimiz-avukat-card {
+        max-width: 100%;
+    }
+
+    .hizmetlerimiz-avukat-img {
+        height: 260px;
+        width: 100%;
+    }
+
+    .featured-img {
+        height: 180px;
+    }
+
+    .content-card {
+        padding: 25px 15px;
+    }
+
+    .featured-publication-card {
+        padding: 25px 15px;
+        max-width: 100%;
     }
 }

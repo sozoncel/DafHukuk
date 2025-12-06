@@ -1,5 +1,4 @@
-﻿/* ABOUT.CSS - Hakkımızda Sayfası Stilleri */
-
+﻿﻿ /* ABOUT.CSS - Hakkımızda Sayfası Stilleri */
 /* GENEL STİLLER */
 .hero-about-section,
 .about-page-content,
@@ -238,7 +237,7 @@
 
 /* İÇERİK KONTEYNERİ (BİZ KİMİZ & VİZYON) */
 .content-container {
-    max-width: 100%;
+    max-width: 1400px;
     padding-left: 5%;
     padding-right: 5%;
     padding-top: clamp(3rem, 8vw, 6rem);
@@ -279,6 +278,10 @@
     justify-content: center;
 }
 
+.bracket{
+    display: none;
+}
+
 .img-placeholder .img {
     width: 100%;
     padding-bottom: 60%;
@@ -298,7 +301,7 @@
 .about-awards-section {
     padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: clamp(3rem, 8vw, 6rem);
-    background-color: #fff;
+    background-color: #F8F9FA;
 }
 
     .about-awards-section .main-header {
@@ -319,7 +322,7 @@
 }
 
 .awards-text-col p {
-    font-size: clamp(1rem, 2vw, 1.1rem);
+    font-size: clamp(1rem, 2vw, 10rem);
     line-height: 1.8;
     color: #444;
 }
@@ -332,8 +335,7 @@
 }
 
 .about-award-box {
-    flex: 0 0 calc(33.333% - 10px);
-    max-width: calc(33.333% - 10px);
+    flex: 0 0 calc(33.333% - 1px);
     padding: 15px;
     background-color: #f8f8f8;
     border: 1px solid #eee;
@@ -344,7 +346,7 @@
 }
 
     .about-award-box img {
-        max-width: 100%;
+        max-width: 5rem;
         height: auto;
         opacity: 0.85;
         transition: opacity 0.3s;
@@ -390,10 +392,9 @@
 
 /* SOSYAL SORUMLULUK BÖLÜMÜ */
 .about-social-section {
-    max-width: 100%;
+    max-width: 1400px;
     margin: 1% auto 6rem;
     padding: 0 5%;
-    background-color: #fff;
 }
 
     .about-social-section .row {
@@ -439,11 +440,12 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-/* SAYICI (COUNTER) */
+/* ESKİ SAYAÇ BLOK STİLİ (Yeni stiller için aşağı kaydırın) */
 .counter-with-js {
     text-align: center;
     padding: clamp(3rem, 8vw, 6rem) 5%;
     background-color: #f7f7f7;
+    /* Artık bu stil kullanılmıyor. Yeni stiller aşağıda. */
 }
 
 .counter-row-main {
@@ -524,6 +526,41 @@
     color: #444;
 }
 
+/* YENİ YAPISAL VE STİL DÜZENLEMELERİ (Sayaç ve Etiket Bölümü) */
+
+/* Sayaç Bölümü Stilleri */
+.counter-section {
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    background-color: #fff;
+}
+
+    .counter-section .counter-row-main {
+        margin-bottom: 0;
+    }
+
+/* Etiket (Tagline) Bölümü Stilleri */
+.tagline-section {
+    margin: 0 auto;
+    background-color: #f8f8f8; /* Bir Tık Koyu Gri Arka Plan */
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+    margin-top: -1px; /* Birleşme efekti için küçük negatif margin */
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+    .tagline-section .counter-tagline-row-new {
+        margin-top: 0;
+        border-top: none;
+        padding-top: 0;
+    }
+
+
 /* RESPONSIVE STİLLER */
 @media (max-width: 1200px) {
     .hero-about-container {
@@ -565,6 +602,13 @@
         padding: 24px;
         padding-top: 110px;
         padding-bottom: 40px;
+    }
+
+    .bracket{
+        display:grid;
+        margin: 0 auto;
+        margin-bottom: 4rem;
+
     }
 
     .about-hero-title-upper {
@@ -613,6 +657,39 @@
     }
 }
 
+.down-description .value-box {
+    margin-bottom: 0.75rem;
+}
+
+    /* Başlık ile paragraf arasına nefes aldır */
+    .down-description .value-box h2 {
+        margin-bottom: 1.75rem;
+        text-align: center;
+    }
+
+    /* Paragrafa alt boşluk */
+    .down-description .value-box p {
+        margin-bottom: 1.75rem;
+        text-align: center;
+    }
+
+/* Görsel kutusu aşağıdan 0.75rem boşluk bıraksın */
+.down-description .value-img-wrapper {
+    margin-bottom: 1.75rem;
+}
+
+/* Mobilde tamamen ortalı dursun */
+.down-description .value-box,
+.down-description .value-img-wrapper,
+.down-description .img-placeholder {
+    text-align: center;
+}
+
+    .down-description .img-placeholder img {
+        margin: 0 auto;
+        display: block;
+    }
+
 @media (max-width: 768px) {
     .hero-about-sub-nav-container {
         gap: 10px;
@@ -625,10 +702,44 @@
 
     .about-award-box {
         flex: 0 0 100%;
-        max-width: 100%;
         margin-bottom: 10px;
     }
 }
+
+.social-project-row {
+    text-align: center;
+}
+
+    /* İç kolonu tamamen ortala */
+    .social-project-row .col-lg-6,
+    .social-project-row .col-lg-4,
+    .social-project-row .col-lg-3,
+    .social-project-row .col-12 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Görsel ortalansın ve altına boşluk gelsin */
+    .social-project-row img,
+    .about-social-section .img-fluid {
+        margin: 0 auto;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .social-row-header{
+        text-align: center;
+    }
+    /* Metin ortalansın */
+    .social-project-row p,
+    .social-project-row h3,
+    .social-project-row h4,
+    .social-project-row h5 {
+        text-align: center !important;
+    }
+
 
 @media (max-width: 600px) {
     .content-container,

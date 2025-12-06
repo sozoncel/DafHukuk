@@ -18,6 +18,8 @@ namespace DafHukuk.Service
         {
             return await _context.Posts
                 .Include(p => p.Category)
+                .Where(p => p.IsActive)
+                .OrderByDescending(p => p.PublishedDate)
                 .ToListAsync();
         }
 
@@ -25,7 +27,7 @@ namespace DafHukuk.Service
         {
             return await _context.Posts
                 .Include(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id && p.IsActive);
         }
 
         public async Task<Post> Create(Post post)
@@ -70,6 +72,27 @@ namespace DafHukuk.Service
             _context.Posts.Remove(existing);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Post>> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return new List<Post>();
+
+            var lowerQuery = query.ToLower().Trim();
+
+            var results = await _context.Posts
+                .Include(p => p.Category)
+                .Where(p => p.IsActive &&
+                    (p.Title_TR.ToLower().Contains(lowerQuery) ||
+                     p.Content_TR.ToLower().Contains(lowerQuery) ||
+                     p.Slug_TR.ToLower().Contains(lowerQuery) ||
+                     (p.Category != null && p.Category.Name_TR.ToLower().Contains(lowerQuery)))
+                )
+                .OrderByDescending(p => p.PublishedDate)
+                .ToListAsync();
+
+            return results;
         }
     }
 }

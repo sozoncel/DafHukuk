@@ -1,4 +1,4 @@
-/* Genel Sidebar Arka Planý - Koyu Lacivert/Gri tonlarý Hukuk için uygundur */
+/* Genel Sidebar Arka Planý */
 .nav-scrollable {
     background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
     color: #cbd5e1;
@@ -11,11 +11,11 @@
     color: #fff !important;
 }
 
-/* Kategori Baþlýklarý (GENEL BAKIÞ vb.) */
+/* Kategori Baþlýklarý */
 .nav-category {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: #64748b; 
+    color: #64748b;
     padding: 1rem 1.5rem 0.5rem;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -23,13 +23,12 @@
 
 .nav-item .nav-link {
     color: #94a3b8;
-    border-radius: 6px; 
+    border-radius: 6px;
     transition: all 0.2s ease;
     margin-bottom: 4px;
     display: flex;
     align-items: center;
 }
-
 
     .nav-item .nav-link span.bi {
         margin-right: 12px;
@@ -43,20 +42,18 @@
     }
 
     .nav-item .nav-link.active {
-        background-color: #3b82f6; 
+        background-color: #3b82f6;
         color: #fff;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
-    .nav-item .nav-link.text-danger:hover {
-        background-color: rgba(220, 53, 69, 0.2);
-        color: #ff6b6b !important;
-    }
-
-  /* Yönetim Kýsmý*/
+/* Yönetim Kýsmý */
 .card {
     border-radius: 12px;
     transition: all 0.3s ease;
+    border: none;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
 
 .card-header {
@@ -64,12 +61,14 @@
     border-top-right-radius: 12px !important;
 }
 
-/* Sekmeler (Tabs) */
+/* Sekmeler */
 .nav-tabs .nav-link {
     border: none;
     color: #6c757d;
     transition: all 0.2s;
     border-bottom: 3px solid transparent;
+    padding: 12px;
+    font-weight: 600;
 }
 
     .nav-tabs .nav-link:hover {
@@ -83,15 +82,98 @@
         border-bottom: 3px solid #0d6efd;
     }
 
-/* Input Alanlarý Odaklanma */
-.form-control:focus, .form-select:focus {
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-    border-color: #86b7fe;
+/* Form */
+.form-control,
+.form-select {
+    border-radius: 10px;
+    padding: 11px 14px;
+    border: 1px solid #e6eef7;
+    background-color: #fafcff;
+    transition: all 0.25s;
 }
 
-/* Kaydet Butonu */
-.btn-primary {
-    padding: 12px;
+.form-label {
     font-weight: 600;
-    letter-spacing: 0.5px;
+    color: #334155;
+}
+
+/* Kaydet butonu */
+.btn-primary {
+    padding: 12px 18px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+/* Resim önizleme */
+.admin-image-preview {
+    max-height: 180px;
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Admin listeler */
+.admin-card-list {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+    .admin-card-list h5 {
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+.admin-list-item {
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #eef4fb;
+    margin-bottom: 10px;
+    background: #fbfdff;
+    transition: all .18s ease;
+}
+
+    .admin-list-item:hover {
+        background: #f1f8ff;
+        border-color: #dbeffd;
+    }
+
+.admin-post-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.admin-post-meta {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.admin-filter {
+    min-width: 180px;
+}
+
+.admin-load-controls .btn {
+    white-space: nowrap;
+}
+
+/* Küçük ekranlar */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 1.35rem;
+    }
+
+    .admin-load-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .admin-load-controls .ms-auto {
+            margin-left: 0 !important;
+        }
 }

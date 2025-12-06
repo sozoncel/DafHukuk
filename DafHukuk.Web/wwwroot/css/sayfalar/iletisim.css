@@ -1,16 +1,13 @@
 ﻿/* =========================================================
    ILETİŞİM SAYFASI STİLLERİ
-   - Bu dosya base.css ve örnek.css sonrası yüklenmelidir.
 ========================================================= */
 
-/* Temel font/renk değişkenleri */
 :root {
     --accent: #1F3363;
     --muted: #e6e6e6;
     --hero-overlay-start: rgba(0,0,0,0.55);
 }
 
-/* Grid (örnek.css ile uyumlu) */
 .row {
     display: flex;
     flex-wrap: wrap;
@@ -448,10 +445,8 @@ form {
     .hero-iletisim-slogan-text-style {
         display: none;
     }
-    /* mobilde slogan gizlenebilir */
 }
 
-/* Küçük ekranlarda form satırlarını dikey yap */
 @media (max-width: 600px) {
     .form-row {
         flex-direction: column;

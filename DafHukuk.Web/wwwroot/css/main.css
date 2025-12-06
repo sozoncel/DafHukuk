@@ -8,7 +8,6 @@
 
 body {
     font-family: "Source Sans Pro", Arial, sans-serif;
-    background: #fff;
     overflow-x: hidden;
 }
 
@@ -675,6 +674,7 @@ a {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-right: 5px;
     margin-bottom: 5px;
+    max-width: 8rem;
 }
 
     .content-tag-button:hover {
@@ -885,6 +885,26 @@ a {
     }
 }
 
+@media (max-width: 991px) {
+    .custom-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 10px;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+        .custom-tabs .nav-item {
+            flex-shrink: 0;
+            width: auto;
+        }
+
+        .custom-tabs .nav-link {
+            white-space: nowrap;
+        }
+}
+
 @media (max-width: 600px) {
     .header {
         padding: 16px 20px;
@@ -969,3 +989,32 @@ a {
         justify-content: center;
     }
 }
+
+/* =========================================================
+    CUSTOM TABS  STÝLLERÝ 
+========================================================= */
+.custom-tabs {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 40px;
+}
+
+    .custom-tabs .nav-link {
+        color: #666;
+        border: none;
+        padding: 8px 15px;
+        margin-bottom: -1px; 
+        font-size: 1rem;
+        transition: color 0.3s;
+    }
+
+        .custom-tabs .nav-link:hover {
+            color: #999;
+            border-bottom: 2px solid #999;
+        }
+
+        .custom-tabs .nav-link.active {
+            color: #dfb887;
+            border-bottom: 2px solid #1F3363;
+            font-weight: 600;
+            background-color: transparent;
+        }

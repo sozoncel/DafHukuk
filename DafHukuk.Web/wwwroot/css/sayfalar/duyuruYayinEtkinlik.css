@@ -1,11 +1,13 @@
-﻿/* GENEL KONTEYNER */
-.services-page-content {
-    margin: 0 auto;
-    padding: 0 40px;
+﻿/* İÇERİK BÖLÜMÜ */
+body{
+    background-color: #F8F9FA;
 }
-
+.main-content{
+    background-color: #F8F9FA;
+}
 .icerikBolumu {
-    padding: 60px 0;
+    /* Değişiklik: Yatay padding'ler kaldırıldı veya azaltıldı */
+    padding: 60px 20px; /* Üst/Alt padding 60px, Sağ/Sol padding 20px (Paksoy'daki gibi az boşluk) */
 }
 
 /* ANA GÖRSEL (HERO) BÖLÜMÜ */
@@ -42,7 +44,8 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1400px;
+    /* Değişiklik: Hero içeriğinin genişliğini artırdık */
+    max-width: 100%;
     flex: 1;
     margin: 0 auto;
     padding: 0 40px;
@@ -136,7 +139,9 @@
 .search-bar {
     display: flex;
     gap: 10px;
+    margin-top: 1rem;
 }
+
 
     .search-bar .form-control-lg {
         border-radius: 0;
@@ -146,11 +151,17 @@
     }
 
     .search-bar .btn-primary {
-        background-color: #000;
+        background-color: #1F3363;
         border-color: #000;
-        border-radius: 0;
+        border-radius: 10px;
         height: 48px;
     }
+
+        .search-bar .btn-primary:hover {
+            background-color: transparent;
+            color: #1F3363;
+            border: 1px solid;
+        }
 
 .modern-dropdown-toggle {
     border-radius: 0;
@@ -161,6 +172,7 @@
     padding: 10px 15px;
     font-weight: 500;
     height: 48px;
+    margin-top: 1rem;
 }
 
     .modern-dropdown-toggle:hover,
@@ -181,8 +193,10 @@
 }
 
 /* İÇERİK KARTLARI */
+
 .icerik-Kart {
-    margin-top: 40px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .content-card-item {
@@ -301,19 +315,19 @@
             text-decoration: none;
         }
 
-            .related-area-list li a:hover {
-                color: #007bff;
-            }
+        .related-area-list li p:hover {
+            color: #007bff;
+        }
 
-            .related-area-list li a::before {
-                content: ">";
-                position: absolute;
-                left: 0;
-                color: #007bff;
-                font-weight: bold;
-                font-size: 0.9rem;
-                top: 0;
-            }
+        .related-area-list li a::before {
+            content: "-";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 0.9rem;
+            top: 0.25rem;
+        }
 
 /* SOSYAL MEDYA PAYLAŞIM */
 .post-share-section {
@@ -329,7 +343,7 @@
 .social-share-links a {
     color: #6c757d;
     transition: color 0.3s;
-    font-size: 1.25rem;
+    font-size: 0.75rem;
 }
 
     .social-share-links a:hover {

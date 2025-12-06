@@ -79,8 +79,9 @@
 
 <section class="icerikBolumu services-page-content">
 
+    @* ARAMA VE FİLTRE KISMI *@
     <div class="row mb-5">
-        
+
         <div class="col-lg-6">
             <div class="search-bar">
                 <input class="form-control form-control-lg" type="search" placeholder="Kelime Ara" aria-label="Search">
@@ -114,6 +115,7 @@
         </div>
     </div>
 
+    @* İÇERİK KARTLARI KISMI *@
     <div class="row icerik-Kart">
         @if (!currentCategoryPosts.Any())
         {
@@ -131,7 +133,7 @@
                 <div class="@columnClass">
                     <div class="content-card-item">
                         <a href="@url"><img src="@post.CoverImageUrl" alt="@post.Title_TR" class="img-fluid post-cover-image"></a>
-                        <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy")</p>
+                        <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</p>
                         <a href="@url"><h2 class="textTitle">@post.Title_TR</h2></a>
                         <p class="slugText">@GetSummary(post)</p>
                         <hr>

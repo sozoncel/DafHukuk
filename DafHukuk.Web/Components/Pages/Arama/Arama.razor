@@ -1,0 +1,237 @@
+﻿@page "/arama"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@inject NavigationManager NavManager
+@inject DafHukuk.Service.Interfaces.IPostService PostService
+@using DafHukuk.Core.Entities
+
+<PageTitle>Arama Sonuçları: @SearchTerm</PageTitle>
+
+<div class="arama-sayfasi">
+
+    <section class="hero-search-section">
+        <div class="hero-search-bg"></div>
+        <div class="hero-search-overlay"></div>
+
+        <div class="hero-search-container">
+            <div class="hero-search-title-content">
+                <p class="search-term-label">Aranılan Terim</p>
+                <h1 class="hero-search-title">@SearchTerm</h1>
+                @if (!IsLoading && !string.IsNullOrWhiteSpace(SearchTerm))
+                {
+                    <p class="search-results-count">@AllSearchResults.Count Sonuç</p>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="icerikBolumu">
+        <div class="container-custom">
+            <div class="row">
+
+                <div class="col-lg-3">
+                    <div class="filter-section">
+                        <h4 class="info-title">Filtrele</h4>
+                        <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
+
+                            <li class="nav-item">
+                                <a class="nav-link @(CurrentCategoryId == 0 ? "active" : "")"
+                                                   href="javascript:void(0)"
+                                                   @onclick="() => FilterCategory(0)">
+                                    <span>Hepsini Göster</span>
+                                    <span>(@AllSearchResults.Count)</span>
+                                </a>
+                            </li>
+
+                            @foreach (var cat in DistinctCategories)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(CurrentCategoryId == cat.Id ? "active" : "")"
+                                                         href="javascript:void(0)"
+                                                         @onclick="() => FilterCategory(cat.Id)">
+                                        <span>@cat.Name_TR</span>
+                                        <span>(@cat.Posts.Count)</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="row icerik-Kart">
+
+                        @if (IsLoading)
+                        {
+                            <div class="loading-state">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                                <p class="loading-text">Aranıyor...</p>
+                            </div>
+                        }
+                        else if (!AllSearchResults.Any())
+                        {
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Üzgünüz!</strong> Aradığınız "<strong>@SearchTerm</strong>" kelimesine uygun içerik bulunamadı.
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var post in FilteredPosts)
+                            {
+                                var postUrl = GetPostUrl(post);
+
+                                <div class="col-lg-4 col-md-6 mb-4 card-offset-styling">
+                                    <div class="content-card">
+                                        <div class="card-image-wrapper">
+                                            <img src="@post.CoverImageUrl" alt="@post.Title_TR" />
+                                            <span class="content-tag-button"
+                                                                         style="background: @GetCategoryColor(post.Category?.Name_TR);">
+                                                @post.Category?.Name_TR
+                                            </span>
+                                        </div>
+                                        <div class="card-content-body">
+                                            <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</p>
+                                            <a href="@postUrl" class="content-title-link">
+                                                <h2 class="textTitle">@post.Title_TR</h2>
+                                            </a>
+                                            <span class="slugText">@GetSummary(post)</span>
+                                            <a href="@postUrl" class="btn-detail">Detayı Gör</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!FilteredPosts.Any() && CurrentCategoryId != 0)
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    Seçtiğiniz kategoriye ait sonuç bulunamadı. Lütfen başka bir filtre deneyin.
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div> 
+
+@code {
+    [SupplyParameterFromQuery(Name = "q")]
+    public string? SearchTerm { get; set; }
+
+    private List<Post> AllPosts { get; set; } = new List<Post>();
+    private List<Post> AllSearchResults { get; set; } = new List<Post>();
+    private List<Post> FilteredPosts { get; set; } = new List<Post>();
+    private List<Category> DistinctCategories { get; set; } = new List<Category>();
+
+    private int CurrentCategoryId { get; set; } = 0;
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            AllPosts = await PostService.GetAll();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hata: {ex.Message}");
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        IsLoading = true;
+        var normalizedSearchTerm = (SearchTerm ?? string.Empty).Trim();
+
+        if (AllPosts.Any() && !string.IsNullOrWhiteSpace(normalizedSearchTerm))
+        {
+            AllSearchResults = AllPosts
+              .Where(p => p.IsActive &&
+                    ((p.Title_TR != null && p.Title_TR.Contains(normalizedSearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (p.Content_TR != null && p.Content_TR.Contains(normalizedSearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (p.Slug_TR != null && p.Slug_TR.Contains(normalizedSearchTerm, StringComparison.OrdinalIgnoreCase))))
+              .OrderByDescending(p => p.PublishedDate)
+              .ToList();
+
+            DistinctCategories = AllSearchResults
+              .Where(p => p.Category != null)
+              .GroupBy(p => p.Category)
+              .Select(g => new Category
+              {
+                  Id = g.Key.Id,
+                  Name_TR = g.Key.Name_TR,
+                  Posts = g.ToList()
+              })
+              .OrderBy(c => c.Name_TR)
+              .ToList();
+        }
+        else
+        {
+            AllSearchResults = new List<Post>();
+            DistinctCategories = new List<Category>();
+        }
+
+        FilterCategory(CurrentCategoryId);
+        IsLoading = false;
+    }
+
+    private void FilterCategory(int categoryId)
+    {
+        CurrentCategoryId = categoryId;
+
+        if (CurrentCategoryId == 0)
+        {
+            FilteredPosts = AllSearchResults;
+        }
+        else
+        {
+            FilteredPosts = AllSearchResults
+              .Where(p => p.CategoryId == categoryId)
+              .ToList();
+        }
+    }
+
+    private string GetPostUrl(Post post)
+    {
+        if (post?.Category == null) return "#";
+
+        var categorySlug = post.Category.Name_TR?.ToLowerInvariant() ?? "yayin";
+
+        return categorySlug switch
+        {
+            "hizmetlerimiz" => $"/hizmetlerimiz/{post.Slug_TR}",
+            "duyurular" => $"/duyurular/{post.Slug_TR}",
+            "etkinlikler" => $"/etkinlikler/{post.Slug_TR}",
+            "yayınlar" => $"/yayinlar/{post.Slug_TR}",
+            "yayinlar" => $"/yayinlar/{post.Slug_TR}",
+            _ => $"/yayinlar/{post.Slug_TR}"
+        };
+    }
+
+    private string GetCategoryColor(string? categoryName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return "#3b82f6";
+
+        return categoryName switch
+        {
+            "Hizmetlerimiz" => "#366C80",
+            "Duyurular" => "#5c7341",
+            "Etkinlikler" => "#78514A",
+            "Yayınlar" => "#dfb899",
+            _ => "#3b82f6"
+        };
+    }
+
+    private string GetSummary(Post post)
+    {
+        if (string.IsNullOrWhiteSpace(post.Content_TR)) return "";
+        var content = post.Content_TR.Replace(Environment.NewLine, " ").Trim();
+        return content.Length > 120 ? content.Substring(0, 120) + "..." : content;
+    }
+}

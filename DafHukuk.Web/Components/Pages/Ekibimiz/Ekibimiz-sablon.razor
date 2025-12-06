@@ -27,7 +27,7 @@
     }
 
     // ------------------------------------------------------------
-    //  POST → URL üretici (en önemli düzeltme)
+    //  POST → URL üretici 
     // ------------------------------------------------------------
     private string GetPostUrl(Post p)
     {
@@ -103,7 +103,6 @@
                     <a class="nav-link active" href="javascript:void(0)" onclick="filterCategory(0)">Hepsini Göster</a>
                 </li>
 
-                @* Filtrelenmiş distinctCategories listesi kullanılır *@
                 @foreach (var cat in distinctCategories)
                 {
                     <li class="nav-item">

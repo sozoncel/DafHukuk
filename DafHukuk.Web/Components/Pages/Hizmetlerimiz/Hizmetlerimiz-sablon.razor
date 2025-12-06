@@ -10,24 +10,21 @@
     private Post featuredPost;
 
     private List<Post> allPosts = new();
-    private List<Post> servicePosts = new(); // CategoryId=18 → Hizmetler
+    private List<Post> servicePosts = new(); 
 
     protected override async Task OnInitializedAsync()
     {
         allPosts = await PostService.GetAll();
 
-        // 1) Aktif sayfanın postu
         currentPost = allPosts.FirstOrDefault(
             x => string.Equals(x.Slug_TR, slug, StringComparison.OrdinalIgnoreCase)
         );
 
-        // 2) Hizmet kategorisindeki tüm içerikler (currentPost?.Id kontrolü ekledik)
         servicePosts = allPosts
             .Where(p => p.CategoryId == 18 && p.Id != currentPost?.Id)
             .OrderBy(p => p.Title_TR)
             .ToList();
 
-        // 3) FEATURED POST — son 12 ay içinden rastgele, yoksa tümünden rastgele
         var dateCutOff = DateTime.Now.AddMonths(-12);
 
         var recent = allPosts
@@ -45,7 +42,6 @@
         }
     }
 
-    // Featured url belirleme
     private string GetFeaturedUrl()
     {
         if (featuredPost == null || featuredPost.Category == null)
@@ -65,6 +61,7 @@
 <PageTitle>@currentPost?.Title_TR</PageTitle>
 
 
+<!-- HERO -->
 <section class="hero-servicesTemplate-section">
 
     <div class="hero-servicesTemplate-bg"
@@ -96,12 +93,16 @@
 
 
 <section class="page-content service-page-content">
+
+    <!-- ANA İÇERİK -->
     <div class="row">
 
+        <!-- SOL ANA METİN -->
         <div class="col-lg-9">
-            <p>@((MarkupString)currentPost?.Content_TR)</p> 
+            <p>@((MarkupString)currentPost?.Content_TR)</p>
         </div>
 
+        <!-- SAĞ SİDEBAR -->
         <div class="col-lg-3">
 
             <div class="dropdown modern-dropdown w-100 mb-3">
@@ -140,29 +141,86 @@
 
     </div>
 
+
+
+
+    <!-- ======================================================== -->
+    <!--  İLGİLİ KİŞİLER & ÖNE ÇIKAN YAYINLAR -->
+    <!-- ======================================================== -->
+
     <div class="row section-separator">
-        <div class="col-sm-9">
-            <h4>İlgili kişiler</h4>
-        </div>
-        <div class="col-sm-3">
-            <h5 class="featured-publications-title">Öne Çıkan Yayınlar</h5>
+        <div class="col-12">
+            <h4 class="text-start text-lg-start text-center">İlgili kişiler</h4>
         </div>
     </div>
 
-    <div class="row featured">
+    <div class="row featured align-items-start">
 
-        <div class="col-md-9">
-            @* İlgili Kişiler İçeriği Buraya Gelecek *@
+        <!-- İLGİLİ KİŞİLER -->
+        <div class="col-lg-9 col-md-12 mb-4">
+
+            <div class="row team-cards-row g-4">
+
+                <!-- KART 1 -->
+                <div class="col-12 team-card-col">
+                    <div class="hizmetlerimiz-avukat-card">
+                        <img src="img/sayfalar/ekibimiz/daf-ekip-01.jpg" class="hizmetlerimiz-avukat-img" alt="Avukat Serdar Bek">
+                        <a href="/ekibimiz/template" class="hizmetlerimiz-avukat-name-link">
+                            <h3 class="hizmetlerimiz-avukat-name">Serdar Bek</h3>
+                        </a>
+                        <hr class="card-divider">
+                        <a href="mailto:serdarbek@daf.com" class="mail-box-link">
+                            <i class="fa fa-envelope-o"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- KART 2 -->
+                <div class="col-12 team-card-col">
+                    <div class="hizmetlerimiz-avukat-card">
+                        <img src="img/sayfalar/ekibimiz/daf-ekip-02.jpg" class="hizmetlerimiz-avukat-img" alt="Avukat Ahmet Yilmaz">
+                        <a href="#" class="hizmetlerimiz-avukat-name-link">
+                            <h3 class="hizmetlerimiz-avukat-name">Ahmet Yılmaz</h3>
+                        </a>
+                        <hr class="card-divider">
+                        <a href="mailto:ahmetyilmaz@daf.com" class="mail-box-link">
+                            <i class="fa fa-envelope-o"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- KART 3 -->
+                <div class="col-12 team-card-col">
+                    <div class="hizmetlerimiz-avukat-card">
+                        <img src="img/sayfalar/ekibimiz/daf-ekip-03.jpg" class="hizmetlerimiz-avukat-img" alt="Avukat Davut Ata">
+                        <a href="#" class="hizmetlerimiz-avukat-name-link">
+                            <h3 class="hizmetlerimiz-avukat-name">Davut Ata</h3>
+                        </a>
+                        <hr class="card-divider">
+                        <a href="mailto:davutata@daf.com" class="mail-box-link">
+                            <i class="fa fa-envelope-o"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="col-md-3">
+
+        <!-- ÖNE ÇIKAN YAYIN -->
+        <div class="col-lg-3 col-md-12">
+
+            <h5 class="featured-publications-title text-center text-lg-start mb-3">
+                Öne Çıkan Yayınlar
+            </h5>
 
             @if (featuredPost != null)
             {
                 <div class="content-card featured-publication-card">
 
                     <p class="created-Date">
-                        @featuredPost.PublishedDate.ToString("dd MMMM yyyy")
+                        @featuredPost.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
                     </p>
 
                     <img class="featured-img" src="@featuredPost.CoverImageUrl" alt="@featuredPost.Title_TR">
@@ -193,8 +251,9 @@
 
     </div>
 
-    @*      İÇERİKLER BÖLÜMÜ     *@
 
+
+    <!-- ======== İLİŞKİLİ İÇERİKLER ======== -->
 
     <div class="row related-content-nav-row mt-5 mb-3">
         <div class="col-sm-12">
@@ -202,14 +261,12 @@
 
             <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
 
-                @* TÜMÜ *@
                 <li class="nav-item">
                     <a class="nav-link active" href="javascript:void(0)" onclick="filterCategory(0)">
                         Hepsini Göster
                     </a>
                 </li>
 
-                @* KATEGORİ TABS *@
                 @foreach (var cat in allPosts
                                 .Where(x => x.Category != null)
                                 .Select(x => x.Category)
@@ -220,7 +277,6 @@
                         <a class="nav-link"
                            href="javascript:void(0)"
                            onclick="filterCategory(@cat.Id)">
-
                             @cat.Name_TR
                         </a>
                     </li>
@@ -229,7 +285,9 @@
         </div>
     </div>
 
-    @*      İÇERİK KART LİSTESİ     *@
+
+    <!-- ======== İÇERİK KART GRİD ======== -->
+
     <div class="row content-cards-row" id="contentContainer">
 
         @foreach (var p in allPosts
@@ -253,7 +311,7 @@
                 <div class="content-card">
 
                     <p class="created-Date">
-                        @p.PublishedDate.ToString("dd MMMM yyyy")
+                        @p.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
                     </p>
 
                     <a href="@url" class="content-title-link">
@@ -275,7 +333,8 @@
                 }
     </div>
 
-    @* BOŞ İÇERİK MESAJI *@
+
+    <!-- BOŞ MESAJ -->
     <div class="row">
         <div class="col-12 text-center">
             <p id="noContentMessage"
@@ -285,7 +344,8 @@
         </div>
     </div>
 
-    @* TÜMÜNÜ GÖSTER *@
+
+    <!-- TÜMÜNÜ GÖSTER -->
     <div class="row mt-4 mb-5">
         <div class="col-lg-12 text-center">
             <button id="showAllButton"

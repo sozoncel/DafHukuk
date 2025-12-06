@@ -16,68 +16,27 @@
 </section>
 
 <section class="ourteam-content">
-    
     <div class="ourteam-page-content">
-        @* Açıklama Metni *@
+
+        <!-- AÇIKLAMA METNİ -->
         <div class="row info-row">
             <div class="col-lg-12">
                 <p class="team-info-text">
-                    120’nin üstünde avukat, danışman ve destek birimini bünyesinde barındıran Paksoy ekibi, tamamen çözüm odaklı çalışma anlayışı, kusursuz hizmet kalitesi ve müvekkil memnuniyetine bağlılığıyla bilinmektedir.
+                    120’nin üstünde avukat, danışman ve destek birimini bünyesinde barındıran Daf ekibi,
+                    çözüm odaklı çalışma anlayışı, yüksek hizmet kalitesi ve müvekkil memnuniyetine bağlılığıyla tanınır.
                 </p>
             </div>
         </div>
 
-        @* FİLTRE VE ARAMA KISMI *@
-        <div class="row filter-row">
-
-            <div class="col-lg-4 col-md-12 search-col">
-                <div class="name-filter">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="İsimle Ara">
-                        <div class="input-group-append">
-                            <button class="btn btn-search-icon" type="button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @* Çalışma Alanları Filtresi (Dinamik class ile açma/kapama) *@
-            <div class="col-lg-4 col-md-6 filter-col">
-                <div class="@(isAreaFilterOpen ? "my_filter_item my_filter_select my_filter_area open" : "my_filter_item my_filter_select my_filter_area")">
-                    <div class="my_filter_selected" @onclick="ToggleAreaFilter">Çalışma Alanları <span>(Tümü)</span></div>
-                    <ul>
-                        <li data-filter="area_one"><input type="checkbox"> <span>Kurumsal Hukuk</span></li>
-                        <li data-filter="area_two"><input type="checkbox"> <span>Fikri Mülkiyet</span></li>
-                        <li data-filter="area_three"><input type="checkbox"> <span>Gayrimenkul Hukuku</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            @* Pozisyon Filtresi (Dinamik class ile açma/kapama) *@
-            <div class="col-lg-4 col-md-6 filter-col">
-                <div class="@(isPositionFilterOpen ? "my_filter_item my_filter_select my_filter_position open" : "my_filter_item my_filter_select my_filter_position")">
-                    <div class="my_filter_selected" @onclick="TogglePositionFilter">Pozisyon <span>(Tümü)</span></div>
-                    <ul>
-                        <li data-filter="pozisyon_kurucu"><input type="checkbox"> <span>Kurucu, Kıdemli ve Yönetici Ortak Avukat</span></li>
-                        <li data-filter="pozisyon_ortak"><input type="checkbox"> <span>Ortak</span></li>
-                        <li data-filter="pozisyon_stajyer"><input type="checkbox"> <span>Yasal Stajyer</span></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        @* AVUKAT KARTLARI KISMI (Değişiklik yapılmadı) *@
+        <!-- EKİP KARTLARI -->
         <div class="row team-cards-row">
 
-            <div class="col-lg-3 col-md-6 col-sm-12 team-card-col">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 team-card-col">
                 <div class="avukat-card">
-                    <img src="img/sayfalar/ekibimiz/daf-ekip-01.jpg" alt="Avukat Serdar Bek" class="avukat-img">
-                    <a href="#" class="avukat-name-link">
-                        <a href="/ekibimiz/template"> <h3 class="avukat-name">Serdar Bek</h3></a>
+                    <img src="img/sayfalar/ekibimiz/daf-ekip-01.jpg" class="avukat-img" alt="Avukat Serdar Bek">
+                    <a href="/ekibimiz/template" class="avukat-name-link">
+                        <h3 class="avukat-name">Serdar Bek</h3>
                     </a>
-                    <p class="avukat-position">Kurucu, Kıdemli ve Yönetici</p>
                     <hr class="card-divider">
                     <a href="mailto:serdarbek@daf.com" class="mail-box-link">
                         <i class="fa fa-envelope-o"></i>
@@ -85,13 +44,10 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12 team-card-col">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 team-card-col">
                 <div class="avukat-card">
-                    <img src="img/sayfalar/ekibimiz/daf-ekip-02.jpg" alt="Avukat Ahmet Yılmaz" class="avukat-img">
-                    <a href="#" class="avukat-name-link">
-                        <h3 class="avukat-name">Ahmet Yılmaz</h3>
-                    </a>
-                    <p class="avukat-position">Ortak</p>
+                    <img src="img/sayfalar/ekibimiz/daf-ekip-02.jpg" class="avukat-img" alt="Avukat Ahmet Yılmaz">
+                    <a href="#" class="avukat-name-link"><h3 class="avukat-name">Ahmet Yılmaz</h3></a>
                     <hr class="card-divider">
                     <a href="mailto:ahmetyilmaz@daf.com" class="mail-box-link">
                         <i class="fa fa-envelope-o"></i>
@@ -99,47 +55,17 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12 team-card-col">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 team-card-col">
                 <div class="avukat-card">
-                    <img src="img/sayfalar/ekibimiz/daf-ekip-03.jpg" alt="Avukat Davut Ata" class="avukat-img">
-                    <a href="#" class="avukat-name-link">
-                        <h3 class="avukat-name">Davut Ata</h3>
-                    </a>
-                    <p class="avukat-position">Kıdemli Avukat</p>
+                    <img src="img/sayfalar/ekibimiz/daf-ekip-03.jpg" class="avukat-img" alt="Avukat Davut Ata">
+                    <a href="#" class="avukat-name-link"><h3 class="avukat-name">Davut Ata</h3></a>
                     <hr class="card-divider">
-                    <a href="mailto:aysedogan@daf.com" class="mail-box-link">
+                    <a href="mailto:davutata@daf.com" class="mail-box-link">
                         <i class="fa fa-envelope-o"></i>
                     </a>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </section>
-
-@code {
-    private bool isAreaFilterOpen = false;
-    private bool isPositionFilterOpen = false;
-
-    private void ToggleAreaFilter()
-    {
-        // Çalışma Alanları filtresini aç/kapa
-        isAreaFilterOpen = !isAreaFilterOpen;
-        // Diğer filtreyi kapat
-        if (isAreaFilterOpen)
-        {
-            isPositionFilterOpen = false;
-        }
-    }
-
-    private void TogglePositionFilter()
-    {
-        // Pozisyon filtresini aç/kapa
-        isPositionFilterOpen = !isPositionFilterOpen;
-        // Diğer filtreyi kapat
-        if (isPositionFilterOpen)
-        {
-            isAreaFilterOpen = false;
-        }
-    }
-}

@@ -87,7 +87,7 @@
                     @currentPost.Title_TR
                 </h1>
 
-                <p class="hero-post-date">@currentPost.PublishedDate.ToString("dd MMMM yyyy")</p>
+                <p class="hero-post-date">@currentPost.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</p>
 
                 <div class="hero-servicesTemplate-breadcrumb">
                     <a href="/">Ana Sayfa</a> /
@@ -172,7 +172,7 @@
         {
             <div class="col-lg-4 mb-4 content-card-wrapper">
                 <div class="content-card content-card-sm p-3 rounded h-100">
-                    <p class="created-Date small text-muted">@p.PublishedDate.ToString("dd MMMM yyyy")</p>
+                    <p class="created-Date small text-muted">@p.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</p>
 
                     <a href="@GetPostUrl(p)" class="content-title-link">
                         <h3 class="textContent h5 fw-bold">@p.Title_TR</h3>

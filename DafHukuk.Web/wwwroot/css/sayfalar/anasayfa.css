@@ -1,5 +1,9 @@
-﻿/* ANİMASYON */
-@keyframes slideUpFadeIn {
+﻿/* =========================================================
+   STİLLER (Anasayfa.css) - Türkçeleştirilmiş
+========================================================= */
+
+/* ANİMASYON */
+@keyframes yukariKaydirSoluklestir {
     from {
         transform: translateY(30px);
         opacity: 0;
@@ -12,7 +16,7 @@
 }
 
 /* ANA GÖRSEL (HERO) BÖLÜMÜ */
-.hero-section {
+.ana-gorsel-bolumu {
     position: relative;
     width: 100%;
     height: 90vh;
@@ -24,7 +28,7 @@
     overflow: hidden;
 }
 
-.hero-bg {
+.ana-gorsel-arka-plan {
     position: absolute;
     inset: 0;
     background-image: url("/img/sayfalar/anasayfa/daf-anasayfa-office2k.png");
@@ -33,14 +37,14 @@
     z-index: 1;
 }
 
-.hero-overlay {
+.ana-gorsel-katman {
     position: absolute;
     inset: 0;
     background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
     z-index: 2;
 }
 
-.hero-container {
+.ana-gorsel-konteyner {
     position: relative;
     z-index: 3;
     width: 100%;
@@ -54,12 +58,12 @@
     justify-content: flex-end;
 }
 
-/* HERO İÇERİK (ÜST METİN) */
-.hero-content-col {
+/* ANA GÖRSEL İÇERİK (ÜST METİN) */
+.ana-gorsel-icerik-sutunu {
     margin-bottom: 40px;
 }
 
-.hero-lead-text {
+.ana-gorsel-giris-metni {
     font-size: 22px;
     line-height: 1.6;
     font-weight: 300;
@@ -68,8 +72,8 @@
     max-width: 800px;
 }
 
-/* HERO ALT SATIR (SLOGAN + WIDGET) */
-.hero-bottom-row {
+/* ANA GÖRSEL ALT SATIR (SLOGAN + WIDGET) */
+.ana-gorsel-alt-satir {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -77,11 +81,11 @@
 }
 
 /* Slogan */
-.slogan-wrapper {
+.slogan-kapsayici {
     padding-bottom: 60px;
 }
 
-.slogan-text-style {
+.slogan-metin-stili {
     font-family: "Playfair Display", Georgia, serif;
     font-size: 20px;
     font-weight: 700;
@@ -93,14 +97,14 @@
 }
 
 /* HABER WIDGETI (SAĞ ALT KUTU) */
-.news-widget {
+.haber-araci {
     display: flex;
     height: 160px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    animation: slideUpFadeIn 0.8s ease-out 0.2s backwards;
+    animation: yukariKaydirSoluklestir 0.8s ease-out 0.2s backwards;
 }
 
-.news-title-box {
+.haber-baslik-kutusu {
     background-color: #28406d;
     width: 240px;
     display: flex;
@@ -110,14 +114,14 @@
     padding: 20px;
 }
 
-    .news-title-box span {
+    .haber-baslik-kutusu span {
         color: #fff;
         font-size: 20px;
         font-weight: 300;
         line-height: 1.3;
     }
 
-.news-content-box {
+.haber-icerik-kutusu {
     background-color: #4e5466;
     width: 500px;
     display: flex;
@@ -126,7 +130,7 @@
     gap: 25px;
 }
 
-.news-img-wrapper {
+.haber-gorsel-kapsayici {
     flex-shrink: 0;
     width: 140px;
     height: 90px;
@@ -134,26 +138,26 @@
     background: #000;
 }
 
-    .news-img-wrapper img {
+    .haber-gorsel-kapsayici img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-.news-info {
+.haber-bilgi {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.news-date {
+.haber-tarih {
     font-size: 13px;
     opacity: 0.8;
     margin-bottom: 5px;
     color: #ddd;
 }
 
-.news-link {
+.haber-baglanti {
     font-size: 16px;
     font-weight: 700;
     color: #fff;
@@ -162,38 +166,38 @@
     transition: opacity 0.3s;
 }
 
-    .news-link:hover {
+    .haber-baglanti:hover {
         opacity: 0.8;
     }
 
 /* RESPONSIVE (MOBİL) STİLLERİ */
 @media (max-width: 1200px) {
-    .hero-container {
+    .ana-gorsel-konteyner {
         padding: 0 30px;
     }
 
-    .news-content-box {
+    .haber-icerik-kutusu {
         width: 400px;
     }
 }
 
 @media (max-width: 992px) {
-    .hero-section {
+    .ana-gorsel-bolumu {
         height: auto;
         padding-bottom: 0;
     }
 
-    .hero-container {
+    .ana-gorsel-konteyner {
         padding: 120px 24px 0 24px;
         justify-content: flex-start;
     }
 
-    .hero-lead-text {
+    .ana-gorsel-giris-metni {
         font-size: 18px;
         margin-bottom: 40px;
     }
 
-    .hero-bottom-row {
+    .ana-gorsel-alt-satir {
         flex-direction: column;
         align-items: flex-start;
         gap: 40px;
@@ -201,29 +205,29 @@
         margin-top: auto;
     }
 
-    .slogan-wrapper {
+    .slogan-kapsayici {
         display: none;
     }
 
-    .news-widget {
+    .haber-araci {
         width: 100%;
         height: auto;
         flex-direction: column;
     }
 
-    .news-title-box,
-    .news-content-box {
+    .haber-baslik-kutusu,
+    .haber-icerik-kutusu {
         width: 100%;
         height: auto;
         padding: 20px;
     }
 
-    .news-title-box {
+    .haber-baslik-kutusu {
         justify-content: flex-start;
         text-align: left;
     }
 
-        .news-title-box span br {
+        .haber-baslik-kutusu span br {
             display: none;
         }
 }
