@@ -301,7 +301,6 @@
 .about-awards-section {
     padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: clamp(3rem, 8vw, 6rem);
-    background-color: #F8F9FA;
 }
 
     .about-awards-section .main-header {
@@ -544,6 +543,7 @@
 
 /* Etiket (Tagline) Bölümü Stilleri */
 .tagline-section {
+    max-width: 1400px;
     margin: 0 auto;
     background-color: #f8f8f8; /* Bir Tık Koyu Gri Arka Plan */
     padding-top: clamp(3rem, 8vw, 6rem);

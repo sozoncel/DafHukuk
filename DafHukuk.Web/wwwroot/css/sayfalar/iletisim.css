@@ -128,7 +128,9 @@
 }
 
 .iletisim-card-inner {
+    margin-top: 1rem;
     border: 1px solid #eee;
+    background-color: #f8f9fa;
     padding: 28px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
 }
@@ -292,7 +294,8 @@
 
 /* SAĞ - FORM */
 .contact-form {
-    background: transparent;
+    margin-top: 1rem;
+    background-color: #f8f9fa;
     padding: 28px 20px;
 }
 

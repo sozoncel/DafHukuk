@@ -1,35 +1,283 @@
 ﻿@page "/admin"
-@using DafHukuk.Web.Components.Layout
-@layout AdminMainLayout  
-@* admin layout yazılıp güncelleştirilecek *@
+@layout DafHukuk.Web.Components.Layout.AdminMainLayout
+@rendermode InteractiveServer
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
-<h3>Hoşgeldiniz, Yönetici!</h3>
-<hr />
+@inject ICategoryService CategoryService
+@inject IPostService PostService
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-header">Toplam Makale</div>
-            <div class="card-body">
-                <h1 class="card-title">0</h1>
-            </div>
+<div class="dashboard-container">
+
+    <!-- HEADER -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Hoş Geldiniz! 👋</h1>
+            <p class="dashboard-subtitle">İşte bugünün genel görünümü</p>
+        </div>
+        <div class="dashboard-date">
+            <i class="bi bi-calendar3"></i>
+            <span>@DateTime.Now.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</span>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-header">Aktif Avukatlar</div>
-            <div class="card-body">
-                <h1 class="card-title">0</h1>
+
+    <!-- İSTATİSTİK KARTLARI -->
+    <div class="stats-grid">
+
+        <!-- TOPLAM İÇERİK -->
+        <div class="stat-card stat-card-primary">
+            <div class="stat-card-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-label">Toplam İçerik</p>
+                <h2 class="stat-card-value">@totalPosts</h2>
+                <p class="stat-card-change positive">
+                    <i class="bi bi-arrow-up"></i>
+                    <span>+@recentPosts bu ay</span>
+                </p>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-header">Okunmamış Mesajlar</div>
-            <div class="card-body">
-                <h1 class="card-title">0</h1>
+
+        <!-- KATEGORİLER -->
+        <div class="stat-card stat-card-success">
+            <div class="stat-card-icon">
+                <i class="bi bi-bookmark"></i>
             </div>
+            <div class="stat-card-content">
+                <p class="stat-card-label">Kategoriler</p>
+                <h2 class="stat-card-value">@totalCategories</h2>
+                <p class="stat-card-change">
+                    <i class="bi bi-dot"></i>
+                    <span>Aktif kategoriler</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- AKTİF İÇERİKLER -->
+        <div class="stat-card stat-card-warning">
+            <div class="stat-card-icon">
+                <i class="bi bi-eye"></i>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-label">Aktif İçerikler</p>
+                <h2 class="stat-card-value">@activePosts</h2>
+                <p class="stat-card-change">
+                    <i class="bi bi-dot"></i>
+                    <span>Yayında</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- SON GÜNCELLEMELER -->
+        <div class="stat-card stat-card-info">
+            <div class="stat-card-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-label">Son Güncelleme</p>
+                <h2 class="stat-card-value">@daysAgo</h2>
+                <p class="stat-card-change">
+                    <i class="bi bi-dot"></i>
+                    <span>Gün önce</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- İÇERİK ÖZETİ -->
+    <div class="dashboard-row">
+
+        <!-- SON İÇERİKLER -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="bi bi-newspaper"></i>
+                    Son İçerikler
+                </h3>
+                <a href="/admin/yonetim" class="card-link">
+                    Tümünü Gör
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                @if (loading)
+                {
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Yükleniyor...</p>
+                    </div>
+                }
+                else if (!latestPosts.Any())
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Henüz içerik yok</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="content-list">
+                        @foreach (var post in latestPosts.Take(5))
+                        {
+                            <div class="content-item">
+                                <div class="content-item-icon">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <div class="content-item-info">
+                                    <h4 class="content-item-title">@post.Title_TR</h4>
+                                    <p class="content-item-meta">
+                                        <span class="badge-category" style="background: @GetCategoryColor(post.Category?.Name_TR);">
+                                            @post.Category?.Name_TR
+                                        </span>
+                                        <span class="content-item-date">
+                                            @post.PublishedDate.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- KATEGORİ DAĞILIMI -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="bi bi-pie-chart"></i>
+                    Kategori Dağılımı
+                </h3>
+            </div>
+            <div class="card-body">
+                @if (loading)
+                {
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Yükleniyor...</p>
+                    </div>
+                }
+                else if (!categoryStats.Any())
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Henüz kategori yok</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="category-stats">
+                        @foreach (var stat in categoryStats.Take(5))
+                        {
+                            <div class="category-stat-item">
+                                <div class="category-stat-header">
+                                    <span class="category-stat-name">@stat.CategoryName</span>
+                                    <span class="category-stat-count">@stat.Count</span>
+                                </div>
+                                <div class="category-stat-bar">
+                                    <div class="category-stat-progress"
+                                         style="width: @stat.Percentage%; background: @GetCategoryColor(stat.CategoryName);"></div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <!-- HIZLI ERİŞİM -->
+    <div class="quick-actions">
+        <h3 class="quick-actions-title">Hızlı İşlemler</h3>
+        <div class="quick-actions-grid">
+
+            <a href="/admin/yonetim" class="quick-action-card">
+                <div class="quick-action-icon bg-primary">
+                    <i class="bi bi-plus-circle"></i>
+                </div>
+                <h4 class="quick-action-title">Yeni İçerik</h4>
+                <p class="quick-action-desc">İçerik ekle</p>
+            </a>
         </div>
     </div>
 </div>
+
+@code {
+    private bool loading = true;
+    private int totalPosts = 0;
+    private int totalCategories = 0;
+    private int activePosts = 0;
+    private int recentPosts = 0;
+    private int daysAgo = 0;
+
+    private List<Post> latestPosts = new();
+    private List<CategoryStat> categoryStats = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var posts = await PostService.GetAll();
+            var categories = await CategoryService.GetAll();
+
+            totalPosts = posts.Count;
+            totalCategories = categories.Count;
+            activePosts = posts.Count(p => p.IsActive);
+
+            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+            recentPosts = posts.Count(p => p.CreatedDate >= thirtyDaysAgo);
+
+            if (posts.Any())
+            {
+                var lastUpdate = posts.Max(p => p.CreatedDate);
+                daysAgo = (DateTime.Now - lastUpdate).Days;
+            }
+
+            latestPosts = posts.OrderByDescending(p => p.PublishedDate).Take(5).ToList();
+
+            categoryStats = posts
+                .Where(p => p.Category != null)
+                .GroupBy(p => p.Category.Name_TR)
+                .Select(g => new CategoryStat
+                {
+                    CategoryName = g.Key,
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / totalPosts * 100
+                })
+                .OrderByDescending(s => s.Count)
+                .ToList();
+
+            loading = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hata: {ex.Message}");
+            loading = false;
+        }
+    }
+
+    private string GetCategoryColor(string? categoryName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return "#3b82f6";
+
+        return categoryName.ToLowerInvariant() switch
+        {
+            "hizmetlerimiz" => "#366C80",
+            "duyurular" => "#5c7341",
+            "etkinlikler" => "#78514A",
+            "yayınlar" => "#dfb899",
+            "yayinlar" => "#dfb899",
+            _ => "#3b82f6"
+        };
+    }
+
+    private class CategoryStat
+    {
+        public string CategoryName { get; set; }
+        public int Count { get; set; }
+        public double Percentage { get; set; }
+    }
+}

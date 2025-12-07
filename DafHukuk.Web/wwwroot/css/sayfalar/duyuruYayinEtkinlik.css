@@ -1,10 +1,4 @@
 ﻿/* İÇERİK BÖLÜMÜ */
-body{
-    background-color: #F8F9FA;
-}
-.main-content{
-    background-color: #F8F9FA;
-}
 .icerikBolumu {
     /* Değişiklik: Yatay padding'ler kaldırıldı veya azaltıldı */
     padding: 60px 20px; /* Üst/Alt padding 60px, Sağ/Sol padding 20px (Paksoy'daki gibi az boşluk) */
