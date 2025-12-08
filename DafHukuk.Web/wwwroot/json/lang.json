@@ -1,0 +1,20 @@
+﻿{
+  "tr": {
+    "save": "Kaydet",
+    "title": "Başlık",
+    "content": "İçerik",
+    "category": "Kategori",
+    "language": "Dil",
+    "success": "İçerik başarıyla kaydedildi.",
+    "error": "Kayıt sırasında hata oluştu."
+  },
+  "en": {
+    "save": "Save",
+    "title": "Title",
+    "content": "Content",
+    "category": "Category",
+    "language": "Language",
+    "success": "Content saved successfully.",
+    "error": "Error while saving content."
+  }
+}

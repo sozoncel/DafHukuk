@@ -103,7 +103,6 @@
     {
         RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
 
-        // Geliştirici modunu kontrol et (basit bir örnek)
         IsDevelopmentMode = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
     }
 

@@ -3,9 +3,11 @@
 @rendermode InteractiveServer
 
 @using DafHukuk.Core.Entities
+@using System.Net.Http.Json
 @inject ICategoryService CategoryService
 @inject IPostService PostService
 @inject IJSRuntime JS
+@inject HttpClient Http
 
 <div class="container-fluid px-4 py-4">
 
@@ -48,18 +50,16 @@
         </div>
     }
 
-    <!-- FORM BÖLÜMÜ -->
     <div class="row g-4 mb-5">
-
         <div class="col-lg-4">
-            <div class="card admin-card h-100">
+            <div class="card admin-card">
                 <div class="card-body">
                     <h5 class="card-title mb-4">
-                        <i class="bi bi-info-circle me-2"></i>
-                        @GetText("generalInfo")
+                        <i class="bi bi-plus-circle me-2"></i>
+                        @GetText("newContentTitle")
                     </h5>
 
-                    <!-- KATEGORİ SEÇİMİ -->
+                    @* Kategori Seçimi *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-folder me-1"></i>
@@ -74,7 +74,7 @@
                         </select>
                     </div>
 
-                    <!-- KAPAK RESMİ -->
+                    @* Kapak Resmi URL *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-image me-1"></i>
@@ -90,7 +90,7 @@
                         </div>
                     </div>
 
-                    <!-- YAYIN TARİHİ -->
+                    @* Yayın Tarihi *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-calendar-event me-1"></i>
@@ -99,7 +99,21 @@
                         <InputDate class="form-control" @bind-Value="newPost.PublishedDate" />
                     </div>
 
-                    <!-- DİL SEÇİMİ -->
+                    @* Aktif/Pasif Durumu *@
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">
+                            <i class="bi bi-activity me-1"></i>
+                            @GetText("activeState")
+                        </label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isActiveSwitch" @bind="newPost.IsActive">
+                            <label class="form-check-label" for="isActiveSwitch">
+                                @(newPost.IsActive? GetText("active") : GetText("passive"))
+                            </label>
+                        </div>
+                    </div>
+
+                    @* Kaydedilecek Diller *@
                     <div class="mb-4">
                         <label class="form-label d-block mb-2">
                             <i class="bi bi-translate me-1"></i>
@@ -107,78 +121,51 @@
                         </label>
                         <div class="d-flex gap-3">
                             <div class="form-check">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="langTr"
-                                       @bind="includeTr" />
-                                <label class="form-check-label" for="langTr">
-                                    🇹🇷 TR
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="langTr" @bind="includeTr" />
+                                <label class="form-check-label" for="langTr">🇹🇷 TR</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="langEn"
-                                       @bind="includeEn" />
-                                <label class="form-check-label" for="langEn">
-                                    🇬🇧 EN
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="langEn" @bind="includeEn" />
+                                <label class="form-check-label" for="langEn">🇬🇧 EN</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="langAr"
-                                       @bind="includeAr" />
-                                <label class="form-check-label" for="langAr">
-                                    🇸🇦 AR
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="langAr" @bind="includeAr" />
+                                <label class="form-check-label" for="langAr">🇸🇦 AR</label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- KAYDET BUTONU -->
+                    @* Kaydet Butonu *@
                     <button class="btn btn-primary btn-lg w-100"
-                            @onclick="SavePost"
+                            @onclick="CreatePost"
                             disabled="@isSaving">
                         <i class="bi @(isSaving ? "bi-hourglass-split" : "bi-save") me-2"></i>
-                        @(isSaving ? GetText("saving") : GetText("saveContent"))
+                        @(isSaving? GetText("saving") : GetText("saveContent"))
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- SAĞ: DİL SEKMELERİ -->
         <div class="col-lg-8">
-            <div class="card admin-card h-100">
+            <div class="card admin-card">
+                @* Dil Sekmeleri *@
                 <div class="card-header bg-white border-bottom">
                     <ul class="nav nav-tabs card-header-tabs nav-fill border-0">
                         <li class="nav-item">
-                            <button class='@GetTabClass("tr")'
-                                    @onclick='() => SwitchLang("tr")'
-                                    type="button">
-                                🇹🇷 Türkçe
-                            </button>
+                            <button class='@GetTabClass("tr")' @onclick='() => SwitchLang("tr")' type="button">🇹🇷 Türkçe</button>
                         </li>
                         <li class="nav-item">
-                            <button class='@GetTabClass("en")'
-                                    @onclick='() => SwitchLang("en")'
-                                    type="button">
-                                🇬🇧 English
-                            </button>
+                            <button class='@GetTabClass("en")' @onclick='() => SwitchLang("en")' type="button">🇬🇧 English</button>
                         </li>
                         <li class="nav-item">
-                            <button class='@GetTabClass("ar")'
-                                    @onclick='() => SwitchLang("ar")'
-                                    type="button">
-                                🇸🇦 العربية
-                            </button>
+                            <button class='@GetTabClass("ar")' @onclick='() => SwitchLang("ar")' type="button">🇸🇦 العربية</button>
                         </li>
                     </ul>
                 </div>
 
+                @* Dil İçerikleri *@
                 <div class="card-body">
-
-                    <!-- TÜRKÇE -->
+                    @* Türkçe Alanlar *@
                     <div class='@GetLangClass("tr")'>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -201,7 +188,7 @@
                         </div>
                     </div>
 
-                    <!-- İNGİLİZCE -->
+                    @* İngilizce Alanlar *@
                     <div class='@GetLangClass("en")'>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -224,7 +211,7 @@
                         </div>
                     </div>
 
-                    <!-- ARAPÇA -->
+                    @* Arapça Alanlar *@
                     <div class='@GetLangClass("ar")' dir="rtl">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -252,272 +239,246 @@
         </div>
     </div>
 
-    <!-- KATEGORİLER BÖLÜMÜ -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card admin-card">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">
-                        <i class="bi bi-bookmark-fill me-2"></i>
-                        @GetText("savedCategories")
-                    </h5>
-                    <div class="d-flex flex-wrap gap-2">
-                        @if (!categories.Any())
-                        {
-                            <span class="text-muted">@GetText("noCategories")</span>
-                        }
-                        else
-                        {
-                            @foreach (var c in categories)
-                            {
-                                <span class="badge bg-primary bg-gradient px-3 py-2 fs-6">
-                                    @GetCategoryName(c)
-                                </span>
-                            }
-                        }
-                    </div>
-                </div>
+    @* İÇERİK LİSTESİ *@
+    <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-list-columns-reverse me-2"></i>
+            @GetText("contentList") (@posts.Count)
+        </h3>
+
+        @* Filtreler ve Arama *@
+        <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100 w-md-auto">
+            <div class="input-group search-input-group">
+                <input type="text" class="form-control" @bind-value="searchTerm" @bind-value:event="oninput" placeholder="@GetText("searchPlaceholder")" />
+                <button class="btn btn-outline-secondary" @onclick="SearchContent">
+                    <i class="bi bi-search"></i>
+                </button>
             </div>
+
+            <select class="form-select filter-select" @bind="filterCategoryId" @bind:after="OnFilterChange">
+                <option value="0">@GetText("allCategories")</option>
+                @foreach (var c in categories)
+                {
+                    <option value="@c.Id">@GetCategoryNameByFilter(c)</option>
+                }
+            </select>
+
+            <select class="form-select filter-select" @bind="filterLanguage" @bind:after="OnFilterChange">
+                <option value="tr">🇹🇷 TR</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="ar">🇸🇦 AR</option>
+            </select>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card admin-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-file-text-fill me-2"></i>
-                            @GetText("recentPosts") (@FilteredPostsCount)
-                        </h5>
+    @if (isListLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">@GetText("loadingList")</span>
+            </div>
+            <p class="text-muted mt-2">@GetText("loadingList")</p>
+        </div>
+    }
+    else if (posts.Count == 0)
+    {
+        <div class="text-center py-5 border rounded bg-light text-muted">
+            <i class="bi bi-inbox fs-1 mb-3"></i>
+            <p>@GetText("noContent")</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var p in posts)
+            {
+                var categoryName = p.Category != null ? GetCategoryNameByFilter(p.Category) : "Genel";
+                var url = GetPostUrl(p);
 
-                        <!-- FİLTRE VE KONTROLLER -->
-                        <div class="d-flex gap-2 flex-wrap align-items-center">
-                            <!-- KATEGORİ FİLTRESİ -->
-                            <select class="form-select form-select-sm filter-select"
-                                    @bind="filterCategoryId"
-                                    @bind:after="ApplyFilter">
-                                <option value="0">@GetText("allCategories")</option>
-                                @foreach (var c in categories)
-                                {
-                                    <option value="@c.Id">@GetCategoryName(c)</option>
-                                }
-                            </select>
+                <div class="col">
+                    <div class="admin-content-card h-100 d-flex flex-column position-relative">
 
-                            <!-- DİL FİLTRESİ -->
-                            <select class="form-select form-select-sm filter-select"
-                                    @bind="filterLanguage"
-                                    @bind:after="ApplyFilter">
-                                <option value="all">@GetText("allLanguages")</option>
-                                <option value="tr">🇹🇷 Türkçe</option>
-                                <option value="en">🇬🇧 English</option>
-                                <option value="ar">🇸🇦 العربية</option>
-                            </select>
+                        @* KATEGORİ BADGE DÜZELTME *@
+                        <div class="admin-category-badge"
+                             style="background-color: @GetCategoryColor(categoryName);
+                                            position: absolute;
+                                            top: 10px;
+                                            left: 10px;
+                                            z-index: 10;
+                                            padding: 5px 10px;
+                                            border-radius: 5px;
+                                            color: white;
+                                            font-size: 0.8rem;
+                                            font-weight: bold;
+                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                            @categoryName
+                        </div>
 
-                            @if (VisibleHasMore())
-                            {
-                                <button class="btn btn-sm btn-outline-primary"
-                                        @onclick="LoadMorePosts"
-                                        disabled="@isAutoLoading">
-                                    <i class="bi bi-arrow-down-circle me-1"></i>
-                                    @GetText("loadMore")
+                        <div class="admin-card-image">
+                            <img src="@(string.IsNullOrWhiteSpace(p.CoverImageUrl) ? "https://via.placeholder.com/600x300?text=Görsel+Yok" : p.CoverImageUrl)"
+                                 class="card-img-top" alt="@GetPostTitle(p)" />
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-2 fw-bold">@GetPostTitle(p)</h5>
+                            <p class="card-text text-muted small mb-3">
+                                <i class="bi bi-calendar me-1"></i> @p.PublishedDate.ToShortDateString()
+                            </p>
+                            <p class="card-text flex-grow-1">@GetPostSummary(p)</p>
+                        </div>
+
+                        <div class="card-footer bg-white pt-0 border-0">
+                            <div class="d-flex gap-2 mt-auto">
+                                @* Görüntüle Butonu *@
+                                <a href="@url"
+                                   class="btn btn-sm btn-outline-primary flex-grow-1" target="_blank">
+                                    <i class="bi bi-eye me-1"></i> @GetTextForList("view")
+                                </a>
+
+                                @* DÜZENLEME BUTONU *@
+                                <a href="@($"/admin/duzenle/{p.Id}")"
+                                   class="btn btn-sm btn-outline-secondary"
+                                   title="@GetTextForList("edit")">
+                                    <i class="bi bi-pencil me-1"></i> @GetTextForList("edit")
+                                </a>
+
+                                @* Silme Butonu *@
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletePost(p.Id, GetPostTitle(p))" title="@GetTextForList("delete")">
+                                    <i class="bi bi-trash"></i>
                                 </button>
-
-                                <button class="btn btn-sm btn-primary"
-                                        @onclick="ToggleAutoLoad">
-                                    <i class="bi @(isAutoLoading ? "bi-pause-circle" : "bi-play-circle") me-1"></i>
-                                    @(isAutoLoading ? GetText("stop") : GetText("loadAll"))
-                                </button>
-                            }
-
-                            <span class="badge bg-light text-dark px-3 py-2">
-                                @GetText("showing"): @visiblePostsCount / @FilteredPostsCount
-                            </span>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- KARTLAR -->
-                    @if (!posts.Any())
-                    {
-                        <div class="text-center py-5">
-                            <i class="bi bi-inbox fs-1 text-muted"></i>
-                            <p class="text-muted mt-2">@GetText("noContent")</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="row g-4 content-cards-row">
-                            @foreach (var p in GetVisiblePosts())
-                            {
-                                var url = GetPostUrl(p);
-                                var title = GetPostTitle(p);
-                                var summary = GetPostSummary(p);
-
-                                <div class="col-lg-4 col-md-6 content-card-wrapper"
-                                     data-category="@p.CategoryId">
-                                    <div class="admin-content-card h-100">
-                                        <div class="admin-card-image">
-                                            <img src="@p.CoverImageUrl"
-                                                 alt="@title"
-                                                 onerror="this.src='https://via.placeholder.com/400x200?text=Görsel+Yok'" />
-                                            <span class="admin-category-badge"
-                                                  style="background: @GetCategoryColor(p.Category?.Name_TR);">
-                                                @GetCategoryName(p.Category)
-                                            </span>
-                                        </div>
-                                        <div class="admin-card-content">
-                                            <p class="admin-card-date">
-                                                <i class="bi bi-calendar3 me-1"></i>
-                                                @p.PublishedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
-                                            </p>
-                                            <h6 class="admin-card-title">@title</h6>
-                                            <p class="admin-card-excerpt">@summary</p>
-                                            <div class="d-flex gap-2 mt-auto">
-                                                <a href="@url"
-                                                   class="btn btn-sm btn-outline-primary flex-grow-1"
-                                                   target="_blank">
-                                                    <i class="bi bi-eye me-1"></i>
-                                                    @GetText("view")
-                                                </a>
-                                                <button class="btn btn-sm btn-outline-secondary">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
                 </div>
-            </div>
+            }
         </div>
-    </div>
-
+    }
 </div>
 
 @code {
-    private Post newPost = new() { PublishedDate = DateTime.Now };
+    private Post newPost = new Post { PublishedDate = DateTime.Today, IsActive = true };
     private List<Category> categories = new();
     private List<Post> posts = new();
     private string activeLang = "tr";
-
+    private string filterLanguage = "tr";
+    private int filterCategoryId = 0;
+    private string searchTerm = string.Empty;
+    private bool isSaving = false;
+    private bool isListLoading = true;
     private bool showSuccess = false;
     private bool showError = false;
     private string successMessage = string.Empty;
     private string errorMessage = string.Empty;
-    private bool isSaving = false;
-
     private bool includeTr { get; set; } = true;
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
 
-    private int visiblePostsCount = 9;
-    private bool isAutoLoading = false;
-    private int filterCategoryId = 0;
-    private string filterLanguage = "all";
-
-    // ÇOK DİLLİ METINLER
     private Dictionary<string, Dictionary<string, string>> translations = new()
     {
         ["tr"] = new()
         {
             ["pageTitle"] = "İçerik Yönetimi",
-            ["pageSubtitle"] = "Yeni içerik ekleyin ve mevcut içerikleri yönetin",
+            ["pageSubtitle"] = "Yazılarınızı, duyurularınızı ve makalelerinizi yönetin.",
             ["successTitle"] = "Başarılı!",
             ["errorTitle"] = "Hata!",
+            ["newContentTitle"] = "Yeni İçerik Ekle",
             ["generalInfo"] = "Genel Bilgiler",
             ["category"] = "Kategori",
             ["selectCategory"] = "Kategori Seçin",
             ["coverImage"] = "Kapak Resmi URL",
             ["preview"] = "Önizleme",
             ["publishDate"] = "Yayın Tarihi",
-            ["languagesToSave"] = "Kaydedilecek Diller",
+            ["languagesToSave"] = "Diller",
+            ["activeState"] = "Durum",
+            ["active"] = "Aktif",
+            ["passive"] = "Pasif",
             ["saving"] = "Kaydediliyor...",
             ["saveContent"] = "İçeriği Kaydet",
-            ["title"] = "Başlık (TR)",
-            ["slug"] = "Slug (TR)",
-            ["content"] = "İçerik (TR)",
+            ["title"] = "Başlık",
+            ["slug"] = "Slug",
+            ["content"] = "İçerik",
             ["titlePlaceholder"] = "İçerik başlığını girin...",
             ["slugPlaceholder"] = "url-icin-slug",
             ["contentPlaceholder"] = "İçeriği buraya yazın...",
-            ["savedCategories"] = "Kayıtlı Kategoriler",
-            ["noCategories"] = "Henüz kategori eklenmemiş.",
-            ["recentPosts"] = "Son Yazılar",
+            ["contentList"] = "Yayınlanmış İçerikler",
+            ["loadingList"] = "İçerikler yükleniyor...",
+            ["noContent"] = "Henüz içerik eklenmedi.",
+            ["view"] = "Görüntüle",
+            ["delete"] = "Sil",
+            ["confirmDelete"] = "Bu içeriği silmek istediğinizden emin misiniz?",
+            ["searchPlaceholder"] = "Başlıkta ara...",
             ["allCategories"] = "Tüm Kategoriler",
-            ["allLanguages"] = "Tüm Diller",
-            ["loadMore"] = "Daha Fazla (5)",
-            ["stop"] = "Durdur",
-            ["loadAll"] = "Tümünü Yükle",
-            ["showing"] = "Gösterilen",
-            ["noContent"] = "Henüz içerik eklenmemiş.",
-            ["view"] = "Görüntüle"
+            ["edit"] = "Düzenle"
         },
         ["en"] = new()
         {
             ["pageTitle"] = "Content Management",
-            ["pageSubtitle"] = "Add new content and manage existing content",
+            ["pageSubtitle"] = "Manage your posts, announcements, and articles.",
             ["successTitle"] = "Success!",
             ["errorTitle"] = "Error!",
+            ["newContentTitle"] = "Add New Content",
             ["generalInfo"] = "General Information",
             ["category"] = "Category",
             ["selectCategory"] = "Select Category",
             ["coverImage"] = "Cover Image URL",
             ["preview"] = "Preview",
             ["publishDate"] = "Publish Date",
-            ["languagesToSave"] = "Languages to Save",
+            ["languagesToSave"] = "Languages",
+            ["activeState"] = "Status",
+            ["active"] = "Active",
+            ["passive"] = "Passive",
             ["saving"] = "Saving...",
             ["saveContent"] = "Save Content",
-            ["title"] = "Title (EN)",
-            ["slug"] = "Slug (EN)",
-            ["content"] = "Content (EN)",
+            ["title"] = "Title",
+            ["slug"] = "Slug",
+            ["content"] = "Content",
             ["titlePlaceholder"] = "Enter title...",
             ["slugPlaceholder"] = "url-slug",
             ["contentPlaceholder"] = "Write content here...",
-            ["savedCategories"] = "Saved Categories",
-            ["noCategories"] = "No categories added yet.",
-            ["recentPosts"] = "Recent Posts",
-            ["allCategories"] = "All Categories",
-            ["allLanguages"] = "All Languages",
-            ["loadMore"] = "Load More (5)",
-            ["stop"] = "Stop",
-            ["loadAll"] = "Load All",
-            ["showing"] = "Showing",
+            ["contentList"] = "Published Content",
+            ["loadingList"] = "Loading content...",
             ["noContent"] = "No content added yet.",
-            ["view"] = "View"
+            ["view"] = "View",
+            ["delete"] = "Delete",
+            ["confirmDelete"] = "Are you sure you want to delete this content?",
+            ["searchPlaceholder"] = "Search by title...",
+            ["allCategories"] = "All Categories",
+            ["edit"] = "Edit"
         },
         ["ar"] = new()
         {
             ["pageTitle"] = "إدارة المحتوى",
-            ["pageSubtitle"] = "إضافة محتوى جديد وإدارة المحتوى الحالي",
+            ["pageSubtitle"] = "إدارة منشوراتك وإعلاناتك ومقالاتك.",
             ["successTitle"] = "نجاح!",
             ["errorTitle"] = "خطأ!",
+            ["newContentTitle"] = "إضافة محتوى جديد",
             ["generalInfo"] = "معلومات عامة",
             ["category"] = "الفئة",
             ["selectCategory"] = "اختر الفئة",
             ["coverImage"] = "رابط صورة الغلاف",
             ["preview"] = "معاينة",
             ["publishDate"] = "تاريخ النشر",
-            ["languagesToSave"] = "اللغات المراد حفظها",
+            ["languagesToSave"] = "اللغات",
+            ["activeState"] = "الحالة",
+            ["active"] = "نشط",
+            ["passive"] = "غير نشط",
             ["saving"] = "جاري الحفظ...",
             ["saveContent"] = "حفظ المحتوى",
-            ["title"] = "العنوان (AR)",
-            ["slug"] = "الرابط (AR)",
-            ["content"] = "المحتوى (AR)",
+            ["title"] = "العنوان",
+            ["slug"] = "الرابط",
+            ["content"] = "المحتوى",
             ["titlePlaceholder"] = "أدخل العنوان...",
             ["slugPlaceholder"] = "url-slug",
             ["contentPlaceholder"] = "اكتب المحتوى هنا...",
-            ["savedCategories"] = "الفئات المحفوظة",
-            ["noCategories"] = "لم يتم إضافة فئات بعد.",
-            ["recentPosts"] = "المنشورات الأخيرة",
-            ["allCategories"] = "كل الفئات",
-            ["allLanguages"] = "كل اللغات",
-            ["loadMore"] = "تحميل المزيد (5)",
-            ["stop"] = "إيقاف",
-            ["loadAll"] = "تحميل الكل",
-            ["showing"] = "عرض",
+            ["contentList"] = "المحتوى المنشور",
+            ["loadingList"] = "جاري تحميل المحتوى...",
             ["noContent"] = "لم يتم إضافة محتوى بعد.",
-            ["view"] = "عرض"
+            ["view"] = "عرض",
+            ["delete"] = "حذف",
+            ["confirmDelete"] = "هل أنت متأكد من حذف هذا المحتوى؟",
+            ["searchPlaceholder"] = "البحث بالعنوان...",
+            ["allCategories"] = "جميع الفئات",
+            ["edit"] = "تعديل"
         }
     };
 
@@ -525,6 +486,13 @@
     {
         if (translations.ContainsKey(activeLang) && translations[activeLang].ContainsKey(key))
             return translations[activeLang][key];
+        return key;
+    }
+
+    private string GetTextForList(string key)
+    {
+        if (translations.ContainsKey(filterLanguage) && translations[filterLanguage].ContainsKey(key))
+            return translations[filterLanguage][key];
         return key;
     }
 
@@ -538,120 +506,90 @@
     private string GetLangClass(string lang)
         => activeLang == lang ? "d-block" : "d-none";
 
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadAll();
-    }
-
-    private async Task LoadAll()
-    {
-        try
-        {
-            categories = await CategoryService.GetAll() ?? new();
-            posts = (await PostService.GetAll())?.OrderByDescending(x => x.PublishedDate).ToList() ?? new();
-            visiblePostsCount = Math.Min(9, FilteredPostsCount);
-        }
-        catch (Exception ex)
-        {
-            showError = true;
-            errorMessage = "Veriler yüklenirken hata: " + ex.Message;
-        }
-    }
-
-    private IEnumerable<Post> GetVisiblePosts()
-    {
-        var filtered = posts.Where(p => filterCategoryId == 0 || p.CategoryId == filterCategoryId);
-
-        // Dil filtreleme
-        if (filterLanguage != "all")
-        {
-            filtered = filtered.Where(p =>
-            {
-                return filterLanguage switch
-                {
-                    "tr" => !string.IsNullOrWhiteSpace(p.Title_TR),
-                    "en" => !string.IsNullOrWhiteSpace(p.Title_EN),
-                    "ar" => !string.IsNullOrWhiteSpace(p.Title_AR),
-                    _ => true
-                };
-            });
-        }
-
-        return filtered
-            .OrderByDescending(p => p.PublishedDate)
-            .Take(visiblePostsCount);
-    }
-
-    private int FilteredPostsCount
-    {
-        get
-        {
-            var filtered = posts.Where(p => filterCategoryId == 0 || p.CategoryId == filterCategoryId);
-
-            if (filterLanguage != "all")
-            {
-                filtered = filtered.Where(p =>
-                {
-                    return filterLanguage switch
-                    {
-                        "tr" => !string.IsNullOrWhiteSpace(p.Title_TR),
-                        "en" => !string.IsNullOrWhiteSpace(p.Title_EN),
-                        "ar" => !string.IsNullOrWhiteSpace(p.Title_AR),
-                        _ => true
-                    };
-                });
-            }
-
-            return filtered.Count();
-        }
-    }
-
-    private bool VisibleHasMore() => visiblePostsCount < FilteredPostsCount;
-
-    private void ApplyFilter()
-    {
-        visiblePostsCount = Math.Min(9, FilteredPostsCount);
-        isAutoLoading = false;
-    }
-
-    private async Task LoadMorePosts()
-    {
-        var total = FilteredPostsCount;
-        visiblePostsCount = Math.Min(total, visiblePostsCount + 5);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task ToggleAutoLoad()
-    {
-        if (isAutoLoading)
-        {
-            isAutoLoading = false;
-            return;
-        }
-
-        isAutoLoading = true;
-
-        while (isAutoLoading && VisibleHasMore())
-        {
-            visiblePostsCount = Math.Min(FilteredPostsCount, visiblePostsCount + 5);
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(500);
-        }
-
-        isAutoLoading = false;
-    }
+    private string GetPreviewImage()
+        => string.IsNullOrWhiteSpace(newPost.CoverImageUrl)
+            ? "https://via.placeholder.com/600x300?text=Kapak+Önizleme"
+            : newPost.CoverImageUrl;
 
     private void SwitchLang(string lang)
     {
         activeLang = lang;
     }
 
-    private string GetPreviewImage()
-        => string.IsNullOrWhiteSpace(newPost.CoverImageUrl)
-            ? "https://via.placeholder.com/600x300?text=Kapak+Önizleme"
-            : newPost.CoverImageUrl;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+        await LoadPosts();
+    }
 
-    private async Task SavePost()
+    private async Task LoadCategories()
+    {
+        try
+        {
+            categories = await CategoryService.GetAll() ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kategori yükleme hatası: {ex.Message}");
+        }
+    }
+
+    private async Task LoadPosts()
+    {
+        isListLoading = true;
+        try
+        {
+            if (filterCategoryId > 0)
+            {
+                posts = await PostService.GetAll(filterCategoryId);
+            }
+            else
+            {
+                posts = await PostService.GetAll();
+            }
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"İçerikler yüklenirken hata: {ex.Message}";
+            posts = new List<Post>();
+        }
+        finally
+        {
+            isListLoading = false;
+        }
+    }
+
+    private async Task OnFilterChange()
+    {
+        await LoadPosts();
+    }
+
+    private async Task SearchContent()
+    {
+        isListLoading = true;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                await LoadPosts();
+                return;
+            }
+            posts = await PostService.Search(searchTerm);
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Arama yapılırken hata: {ex.Message}";
+            posts = new List<Post>();
+        }
+        finally
+        {
+            isListLoading = false;
+        }
+    }
+
+    private async Task CreatePost()
     {
         showError = false;
         showSuccess = false;
@@ -659,46 +597,27 @@
         if (includeTr && string.IsNullOrWhiteSpace(newPost.Title_TR))
         {
             showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "Turkish title is required.",
-                "ar" => "العنوان التركي مطلوب.",
-                _ => "Türkçe başlık zorunludur."
-            };
+            errorMessage = GetText("errorTitle") + ": " + (activeLang == "tr" ? "Türkçe başlık zorunludur." : "Turkish title is required.");
             return;
         }
 
         if (newPost.CategoryId == 0)
         {
             showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "Please select a category.",
-                "ar" => "الرجاء اختيار فئة.",
-                _ => "Lütfen kategori seçiniz."
-            };
+            errorMessage = GetText("errorTitle") + ": " + (activeLang == "tr" ? "Lütfen kategori seçiniz." : "Please select a category.");
             return;
         }
 
         if (!includeTr && !includeEn && !includeAr)
         {
             showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "You must select at least one language.",
-                "ar" => "يجب عليك اختيار لغة واحدة على الأقل.",
-                _ => "En az bir dil seçmelisiniz."
-            };
+            errorMessage = GetText("errorTitle") + ": " + (activeLang == "tr" ? "En az bir dil seçmelisiniz." : "You must select at least one language.");
             return;
         }
 
         try
         {
             isSaving = true;
-
-            newPost.CreatedDate = DateTime.Now;
-            newPost.IsActive = true;
-
             if (!includeTr)
             {
                 newPost.Title_TR = null;
@@ -718,18 +637,21 @@
                 newPost.Content_AR = null;
             }
 
-            await PostService.Create(newPost);
-            await LoadAll();
-
-            newPost = new() { PublishedDate = DateTime.Now };
-            activeLang = "tr";
+            var createdPost = await PostService.Create(newPost);
+            if (createdPost == null || createdPost.Id == 0)
+            {
+                throw new InvalidOperationException("Post oluşturulamadı.");
+            }
 
             successMessage = activeLang switch
             {
-                "en" => "Content saved successfully!",
-                "ar" => "تم حفظ المحتوى بنجاح!",
-                _ => "İçerik başarıyla kaydedildi!"
+                "en" => "Content created successfully!",
+                "ar" => "تم إنشاء المحتوى بنجاح!",
+                _ => "İçerik başarıyla eklendi!"
             };
+
+            newPost = new Post { PublishedDate = DateTime.Today, IsActive = true };
+            await LoadPosts();
 
             showSuccess = true;
             await Task.Delay(3000);
@@ -740,9 +662,9 @@
             showError = true;
             errorMessage = activeLang switch
             {
-                "en" => $"Error during save: {ex.Message}",
+                "en" => $"Error during saving: {ex.Message}",
                 "ar" => $"خطأ أثناء الحفظ: {ex.Message}",
-                _ => $"Kayıt sırasında hata: {ex.Message}"
+                _ => $"Kaydetme sırasında hata: {ex.Message}"
             };
         }
         finally
@@ -751,39 +673,79 @@
         }
     }
 
-    private string GetPostUrl(Post p)
+    private async Task DeletePost(int postId, string postTitle)
     {
-        if (p?.Category?.Name_TR == null)
-            return "#";
+        var confirmationMessage = $"{postTitle} başlıklı içeriği silmek istediğinizden emin misiniz?";
+        if (filterLanguage == "en") confirmationMessage = $"Are you sure you want to delete the content titled {postTitle}?";
+        if (filterLanguage == "ar") confirmationMessage = $"هل أنت متأكد من حذف المحتوى بعنوان {postTitle}؟";
 
-        string category = p.Category.Name_TR.Trim().ToLower();
-
-        return category switch
+        if (await JS.InvokeAsync<bool>("confirm", confirmationMessage))
         {
-            "hizmetlerimiz" => $"/hizmetlerimiz/{p.Slug_TR}",
-            "duyurular" => $"/duyurular/{p.Slug_TR}",
-            "etkinlikler" => $"/etkinlikler/{p.Slug_TR}",
-            "yayınlar" => $"/yayinlar/{p.Slug_TR}",
-            "yayinlar" => $"/yayinlar/{p.Slug_TR}",
-            _ => $"/yayinlar/{p.Slug_TR}"
+            try
+            {
+                var result = await PostService.Delete(postId);
+                if (result)
+                {
+                    await LoadPosts();
+                    showSuccess = true;
+                    successMessage = filterLanguage switch
+                    {
+                        "en" => $"Content '{postTitle}' deleted successfully.",
+                        "ar" => $"تم حذف المحتوى '{postTitle}' بنجاح.",
+                        _ => $"'{postTitle}' başlıklı içerik başarıyla silindi."
+                    };
+                    await Task.Delay(3000);
+                    showSuccess = false;
+                }
+                else
+                {
+                    showError = true;
+                    errorMessage = filterLanguage switch
+                    {
+                        "en" => "Deletion failed. The content might have already been deleted.",
+                        "ar" => "فشل الحذف. قد يكون المحتوى محذوفًا بالفعل.",
+                        _ => "Silme başarısız. İçerik zaten silinmiş olabilir."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                showError = true;
+                errorMessage = filterLanguage switch
+                {
+                    "en" => $"Error during deletion: {ex.Message}",
+                    "ar" => $"خطأ أثناء الحذف: {ex.Message}",
+                    _ => $"Silme sırasında hata: {ex.Message}"
+                };
+            }
+        }
+    }
+
+    private string GetCategoryNameByFilter(Category? category)
+    {
+        if (category == null) return "Genel";
+        return filterLanguage switch
+        {
+            "en" => category.Name_EN ?? category.Name_TR ?? "General",
+            "ar" => category.Name_AR ?? category.Name_TR ?? "عام",
+            _ => category.Name_TR ?? "Genel"
         };
     }
 
     private string GetCategoryName(Category? category)
     {
-        if (category == null) return "";
-
+        if (category == null) return "Genel";
         return activeLang switch
         {
-            "en" => category.Name_EN ?? category.Name_TR,
-            "ar" => category.Name_AR ?? category.Name_TR,
-            _ => category.Name_TR
+            "en" => category.Name_EN ?? category.Name_TR ?? "General",
+            "ar" => category.Name_AR ?? category.Name_TR ?? "عام",
+            _ => category.Name_TR ?? "Genel"
         };
     }
 
     private string GetPostTitle(Post p)
     {
-        return activeLang switch
+        return filterLanguage switch
         {
             "en" => p.Title_EN ?? p.Title_TR ?? "",
             "ar" => p.Title_AR ?? p.Title_TR ?? "",
@@ -793,7 +755,7 @@
 
     private string GetPostSummary(Post p)
     {
-        string content = activeLang switch
+        string content = filterLanguage switch
         {
             "en" => p.Content_EN ?? p.Content_TR ?? "",
             "ar" => p.Content_AR ?? p.Content_TR ?? "",
@@ -805,18 +767,40 @@
         return content.Length > 100 ? content.Substring(0, 100) + "..." : content;
     }
 
+    private string GetPostUrl(Post p)
+    {
+        if (p?.Category == null) return "#";
+
+        string categoryName = filterLanguage switch
+        {
+            "en" => p.Category.Name_EN ?? p.Category.Name_TR,
+            "ar" => p.Category.Name_AR ?? p.Category.Name_TR,
+            _ => p.Category.Name_TR
+        };
+
+        string slug = filterLanguage switch
+        {
+            "en" => p.Slug_EN ?? p.Slug_TR,
+            "ar" => p.Slug_AR ?? p.Slug_TR,
+            _ => p.Slug_TR
+        };
+
+        if (string.IsNullOrWhiteSpace(categoryName) || string.IsNullOrWhiteSpace(slug))
+            return "#";
+
+        return $"/{categoryName.Trim().ToLower()}/{slug}";
+    }
+
     private string GetCategoryColor(string? categoryName)
     {
         if (string.IsNullOrWhiteSpace(categoryName))
             return "#3b82f6";
-
         return categoryName.ToLowerInvariant() switch
         {
-            "hizmetlerimiz" => "#366C80",
-            "duyurular" => "#5c7341",
-            "etkinlikler" => "#78514A",
-            "yayınlar" => "#dfb899",
-            "yayinlar" => "#dfb899",
+            "hizmetlerimiz" or "our services" => "#366C80",
+            "duyurular" or "announcements" => "#5c7341",
+            "etkinlikler" or "events" => "#78514A",
+            "yayınlar" or "yayinlar" or "publications" => "#dfb899",
             _ => "#3b82f6"
         };
     }

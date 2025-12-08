@@ -9,7 +9,7 @@ namespace DafHukuk.Service.Interfaces
 {
     public interface IPostService
     {
-        Task<List<Post>> GetAll();
+        Task<List<Post>> GetAll(int? categoryId = null);
         Task<Post?> GetById(int id);
         Task<Post> Create(Post post);
         Task<Post?> Update(int id, Post post);

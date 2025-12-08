@@ -1,5 +1,18 @@
 ﻿/* GENEL FONKSİYONLAR */
 
+// --- DENEME.RAZOR İÇİN KRİTİK EKLENTİ: Blazor'dan JS'ye Geri Bildirim ---
+window.showAdminAlert = function (isSuccess, title, message) {
+    console.log(`[Admin Alert] Durum: ${isSuccess ? 'Başarılı' : 'Hata'}`);
+    console.log(`[Admin Alert] Mesaj: ${message}`);
+
+    // Blazor component'i zaten kendi uyarı pencerelerini gösterdiği için,
+    // burada sadece konsola loglama yapıyoruz ve dilerseniz tarayıcı alert'i ekleyebilirsiniz.
+    // Örneğin:
+    // alert(`${title}: ${message}`);
+};
+// --------------------------------------------------------------------------
+
+
 document.addEventListener('DOMContentLoaded', function () {
 
     /* NAVBAR KAYDIRMA ETKİSİ */
@@ -46,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.style.color = txtColor;
         });
     }
-
 
 
     /* SAYICI ANİMASYONU (Counter Animation) */
@@ -206,14 +218,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // --- KRİTİK DÜZELTME BAŞLANGICI ---
+
     /* İÇERİK FİLTRELEME (Sadece Blazor'un olmadığı statik sayfalar için geçerlidir) */
     let currentCategory = 0;
     const MAX_VISIBLE = 9;
 
     window.filterCategory = function (categoryId) {
+        // KRİTİK KONTROL: Fonksiyonun ihtiyaç duyduğu temel elementler var mı?
         const cards = document.querySelectorAll('.content-card-wrapper');
         const noContent = document.getElementById("noContentMessage");
         const showAllButton = document.getElementById("showAllButton");
+
+        // Eğer temel elementlerden herhangi biri yoksa (örn. Blazor admin panelindeyiz) fonksiyonu sonlandır.
+        if (!noContent || !showAllButton || cards.length === 0) {
+            return;
+        }
 
         currentCategory = categoryId;
 
@@ -237,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // Elementlerin null olmadığını garanti ettiğimiz için bu satırlar güvenlidir.
         noContent.style.display = total === 0 ? "block" : "none";
         showAllButton.style.display = total > MAX_VISIBLE ? "inline-block" : "none";
 
@@ -251,6 +272,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.showAll = function () {
         const cards = document.querySelectorAll('.content-card-wrapper');
+        const showAllButton = document.getElementById("showAllButton");
+
+        // KRİTİK KONTROL
+        if (!showAllButton || cards.length === 0) {
+            return;
+        }
 
         cards.forEach(card => {
             const cat = parseInt(card.dataset.category);
@@ -262,7 +289,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("showAllButton").style.display = "none";
     };
 
+    // Sayfa yüklendikten 250ms sonra çalıştır, hata verme olasılığını azaltmak için ?. ile kontrol edilir.
     setTimeout(() => window.filterCategory?.(0), 250);
+
+    // --- KRİTİK DÜZELTME BİTİŞİ ---
 
     /* ALT BİLGİ (FOOTER) MOBİL AÇILIR MENÜ */
     function setupFooterToggle() {
@@ -273,9 +303,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Tıklanacak başlık ve hedef menü (ul elementi)
             const targetId = button.getAttribute('data-target');
             const targetMenu = document.getElementById(targetId);
-
-            // Sadece mobil boyutta çalışması için ekran genişliği kontrolü yapabiliriz
-            // Ancak, CSS'deki @media query zaten görünürlüğü yönettiği için doğrudan toggle mantığı daha basittir.
 
             if (targetMenu) {
                 button.addEventListener('click', () => {
