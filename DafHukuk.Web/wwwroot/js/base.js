@@ -316,3 +316,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupFooterToggle();
 });
+
+/* =========================================================
+    ADMİN MOBİL MENÜ
+========================================================= */
+
+// Admin Mobil Menü Kontrolü
+document.addEventListener('DOMContentLoaded', function () {
+    const adminMobileMenuBtn = document.getElementById("admin-mobile-menu-btn");
+    const adminSidebar = document.getElementById("admin-sidebar");
+    const adminMobileOverlay = document.getElementById("admin-mobile-overlay");
+    const body = document.body;
+
+    // Eğer admin sayfasında değilsek, fonksiyonu çalıştırma
+    if (!adminMobileMenuBtn || !adminSidebar || !adminMobileOverlay) {
+        return;
+    }
+
+    function openAdminMenu() {
+        adminSidebar.classList.add("open");
+        adminMobileOverlay.classList.add("active");
+        adminMobileMenuBtn.classList.add("active");
+        body.style.overflow = "hidden";
+    }
+
+    function closeAdminMenu() {
+        adminSidebar.classList.remove("open");
+        adminMobileOverlay.classList.remove("active");
+        adminMobileMenuBtn.classList.remove("active");
+        body.style.overflow = "";
+    }
+
+    function toggleAdminMenu() {
+        adminSidebar.classList.contains("open")
+            ? closeAdminMenu()
+            : openAdminMenu();
+    }
+
+    adminMobileMenuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleAdminMenu();
+    });
+
+    adminMobileOverlay.addEventListener("click", closeAdminMenu);
+
+    adminSidebar.querySelectorAll("a, button").forEach(link => {
+        link.addEventListener("click", (e) => {
+            if (link.classList.contains("admin-lang-link")) {
+                return;
+            }
+            closeAdminMenu();
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 767) {
+            closeAdminMenu();
+        }
+    });
+});

@@ -45,6 +45,7 @@
 
 .hero-search-title-content {
     display: flex;
+    margin-top: 5rem;
     flex-direction: column;
     align-items: center;
     gap: 10px;
@@ -331,6 +332,7 @@
 
     .content-card {
         padding: 20px;
+        width: 100%;
     }
 
     .textContent {

@@ -35,9 +35,10 @@ namespace DafHukuk.Service
 
         public async Task<Post?> GetById(int id)
         {
+
             return await _context.Posts
                 .Include(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == id && p.IsActive);
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Post> Create(Post post)
@@ -52,51 +53,33 @@ namespace DafHukuk.Service
 
         public async Task<Post?> Update(int id, Post post)
         {
+            // Veritabanından mevcut kaydı al
             var existing = await _context.Posts.FindAsync(id);
             if (existing == null)
                 return null;
 
-            existing.CoverImageUrl = post.CoverImageUrl;
-            existing.PublishedDate = post.PublishedDate;
             existing.CategoryId = post.CategoryId;
             existing.IsActive = post.IsActive;
+            existing.PublishedDate = post.PublishedDate;
+            existing.CoverImageUrl = post.CoverImageUrl;
 
-
-            // TÜRKÇE ALANLARIN GÜNCELLENMESİ
-            // Title_TR her zaman güncellenir (ana dil)
             existing.Title_TR = post.Title_TR;
+            existing.Content_TR = post.Content_TR;
+            existing.Slug_TR = post.Slug_TR;
 
-            // Content_TR ve Slug_TR: Eğer gelen veri boş değilse güncelle
-            if (!string.IsNullOrWhiteSpace(post.Content_TR))
-                existing.Content_TR = post.Content_TR;
+            existing.Title_EN = post.Title_EN;
+            existing.Content_EN = post.Content_EN;
+            existing.Slug_EN = post.Slug_EN;
 
-            if (!string.IsNullOrWhiteSpace(post.Slug_TR))
-                existing.Slug_TR = post.Slug_TR;
-
-            // İNGİLİZCE ALANLARIN GÜNCELLENMESİ
-            // SADECE boş/null değilse güncelle, yoksa mevcut veriyi koru
-            if (!string.IsNullOrWhiteSpace(post.Title_EN))
-                existing.Title_EN = post.Title_EN;
-
-            if (!string.IsNullOrWhiteSpace(post.Content_EN))
-                existing.Content_EN = post.Content_EN;
-
-            if (!string.IsNullOrWhiteSpace(post.Slug_EN))
-                existing.Slug_EN = post.Slug_EN;
-
-            // ARAPÇA ALANLARIN GÜNCELLENMESİ
-            // SADECE boş/null değilse güncelle, yoksa mevcut veriyi koru
-            if (!string.IsNullOrWhiteSpace(post.Title_AR))
-                existing.Title_AR = post.Title_AR;
-
-            if (!string.IsNullOrWhiteSpace(post.Content_AR))
-                existing.Content_AR = post.Content_AR;
-
-            if (!string.IsNullOrWhiteSpace(post.Slug_AR))
-                existing.Slug_AR = post.Slug_AR;
+            existing.Title_AR = post.Title_AR;
+            existing.Content_AR = post.Content_AR;
+            existing.Slug_AR = post.Slug_AR;
 
             await _context.SaveChangesAsync();
-            return existing;
+
+            return await _context.Posts
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> Delete(int id)

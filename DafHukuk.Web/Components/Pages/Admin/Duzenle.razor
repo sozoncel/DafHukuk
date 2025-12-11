@@ -336,6 +336,7 @@
     public int PostId { get; set; }
 
     private Post? post;
+    private Post? originalPost; // ORJİNAL VERİYİ SAKLA
     private List<Post> allPosts = new();
     private List<Category> categories = new();
     private string activeLang = "tr";
@@ -480,6 +481,7 @@
         isLoading = true;
         errorMessage = string.Empty;
         showError = false;
+        showSuccess = false;
 
         try
         {
@@ -496,25 +498,48 @@
 
             if (post == null)
             {
-                errorMessage = GetText("errorTitle") + ": " + (activeLang == "tr" ? "İçerik bulunamadı veya pasif durumda." : "Content not found or is inactive.");
+                errorMessage = activeLang == "tr"
+                    ? "İçerik bulunamadı!"
+                    : "Content not found!";
                 showError = true;
                 await Task.Delay(2000);
                 Navigation.NavigateTo("/admin/yonetim");
                 return;
             }
 
+            // KRİTİK: ORJİNAL VERİYİ SAKLA (deep copy)
+            originalPost = new Post
+            {
+                Id = post.Id,
+                Title_TR = post.Title_TR,
+                Content_TR = post.Content_TR,
+                Slug_TR = post.Slug_TR,
+                Title_EN = post.Title_EN,
+                Content_EN = post.Content_EN,
+                Slug_EN = post.Slug_EN,
+                Title_AR = post.Title_AR,
+                Content_AR = post.Content_AR,
+                Slug_AR = post.Slug_AR,
+                CategoryId = post.CategoryId,
+                CoverImageUrl = post.CoverImageUrl,
+                PublishedDate = post.PublishedDate,
+                IsActive = post.IsActive
+            };
+
+            // Checkbox'ları ayarla (hangi dillerde içerik var)
             includeTr = !string.IsNullOrWhiteSpace(post.Title_TR);
             includeEn = !string.IsNullOrWhiteSpace(post.Title_EN);
             includeAr = !string.IsNullOrWhiteSpace(post.Title_AR);
 
-            if (!includeTr && includeEn) activeLang = "en";
-            else if (!includeTr && !includeEn && includeAr) activeLang = "ar";
-            else activeLang = "tr";
+            // Aktif dili ayarla
+            if (includeTr) activeLang = "tr";
+            else if (includeEn) activeLang = "en";
+            else if (includeAr) activeLang = "ar";
         }
         catch (Exception ex)
         {
             showError = true;
-            errorMessage = $"Veri yüklenirken hata: {ex.Message}";
+            errorMessage = $"Hata: {ex.Message}";
         }
         finally
         {
@@ -536,22 +561,23 @@
 
     private async Task UpdatePost()
     {
-        if (post == null) return;
+        if (post == null || originalPost == null) return;
 
         showError = false;
         showSuccess = false;
 
-        if (includeTr && string.IsNullOrWhiteSpace(post.Title_TR))
+        // VALIDASYON
+        if (string.IsNullOrWhiteSpace(post.Title_TR) && string.IsNullOrWhiteSpace(post.Title_EN) && string.IsNullOrWhiteSpace(post.Title_AR))
         {
             showError = true;
-            errorMessage = GetText("errorTitle") + ": " + (activeLang == "tr" ? "Türkçe başlık zorunludur." : "Turkish title is required.");
+            errorMessage = activeLang == "tr" ? "En az bir dilde başlık girmelisiniz!" : "You must enter a title in at least one language!";
             return;
         }
 
         if (post.CategoryId == 0)
         {
             showError = true;
-            errorMessage = GetText("errorTitle") + ": " + (activeLang == "tr" ? "Lütfen kategori seçiniz." : "Please select a category.");
+            errorMessage = activeLang == "tr" ? "Lütfen kategori seçiniz!" : "Please select a category!";
             return;
         }
 
@@ -559,39 +585,118 @@
         {
             isSaving = true;
 
-            post.Category = null;
+            // YENİ POST OBJESI OLUŞTUR (sadece güncellenecek alanları içerecek)
+            var updatePost = new Post
+            {
+                Id = PostId,
+                CategoryId = post.CategoryId,
+                IsActive = post.IsActive,
+                PublishedDate = post.PublishedDate,
+                CoverImageUrl = post.CoverImageUrl
+            };
 
-            // KRİTİK DÜZELTME: Dil bayrakları sadece validasyon için kullanılır.
-            // Eğer kullanıcı bir dil checkbox'unu kaldırsa bile, mevcut veri KORUNUR.
-            // Kullanıcı manuel olarak içeriği silmek istiyorsa textarea'yı boşaltmalıdır.
+            // KRİTİK MANTIK:
+            // Checkbox AÇIK → Form'dan gelen veriyi kullan
+            // Checkbox KAPALI → ORJİNAL veriyi kullan (değişiklik yapma)
 
-            var updatedPost = await PostService.Update(PostId, post);
+            if (includeTr)
+            {
+                // TR checkbox açık → Kullanıcının girdiği değeri al
+                updatePost.Title_TR = post.Title_TR;
+                updatePost.Content_TR = post.Content_TR;
+                updatePost.Slug_TR = post.Slug_TR;
+            }
+            else
+            {
+                // TR checkbox kapalı → ORJİNAL değeri kullan
+                updatePost.Title_TR = originalPost.Title_TR;
+                updatePost.Content_TR = originalPost.Content_TR;
+                updatePost.Slug_TR = originalPost.Slug_TR;
+            }
+
+            if (includeEn)
+            {
+                // EN checkbox açık → Kullanıcının girdiği değeri al
+                updatePost.Title_EN = post.Title_EN;
+                updatePost.Content_EN = post.Content_EN;
+                updatePost.Slug_EN = post.Slug_EN;
+            }
+            else
+            {
+                // EN checkbox kapalı → ORJİNAL değeri kullan
+                updatePost.Title_EN = originalPost.Title_EN;
+                updatePost.Content_EN = originalPost.Content_EN;
+                updatePost.Slug_EN = originalPost.Slug_EN;
+            }
+
+            if (includeAr)
+            {
+                // AR checkbox açık → Kullanıcının girdiği değeri al
+                updatePost.Title_AR = post.Title_AR;
+                updatePost.Content_AR = post.Content_AR;
+                updatePost.Slug_AR = post.Slug_AR;
+            }
+            else
+            {
+                // AR checkbox kapalı → ORJİNAL değeri kullan
+                updatePost.Title_AR = originalPost.Title_AR;
+                updatePost.Content_AR = originalPost.Content_AR;
+                updatePost.Slug_AR = originalPost.Slug_AR;
+            }
+
+            // Navigation property temizle
+            updatePost.Category = null;
+
+            // Güncelleme yap
+            var updatedPost = await PostService.Update(PostId, updatePost);
 
             if (updatedPost == null)
             {
-                throw new InvalidOperationException("Güncelleme işlemi veritabanına yansıtılamadı.");
+                throw new Exception("Güncelleme başarısız oldu!");
             }
 
-            successMessage = activeLang switch
+            // BAŞARI MESAJI
+            successMessage = activeLang == "tr"
+                ? "✓ İçerik başarıyla güncellendi!"
+                : "✓ Content updated successfully!";
+            showSuccess = true;
+
+            // Veriyi yeniden yükle
+            await Task.Delay(1000);
+            post = updatedPost;
+
+            // Orjinal veriyi güncelle
+            originalPost = new Post
             {
-                "en" => "Content updated successfully!",
-                "ar" => "تم تحديث المحتوى بنجاح!",
-                _ => "İçerik başarıyla güncellendi!"
+                Id = post.Id,
+                Title_TR = post.Title_TR,
+                Content_TR = post.Content_TR,
+                Slug_TR = post.Slug_TR,
+                Title_EN = post.Title_EN,
+                Content_EN = post.Content_EN,
+                Slug_EN = post.Slug_EN,
+                Title_AR = post.Title_AR,
+                Content_AR = post.Content_AR,
+                Slug_AR = post.Slug_AR,
+                CategoryId = post.CategoryId,
+                CoverImageUrl = post.CoverImageUrl,
+                PublishedDate = post.PublishedDate,
+                IsActive = post.IsActive
             };
 
-            showSuccess = true;
-            await Task.Delay(3000);
+            // Checkbox'ları güncelle
+            includeTr = !string.IsNullOrWhiteSpace(post.Title_TR);
+            includeEn = !string.IsNullOrWhiteSpace(post.Title_EN);
+            includeAr = !string.IsNullOrWhiteSpace(post.Title_AR);
+
+            // Mesajı 2 saniye sonra kapat
+            await Task.Delay(2000);
             showSuccess = false;
         }
         catch (Exception ex)
         {
             showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => $"Error during update: {ex.Message}",
-                "ar" => $"خطأ أثناء التحديث: {ex.Message}",
-                _ => $"Güncelleme sırasında hata: {ex.Message}"
-            };
+            errorMessage = $"❌ Hata: {ex.Message}";
         }
         finally
         {
