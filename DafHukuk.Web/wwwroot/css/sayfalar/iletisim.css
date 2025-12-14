@@ -175,7 +175,6 @@
         color: var(--accent);
     }
 
-/* Üst başlık ve meta */
 .ust-baslik {
     font-size: .85rem;
     letter-spacing: 2px;
@@ -205,7 +204,6 @@
     margin-top: 10px;
 }
 
-/* İletişim satırları */
 .row-card2 {
     margin-top: 18px;
 }
@@ -292,7 +290,6 @@
             text-decoration: underline;
         }
 
-/* SAĞ - FORM */
 .contact-form {
     margin-top: 1rem;
     background-color: #f8f9fa;
@@ -316,7 +313,6 @@
     margin-bottom: 18px;
 }
 
-/* Form layout */
 form {
     max-width: 100%;
 }
@@ -357,7 +353,6 @@ form {
     color: #666;
 }
 
-/* GÖNDER BUTONU */
 .btn-send {
     background: var(--accent);
     color: #fff;
@@ -374,7 +369,6 @@ form {
         transition: all .15s ease;
     }
 
-/* FORM NOT */
 .form-note {
     font-size: .85rem;
     color: #888;
@@ -404,7 +398,6 @@ form {
         width: 100%;
     }
 
-/* MAP - responsive */
 .mapouter {
     position: relative;
     text-align: right;

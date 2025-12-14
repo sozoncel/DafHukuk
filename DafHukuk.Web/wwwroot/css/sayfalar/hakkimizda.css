@@ -1,5 +1,4 @@
-﻿﻿ /* ABOUT.CSS - Hakkımızda Sayfası Stilleri */
-/* GENEL STİLLER */
+﻿/* GENEL STİLLER */
 .hero-about-section,
 .about-page-content,
 .content-container,
@@ -251,6 +250,7 @@
 
 .content-bottom-row {
     background-color: #f7f7f7;
+    border-radius: 10px;
     margin-top: 1%;
 }
 
@@ -439,12 +439,10 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-/* ESKİ SAYAÇ BLOK STİLİ (Yeni stiller için aşağı kaydırın) */
 .counter-with-js {
     text-align: center;
     padding: clamp(3rem, 8vw, 6rem) 5%;
     background-color: #f7f7f7;
-    /* Artık bu stil kullanılmıyor. Yeni stiller aşağıda. */
 }
 
 .counter-row-main {
@@ -525,9 +523,7 @@
     color: #444;
 }
 
-/* YENİ YAPISAL VE STİL DÜZENLEMELERİ (Sayaç ve Etiket Bölümü) */
 
-/* Sayaç Bölümü Stilleri */
 .counter-section {
     padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: clamp(3rem, 8vw, 6rem);
@@ -541,14 +537,14 @@
         margin-bottom: 0;
     }
 
-/* Etiket (Tagline) Bölümü Stilleri */
 .tagline-section {
     max-width: 1400px;
     margin: 0 auto;
-    background-color: #f8f8f8; /* Bir Tık Koyu Gri Arka Plan */
+    background-color: #f8f8f8; 
+    border-radius: 10px;
     padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: clamp(3rem, 8vw, 6rem);
-    margin-top: -1px; /* Birleşme efekti için küçük negatif margin */
+    margin-top: -1px; 
     position: relative;
     z-index: 1;
     text-align: center;
@@ -661,24 +657,20 @@
     margin-bottom: 0.75rem;
 }
 
-    /* Başlık ile paragraf arasına nefes aldır */
     .down-description .value-box h2 {
         margin-bottom: 1.75rem;
         text-align: center;
     }
 
-    /* Paragrafa alt boşluk */
     .down-description .value-box p {
         margin-bottom: 1.75rem;
         text-align: center;
     }
 
-/* Görsel kutusu aşağıdan 0.75rem boşluk bıraksın */
 .down-description .value-img-wrapper {
     margin-bottom: 1.75rem;
 }
 
-/* Mobilde tamamen ortalı dursun */
 .down-description .value-box,
 .down-description .value-img-wrapper,
 .down-description .img-placeholder {
@@ -710,7 +702,6 @@
     text-align: center;
 }
 
-    /* İç kolonu tamamen ortala */
     .social-project-row .col-lg-6,
     .social-project-row .col-lg-4,
     .social-project-row .col-lg-3,
@@ -721,7 +712,6 @@
         justify-content: center;
     }
 
-    /* Görsel ortalansın ve altına boşluk gelsin */
     .social-project-row img,
     .about-social-section .img-fluid {
         margin: 0 auto;
@@ -732,7 +722,6 @@
     .social-row-header{
         text-align: center;
     }
-    /* Metin ortalansın */
     .social-project-row p,
     .social-project-row h3,
     .social-project-row h4,

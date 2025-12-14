@@ -1,19 +1,4 @@
-﻿/* GENEL FONKSİYONLAR */
-
-// --- DENEME.RAZOR İÇİN KRİTİK EKLENTİ: Blazor'dan JS'ye Geri Bildirim ---
-window.showAdminAlert = function (isSuccess, title, message) {
-    console.log(`[Admin Alert] Durum: ${isSuccess ? 'Başarılı' : 'Hata'}`);
-    console.log(`[Admin Alert] Mesaj: ${message}`);
-
-    // Blazor component'i zaten kendi uyarı pencerelerini gösterdiği için,
-    // burada sadece konsola loglama yapıyoruz ve dilerseniz tarayıcı alert'i ekleyebilirsiniz.
-    // Örneğin:
-    // alert(`${title}: ${message}`);
-};
-// --------------------------------------------------------------------------
-
-
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
 
     /* NAVBAR KAYDIRMA ETKİSİ */
     window.addEventListener("scroll", () => {
@@ -30,28 +15,35 @@ document.addEventListener('DOMContentLoaded', function () {
     /* KATEGORİ RENKLENDİRME (Case-Insensitive olarak optimize edildi) */
     function colorizeCategoryButtons() {
         document.querySelectorAll(".content-tag-button").forEach(btn => {
-            // Metni küçük harfe çevirerek karşılaştırma yapılır
             let text = btn.innerText.trim().toLowerCase();
 
-            let bgColor = "#dfb899"; // Yayınlar/Varsayılan
+            let bgColor = "#dfb899"; 
             let txtColor = "white";
 
             switch (text) {
                 case "hizmetlerimiz":
+                case "services":
+                case "خدمات":
                     bgColor = "#366C80";
                     break;
                 case "duyurular":
+                case "announcements":
+                case "إعلانات":
                     bgColor = "#5c7341";
                     break;
                 case "etkinlikler":
+                case "events":
+                case "فعاليات":
                     bgColor = "#78514A";
                     break;
-                case "yayınlar": // Hem ç/ş/ğ/ü gibi harflerle hem de düz harflerle uyumlu olması için sadece küçük harf versiyonu kontrol edilir.
+                case "yayınlar":
                 case "yayinlar":
+                case "publications":
+                case "منشورات":
                     bgColor = "#dfb899";
                     break;
                 default:
-                    bgColor = "#3b82f6"; // Varsayılan renk
+                    bgColor = "#3b82f6"; 
                     break;
             }
 
@@ -64,11 +56,10 @@ document.addEventListener('DOMContentLoaded', function () {
     /* SAYICI ANİMASYONU (Counter Animation) */
     function startCounter(target) {
         const dataTarget = parseInt(target.getAttribute("data-target"));
-        // + işareti olsun mu olmasın mı diye bakmak için son karakteri kontrol et
         const hasPlus = target.innerText.trim().endsWith('+');
 
         let count = 0;
-        const duration = 2000; // 2 saniye
+        const duration = 2000; 
         const stepTime = 10;
         const step = dataTarget / (duration / stepTime);
 
@@ -77,11 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (count >= dataTarget) {
                 clearInterval(counter);
-                count = dataTarget; // Tam hedef değere ulaşıldığından emin ol
-                // Eğer + işareti varsa, son haliyle ekle
+                count = dataTarget; 
                 target.innerText = count + (hasPlus ? '+' : '');
             } else {
-                // Animasyon sırasında + işareti ekleme (Sadece sayı artsın)
                 target.innerText = Math.floor(count);
             }
         }, stepTime);
@@ -89,19 +78,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const counterObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            // Eğer sayaç ekranda görünüyorsa
             if (entry.isIntersecting) {
                 const counterElement = entry.target;
                 startCounter(counterElement);
-                // Animasyon bir kere çalıştıktan sonra gözlemlemeyi durdur
                 observer.unobserve(counterElement);
             }
         });
     }, {
-        threshold: 0.5 // Sayaç elementinin %50'si görünür olduğunda tetikle
+        threshold: 0.5
     });
 
-    // Sayfadaki tüm sayaç elementlerini gözlemlemeye başla
     document.querySelectorAll(".counter-number").forEach(counter => {
         counterObserver.observe(counter);
     });
@@ -169,7 +155,18 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ARAMA SİSTEMİ */
     function performSearch(query) {
         if (!query || query.trim().length < 2) return;
-        window.location.href = `/arama?q=${encodeURIComponent(query.trim())}`;
+
+        // Mevcut dile göre arama URL'i oluştur
+        const path = window.location.pathname.toLowerCase();
+        let searchUrl = '/arama'; 
+
+        if (path.startsWith('/en/') || path === '/en') {
+            searchUrl = '/en/search';
+        } else if (path.startsWith('/ar/') || path === '/ar') {
+            searchUrl = '/ar/search';
+        }
+
+        window.location.href = `${searchUrl}?q=${encodeURIComponent(query.trim())}`;
     }
 
     const searchTrigger = document.getElementById("search-trigger");
@@ -218,19 +215,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- KRİTİK DÜZELTME BAŞLANGICI ---
 
-    /* İÇERİK FİLTRELEME (Sadece Blazor'un olmadığı statik sayfalar için geçerlidir) */
     let currentCategory = 0;
     const MAX_VISIBLE = 9;
 
     window.filterCategory = function (categoryId) {
-        // KRİTİK KONTROL: Fonksiyonun ihtiyaç duyduğu temel elementler var mı?
         const cards = document.querySelectorAll('.content-card-wrapper');
         const noContent = document.getElementById("noContentMessage");
         const showAllButton = document.getElementById("showAllButton");
 
-        // Eğer temel elementlerden herhangi biri yoksa (örn. Blazor admin panelindeyiz) fonksiyonu sonlandır.
         if (!noContent || !showAllButton || cards.length === 0) {
             return;
         }
@@ -257,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Elementlerin null olmadığını garanti ettiğimiz için bu satırlar güvenlidir.
         noContent.style.display = total === 0 ? "block" : "none";
         showAllButton.style.display = total > MAX_VISIBLE ? "inline-block" : "none";
 
@@ -274,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const cards = document.querySelectorAll('.content-card-wrapper');
         const showAllButton = document.getElementById("showAllButton");
 
-        // KRİTİK KONTROL
         if (!showAllButton || cards.length === 0) {
             return;
         }
@@ -289,18 +280,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("showAllButton").style.display = "none";
     };
 
-    // Sayfa yüklendikten 250ms sonra çalıştır, hata verme olasılığını azaltmak için ?. ile kontrol edilir.
     setTimeout(() => window.filterCategory?.(0), 250);
 
-    // --- KRİTİK DÜZELTME BİTİŞİ ---
 
-    /* ALT BİLGİ (FOOTER) MOBİL AÇILIR MENÜ */
     function setupFooterToggle() {
-        // data-target özniteliğine sahip tüm başlıkları seçer
         const toggleButtons = document.querySelectorAll('.footer-column-title[data-target]');
 
         toggleButtons.forEach(button => {
-            // Tıklanacak başlık ve hedef menü (ul elementi)
             const targetId = button.getAttribute('data-target');
             const targetMenu = document.getElementById(targetId);
 
@@ -328,7 +314,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const adminMobileOverlay = document.getElementById("admin-mobile-overlay");
     const body = document.body;
 
-    // Eğer admin sayfasında değilsek, fonksiyonu çalıştırma
     if (!adminMobileMenuBtn || !adminSidebar || !adminMobileOverlay) {
         return;
     }
@@ -375,3 +360,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+/* =========================================================
+    DİL DEĞİŞTİRME YARDIMCI FONKSİYONU
+========================================================= */
+
+(function () {
+    const path = window.location.pathname.toLowerCase();
+    let detectedLang = null; 
+
+    if (path.startsWith('/en/') || path === '/en') {
+        detectedLang = 'en';
+    } else if (path.startsWith('/ar/') || path === '/ar') {
+        detectedLang = 'ar';
+    } else if (path.startsWith('/tr/') || path === '/tr') {
+        detectedLang = 'tr';
+    }
+
+    const currentCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('user_language='))
+        ?.split('=')[1];
+
+    if (detectedLang && currentCookie !== detectedLang) {
+        document.cookie = `user_language=${detectedLang}; path=/; max-age=31536000; SameSite=Lax`;
+    }
+})();
+
+window.goToTurkish = function () {
+    let currentPath = window.location.pathname;
+
+    currentPath = currentPath.replace(/^\/(en|ar)\//, '/').replace(/^\/(en|ar)$/, '/');
+
+    document.cookie = 'user_language=tr; path=/; max-age=31536000; SameSite=Lax';
+
+    window.location.href = currentPath;
+};

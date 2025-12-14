@@ -1,0 +1,412 @@
+﻿@page "/kariyer"
+@page "/en/career"
+@page "/ar/career"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager Navigation
+
+<PageTitle>@GetText("pageTitle")</PageTitle>
+
+<section class="hero-kariyer-section">
+
+    <div class="hero-kariyer-bg"></div>
+    <div class="hero-kariyer-overlay"></div>
+
+    <div class="hero-kariyer-container">
+
+        <div class="hero-kariyer-title-content">
+            <h2 class="kariyer-hero-title-upper">@GetText("upperTitle")</h2>
+
+            <div class="hero-kariyer-title-wrapper">
+                <h1 class="hero-kariyer-title">@GetText("mainTitle")</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="hero-kariyer-slogan-wrapper">
+                    <div class="hero-kariyer-slogan-text-style">
+                        @((MarkupString)GetText("slogan"))
+                    </div>
+                </div>
+
+                <div class="hero-kariyer-breadcrumb">
+                    <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("breadcrumbHome")</a> / <span>@GetText("breadcrumbCareer")</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="kariyer-sub-nav-bar">
+    <div class="kariyer-sub-nav-container">
+        <button class="button active" onclick="showTab('kariyer')">@GetText("tabCareerAtDaf")</button>
+        <button class="button" onclick="showTab('pozisyon')">@GetText("tabGeneralApplication")</button>
+    </div>
+</section>
+
+
+
+<section class="kariyer-icerik">
+
+    <div class="tab-content" id="kariyer">
+
+        <div class="row">
+            <div class="col-lg-6">
+                <span>
+                    @GetText("careerIntroSpan")
+                </span>
+
+                <p>
+                    @GetText("careerIntroP")
+                </p>
+            </div>
+
+            <div class="col-lg-6">
+
+                <a href="#" class="apply-btn">
+                    <i class="linkedin-icon"></i> @GetText("joinOurTeam")
+                </a>
+
+                <div class="kariyer-card">
+                    <div class="card-body">
+                        <h5 class="card-title">@GetText("jobTitleFinance")</h5>
+                        <h6 class="card-subtitle">@GetText("jobSummaryText")</h6>
+                        <p class="card-text">@GetText("jobDetailsFinance")</p>
+
+                        <a href="#" class="card-link underline-anim">
+                            @GetText("easyApply")
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="tab-content hidden" id="pozisyon">
+
+        <div class="row positions-row">
+
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>@GetText("posLawyer")</h5></a>
+                    <a href="#" class="underline-anim small-link">@GetText("viewDetails")</a>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>@GetText("posSupportTeam")</h5></a>
+                    <a href="#" class="underline-anim small-link">@GetText("viewDetails")</a>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>@GetText("posLegalIntern")</h5></a>
+                    <a href="#" class="underline-anim small-link">@GetText("viewDetails")</a>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="position-card">
+                    <a href="#"><h5>@GetText("posSummerIntern")</h5></a>
+                    <a href="#" class="underline-anim small-link">@GetText("viewDetails")</a>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-4">
+
+                <a href="#" class="apply-btn">
+                    <i class="linkedin-icon"></i> @GetText("joinOurTeam")
+                </a>
+
+                <div class="kariyer-card">
+                    <div class="card-body">
+                        <h5 class="card-title">@GetText("jobTitlePosition")</h5>
+                        <h6 class="card-subtitle">@GetText("jobSummaryText")</h6>
+                        <p class="card-text">@GetText("jobDetailsPosition")</p>
+
+                        <a href="#" class="card-link underline-anim">
+                            @GetText("easyApply")
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="row degismeyen-icerik">
+
+        <div class="down-description">
+
+            <div class="row">
+                <div class="centered-header col-12">
+                    <h2>@GetText("valuesTitle")</h2>
+                </div>
+            </div>
+
+            <div class="row values-row-1">
+                <div class="col-lg-3 value-box">
+                    <div class="value-img-wrapper">
+                        <img src="/img/sayfalar/kariyer/daf-kariyer-01.png" class="value-img" alt="@GetText("valueImage1Alt")">
+                    </div>
+                </div>
+                <div class="col-lg-3 value-box">
+                    <h2>
+                        @GetText("valueTitle1")
+                    </h2>
+                    <p>
+                        @GetText("valueDesc1")
+                    </p>
+                </div>
+                <div class="col-lg-3 value-box">
+                    <h2>
+                        @GetText("valueTitle2")
+                    </h2>
+                    <p>
+                        @GetText("valueDesc2")
+                    </p>
+                </div>
+                <div class="col-lg-3 value-box">
+                    <h2>
+                        @GetText("valueTitle3")
+                    </h2>
+                    <p>
+                        @GetText("valueDesc3")
+                    </p>
+                </div>
+            </div>
+
+            <div class="row values-row-2">
+                <div class="col-lg-3 value-box">
+                    <h2>
+                        @GetText("valueTitle4")
+                    </h2><p>
+                        @GetText("valueDesc4")
+                    </p>
+                </div>
+
+                <div class="col-lg-3 value-box">
+                    <div class="value-img-wrapper">
+                        <img src="/img/sayfalar/kariyer/daf-kariyer-02.png" class="value-img" alt="@GetText("valueImage2Alt")">
+                    </div>
+                </div>
+
+                <div class="col-lg-3 value-box">
+                    <h2>
+                        @GetText("valueTitle5")
+                    </h2><p>
+                        @GetText("valueDesc5")
+                    </p>
+                </div>
+
+                <div class="col-lg-3 value-box">
+                    <div class="value-img-wrapper">
+                        <img src="/img/sayfalar/kariyer/daf-kariyer-01.png" class="value-img" alt="@GetText("valueImage3Alt")">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+@code {
+    private readonly Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Kariyer",
+            ["upperTitle"] = "Kariyer",
+            ["mainTitle"] = "Daf Hukuk'da Kariyer",
+            ["slogan"] = "Senin <br> Başarın. <br> Bizim <br> İşimiz.",
+            ["breadcrumbHome"] = "Ana Sayfa",
+            ["breadcrumbCareer"] = "Kariyer",
+            ["tabCareerAtDaf"] = "Daf Hukuk’da Kariyer",
+            ["tabGeneralApplication"] = "Genel İş Başvurusu",
+            ["careerIntroSpan"] = "Daf Hukuk’da çalışan herkese, mesleki gelişimlerinde ihtiyaç duydukları beceri, fırsat ve deneyimi sağlıyoruz.",
+            ["careerIntroP"] = "Görev ve sorumluluk alanları ne olursa olsun, stajyer, uzman, kıdemli avukat ya da destek hizmetleri görevli herkese Daf Hukuk’ta ideal bir iş ortamında heyecan dolu ve ilgi çekici bir deneyim fırsatı sunuyoruz. Her bir çalışanımızın mesleki ve kişisel potansiyelinin açığa çıkması için ekibimize yatırım yapıyoruz.",
+            ["joinOurTeam"] = "Ekibimize Hemen Katıl",
+            ["jobTitleFinance"] = "Muhasebe ve Finans Uzmanı",
+            ["jobSummaryText"] = "Pozisyon Özet Yazısı",
+            ["jobDetailsFinance"] = "Tam Zamanlı – Ankara",
+            ["easyApply"] = "Kolay Başvuru",
+            ["posLawyer"] = "Avukat",
+            ["posSupportTeam"] = "Destek Ekibi",
+            ["posLegalIntern"] = "Yasal Stajyer",
+            ["posSummerIntern"] = "Yaz Stajyeri",
+            ["viewDetails"] = "Detayları Görüntüle",
+            ["jobTitlePosition"] = "Pozisyon",
+            ["jobDetailsPosition"] = "Tam Zamanlı – Kızılay, Ankara",
+            ["valuesTitle"] = "Değerlerimiz",
+            ["valueTitle1"] = "Öğrenim ve gelişim",
+            ["valueDesc1"] = "Uzun süreli ve kalıcı bir başarı sağlama vizyonumuza erişmek için, ekibimize en iyi teknik eğitimi ve mesleki rehberliği sunmaya gayret ediyoruz. Karşılıklı destek ve işbirliği, özel gelişim programları, yurt içi ve yurt dışı değişim programları ile avukat kadromuza farklı fırsatlar sunuyoruz.",
+            ["valueImage1Alt"] = "Değer Görseli 1",
+            ["valueTitle2"] = "İletişim",
+            ["valueDesc2"] = "Başarımızın temeli, yıl boyunca, ekibimizle performanslarına ilişkin olarak gerçekleştirdiğimiz dürüst geri bildirimler, yüz yüze etkileşimler, açık toplantılar ve direkt iletişim. Açık bir iletişimin ve kurumsal şeffaflığın, kariyer yolunda ilerlemek ve ekibimizin potansiyelini maksimum düzeye çıkarmak için son derece önemli olduğuna inanıyoruz.",
+            ["valueTitle3"] = "Değişim programları",
+            ["valueDesc3"] = "Avukatlarımızı kariyerlerine global seviyede yön vermelerine etkili olacağını düşündüğümüz, bilgi ve deneyimlerini geliştirebilecekleri uluslararası yabancı hukuk büroları ve müvekkilerimiz ile yaptığımız değişim programları ile destekliyoruz.",
+            ["valueTitle4"] = "Ekip çalışması",
+            ["valueDesc4"] = "Paksoy olarak ekip ruhuna önem veriyoruz. Başarılı bireylerin ekip çalışması ile kendilerini daha çok yansıtabileceklerine inanıyoruz. Ekibimizdeki herkesin bireysel olarak desteklenmesi ve kişiler arası bilgi paylaşımının sağlanması Paksoy’u bugünkü konumuna taşıyan unsurlardan biridir.",
+            ["valueImage2Alt"] = "Değer Görseli 2",
+            ["valueTitle5"] = "Sosyal yaşam",
+            ["valueDesc5"] = "Paksoy, çalışanlarının işlerine duydukları tutkuyu ve memnuniyetlerini önemseyerek sıcak ve destekleyici bir iş ortamı sunmaktadır. Esnek çalışma saatleri, şık bir ofis ortamı, pozitif iş ilişkileri ve katılımcı bir yaklaşımın benimsenmesi sosyal ve entelektüel bir iş ortamı sağlayarak şirketimizi dinamik ve yenilikçi bir kültürün parçası yapmaktadır.",
+            ["valueImage3Alt"] = "Değer Görseli 3"
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Career",
+            ["upperTitle"] = "Career",
+            ["mainTitle"] = "Career at Daf Hukuk",
+            ["slogan"] = "Your <br> Success. <br> Our <br> Business.",
+            ["breadcrumbHome"] = "Home",
+            ["breadcrumbCareer"] = "Career",
+            ["tabCareerAtDaf"] = "Career at Daf Hukuk",
+            ["tabGeneralApplication"] = "General Application",
+            ["careerIntroSpan"] = "We provide everyone working at Daf Hukuk with the skills, opportunities, and experience they need for their professional development.",
+            ["careerIntroP"] = "Regardless of their duties and responsibilities, we offer everyone—interns, specialists, senior lawyers, or support service personnel—an exciting and engaging experience in an ideal working environment at Daf Hukuk. We invest in our team to unlock the professional and personal potential of each employee.",
+            ["joinOurTeam"] = "Join Our Team Now",
+            ["jobTitleFinance"] = "Accounting and Finance Specialist",
+            ["jobSummaryText"] = "Job Summary Text",
+            ["jobDetailsFinance"] = "Full-Time – Ankara",
+            ["easyApply"] = "Easy Application",
+            ["posLawyer"] = "Lawyer",
+            ["posSupportTeam"] = "Support Team",
+            ["posLegalIntern"] = "Legal Intern",
+            ["posSummerIntern"] = "Summer Intern",
+            ["viewDetails"] = "View Details",
+            ["jobTitlePosition"] = "Position",
+            ["jobDetailsPosition"] = "Full-Time – Kızılay, Ankara",
+            ["valuesTitle"] = "Our Values",
+            ["valueTitle1"] = "Learning and development",
+            ["valueDesc1"] = "To achieve our vision of ensuring long-term and sustainable success, we strive to provide our team with the best technical training and professional guidance. We offer various opportunities to our lawyer staff through mutual support and cooperation, special development programs, and domestic and international exchange programs.",
+            ["valueImage1Alt"] = "Value Image 1",
+            ["valueTitle2"] = "Communication",
+            ["valueDesc2"] = "The foundation of our success is the honest feedback, face-to-face interactions, open meetings, and direct communication we conduct with our team regarding their performance throughout the year. We believe that open communication and corporate transparency are crucial for advancing in a career and maximizing our team's potential.",
+            ["valueTitle3"] = "Exchange programs",
+            ["valueDesc3"] = "We support our lawyers with international foreign law firm and client exchange programs that we believe will be effective in guiding their careers globally and enable them to improve their knowledge and experience.",
+            ["valueTitle4"] = "Teamwork",
+            ["valueDesc4"] = "As Daf Hukuk, we value team spirit. We believe that successful individuals can express themselves more fully through teamwork. The individual support for everyone on our team and the sharing of information between people are some of the factors that have brought Daf Hukuk to its current position. (Note: Kept 'Paksoy' from original text and replaced with 'Daf Hukuk' where appropriate, but the original text had 'Paksoy' multiple times.)",
+            ["valueImage2Alt"] = "Value Image 2",
+            ["valueTitle5"] = "Social life",
+            ["valueDesc5"] = "Daf Hukuk provides a warm and supportive work environment by valuing its employees' passion and satisfaction with their work. Flexible working hours, a stylish office environment, positive work relationships, and the adoption of a participatory approach create a social and intellectual work environment, making our company part of a dynamic and innovative culture. (Note: Kept 'Paksoy' from original text and replaced with 'Daf Hukuk' where appropriate.)",
+            ["valueImage3Alt"] = "Value Image 3"
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "الوظائف",
+            ["upperTitle"] = "الوظائف",
+            ["mainTitle"] = "الوظائف في داف محاماة",
+            ["slogan"] = "نجاحك. <br> هو <br> عملنا. <br>",
+            ["breadcrumbHome"] = "الصفحة الرئيسية",
+            ["breadcrumbCareer"] = "الوظائف",
+            ["tabCareerAtDaf"] = "الوظائف في داف محاماة",
+            ["tabGeneralApplication"] = "طلب توظيف عام",
+            ["careerIntroSpan"] = "نحن نوفر لكل من يعمل في داف محاماة المهارات والفرص والخبرات التي يحتاجونها لتطويرهم المهني.",
+            ["careerIntroP"] = "بغض النظر عن واجباتهم ومسؤولياتهم، نقدم للجميع—المتدربين، والمتخصصين، وكبار المحامين، أو موظفي خدمات الدعم—فرصة لتجربة مثيرة وجذابة في بيئة عمل مثالية في داف محاماة. نحن نستثمر في فريقنا لإطلاق العنان للإمكانات المهنية والشخصية لكل موظف.",
+            ["joinOurTeam"] = "انضم إلى فريقنا الآن",
+            ["jobTitleFinance"] = "أخصائي محاسبة ومالية",
+            ["jobSummaryText"] = "نص موجز للوظيفة",
+            ["jobDetailsFinance"] = "دوام كامل – أنقرة",
+            ["easyApply"] = "تقديم سهل",
+            ["posLawyer"] = "محام",
+            ["posSupportTeam"] = "فريق الدعم",
+            ["posLegalIntern"] = "متدرب قانوني",
+            ["posSummerIntern"] = "متدرب صيفي",
+            ["viewDetails"] = "عرض التفاصيل",
+            ["jobTitlePosition"] = "منصب",
+            ["jobDetailsPosition"] = "دوام كامل – كيزيلاي، أنقرة",
+            ["valuesTitle"] = "قيمنا",
+            ["valueTitle1"] = "التعلم والتطوير",
+            ["valueDesc1"] = "لتحقيق رؤيتنا المتمثلة في ضمان النجاح طويل الأمد والمستدام، نسعى لتزويد فريقنا بأفضل التدريب الفني والتوجيه المهني. نقدم فرصًا متنوعة لموظفينا من المحامين من خلال الدعم المتبادل والتعاون، وبرامج التطوير الخاصة، وبرامج التبادل المحلية والدولية.",
+            ["valueImage1Alt"] = "صورة القيمة 1",
+            ["valueTitle2"] = "التواصل",
+            ["valueDesc2"] = "أساس نجاحنا هو التقييمات الصادقة والتفاعلات وجهًا لوجه والاجتماعات المفتوحة والتواصل المباشر الذي نجريه مع فريقنا بشأن أدائهم على مدار العام. نعتقد أن التواصل المفتوح والشفافية المؤسسية أمران بالغا الأهمية للتقدم في المسيرة المهنية وتعظيم إمكانات فريقنا.",
+            ["valueTitle3"] = "برامج التبادل",
+            ["valueDesc3"] = "ندعم محامينا ببرامج التبادل مع مكاتب المحاماة الأجنبية الدولية وعملائنا، والتي نعتقد أنها ستكون فعالة في توجيه حياتهم المهنية على المستوى العالمي وتمكنهم من تحسين معرفتهم وخبراتهم.",
+            ["valueImage1Alt"] = "صورة القيمة 1",
+            ["valueTitle4"] = "العمل الجماعي",
+            ["valueDesc4"] = "في داف محاماة، نولي أهمية لروح الفريق. نعتقد أن الأفراد الناجحين يمكنهم التعبير عن أنفسهم بشكل أكمل من خلال العمل الجماعي. الدعم الفردي للجميع في فريقنا ومشاركة المعلومات بين الأفراد هي بعض العوامل التي أوصلت داف محاماة إلى وضعها الحالي.",
+            ["valueImage2Alt"] = "صورة القيمة 2",
+            ["valueTitle5"] = "الحياة الاجتماعية",
+            ["valueDesc5"] = "توفر داف محاماة بيئة عمل دافئة وداعمة من خلال تقدير شغف موظفيها ورضاهم عن عملهم. ساعات العمل المرنة، وبيئة المكتب الأنيقة، وعلاقات العمل الإيجابية، واعتماد نهج تشاركي يخلق بيئة عمل اجتماعية وفكرية، مما يجعل شركتنا جزءًا من ثقافة ديناميكية ومبتكرة.",
+            ["valueImage3Alt"] = "صورة القيمة 3"
+        }
+    };
+
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    // Metinleri mevcut dile göre döndüren yardımcı metod
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+
+        // Varsayılan olarak Türkçe metni döndür (veya anahtarı)
+        return Translations["tr"].ContainsKey(key) ? Translations["tr"][key] : key;
+    }
+
+    protected override void OnInitialized()
+    {
+        // Tarayıcının mevcut dilini (CurrentLang) sunucuya bildirerek Culture ayarını yapma veya yönlendirme mantığı burada olmalı.
+        // Mevcut yapınızda bu LanguageRedirect.razor veya Program.cs içerisinde ele alınmış gibi görünüyor.
+        // Blazor Server/Interactive rendering kullandığınız için JS fonksiyonunu burada tetiklemeye gerek yoktur.
+    }
+}
+
+
+@* Sekme değiştirme JavaScript kodu aynı kalacaktır *@
+<script>
+    function showTab(id) {
+        document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+        document.getElementById(id).classList.remove("hidden");
+
+        document.querySelectorAll(".kariyer-sub-nav-bar .button")
+            .forEach(btn => btn.classList.remove("active"));
+
+        // Event nesnesini kontrol et
+        const event = window.event;
+        if (event && event.target) {
+             event.target.classList.add("active");
+        } else {
+            // Eğer event yoksa, id ile eşleşen butonu bulup aktif yap (Blazor yaşam döngüsü dışında çağrılabilir)
+            const buttons = document.querySelectorAll(".kariyer-sub-nav-bar .button");
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(id === 'kariyer' ? '@GetText("tabCareerAtDaf")' : '@GetText("tabGeneralApplication")')) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+    }
+
+    // İlk yüklemede doğru sekmeyi aktif yap
+    document.addEventListener("DOMContentLoaded", () => {
+        const kariyerButton = document.querySelector(".kariyer-sub-nav-bar .button:first-child");
+        if (kariyerButton) {
+             kariyerButton.classList.add("active");
+        }
+    });
+
+</script>

@@ -1,9 +1,4 @@
-﻿/**
- * HİZMETLERİMİZ SAYFASI STİLLERİ
- * Tam Responsive - Paksoy Referans
- */
-
-/* =========================================================
+﻿/* =========================================================
     GENEL AYARLAR
 ========================================================= */
 body {
@@ -279,7 +274,6 @@ a {
     color: #1F3363;
 }
 
-/* Android/Mobile için özel küçük görünüm */
 @media (max-width: 480px) {
     .practice-card {
         max-width: 100%;
@@ -673,7 +667,6 @@ a {
     margin-bottom: 15px;
 }
 
-/* Telefon için featured-publication-card center */
 @media (max-width: 768px) {
     .featured-publication-card {
         text-align: center;

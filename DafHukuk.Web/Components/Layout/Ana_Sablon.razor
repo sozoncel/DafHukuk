@@ -1,0 +1,641 @@
+﻿@page "/hizmetlerimiz/{slug}"
+@page "/en/services/{slug}"
+@page "/ar/services/{slug}"
+
+@page "/duyurular/{slug}"
+@page "/en/announcements/{slug}"
+@page "/ar/announcements/{slug}"
+
+@page "/etkinlikler/{slug}"
+@page "/en/events/{slug}"
+@page "/ar/events/{slug}"
+
+@page "/yayinlar/{slug}"
+@page "/en/publications/{slug}"
+@page "/ar/publications/{slug}"
+
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@using DafHukuk.Core.Entities
+@inject DafHukuk.Service.Interfaces.IPostService PostService
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager NavManager
+
+@code {
+    [Parameter] public string slug { get; set; } = string.Empty;
+
+    private Post? currentPost;
+    private Post? featuredPost;
+    private List<Post> allPosts = new();
+
+    // Sayfa türüne göre dinamik içerik için değişkenler
+    private string PageType = "Services"; // "Services", "Announcements", "Events", "Publications"
+    private List<Post> servicePosts = new(); // Sadece Hizmetler için Diğer Hizmetler
+    private List<Post> otherPostsInSameCategory = new(); // Diğer sayfalar için Aynı Kategorideki içerikler
+
+    // İlişkili İçerikler (Ortak)
+    private List<Post> relatedPosts = new();
+    private List<Category> distinctCategories = new();
+    private bool ShowingAll = false;
+    private int InitialDisplayCount = 6;
+    private int CurrentFilterCategory = 0; // 0 = Hepsini Göster
+
+
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            allPosts = await PostService.GetAll();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hata PostService.GetAll(): {ex.Message}");
+            allPosts = new List<Post>();
+        }
+
+        // 1. Sayfa Türünü Belirle
+        var prefix = GetPostUrlPrefix();
+        PageType = prefix switch
+        {
+            "hizmetlerimiz" or "services" => "Services",
+            "duyurular" or "announcements" => "Announcements",
+            "etkinlikler" or "events" => "Events",
+            "yayinlar" or "publications" => "Publications",
+            _ => "Unknown"
+        };
+
+        // 2. Bulunan post: slug'a göre mevcut dile uygun slug alanıyla arama
+        currentPost = GetPostBySlug(slug);
+
+        if (currentPost != null)
+        {
+            // 3. Sayfa Türüne Özgü Yan İçeriği Yükle (Sidebar)
+            if (PageType == "Services")
+            {
+                // Hizmetlerimiz için: Diğer Hizmetleri getir
+                servicePosts = allPosts
+                    .Where(p => p.Category != null &&
+                                (string.Equals(p.Category.Name_TR?.Trim(), "Hizmetlerimiz", StringComparison.OrdinalIgnoreCase) ||
+                                 string.Equals(p.Category.Name_EN?.Trim(), "Our Services", StringComparison.OrdinalIgnoreCase) ||
+                                 string.Equals(p.Category.Name_AR?.Trim(), "خدماتنا", StringComparison.OrdinalIgnoreCase))
+                                && p.Id != currentPost.Id && p.IsActive)
+                    .OrderBy(p => GetPostTitle(p))
+                    .ToList();
+            }
+            else if (currentPost.Category != null)
+            {
+                // Duyuru/Etkinlik/Yayın için: Aynı Kategorideki diğer içerikleri getir
+                otherPostsInSameCategory = allPosts
+                    .Where(p => p.Category != null &&
+                                p.Category.Id == currentPost.Category.Id &&
+                                p.Id != currentPost.Id && p.IsActive)
+                    .OrderByDescending(p => p.PublishedDate)
+                    .Take(10)
+                    .ToList();
+            }
+        }
+
+        // 4. Öne çıkan yayın/Önerilen İçerik: son 12 ay içinde olanlardan ya da genel listeden rastgele seç (Ortak)
+        var dateCutOff = DateTime.Now.AddMonths(-12);
+        var recent = allPosts
+            .Where(p => p.Id != currentPost?.Id && p.PublishedDate >= dateCutOff && p.IsActive)
+            .ToList();
+
+        var candidateList = recent.Any() ? recent : allPosts.Where(p => p.Id != currentPost?.Id && p.IsActive).ToList();
+
+        if (candidateList.Any())
+        {
+            var rnd = new Random();
+            featuredPost = candidateList[rnd.Next(candidateList.Count)];
+        }
+
+        // 5. İlişkili İçerikleri Hazırlama (Ortak)
+        relatedPosts = allPosts
+            .Where(p => p.Id != currentPost?.Id && p.IsActive)
+            .OrderByDescending(p => p.PublishedDate)
+            .ToList();
+
+        distinctCategories = relatedPosts
+            .Select(p => p.Category)
+            .Where(c => c != null)
+            .DistinctBy(c => c!.Id)
+            .OrderBy(c => GetCategoryName(c))
+            .ToList()!;
+    }
+
+    private string GetPostUrlPrefix()
+    {
+        var path = NavManager.ToAbsoluteUri(NavManager.Uri).AbsolutePath.ToLowerInvariant();
+        var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        if (parts.Any() && (parts[0] == "en" || parts[0] == "ar"))
+            parts.RemoveAt(0);
+
+        if (parts.Any())
+            return parts[0];
+
+        return "";
+    }
+
+
+    private Post? GetPostBySlug(string slugValue)
+    {
+        if (string.IsNullOrWhiteSpace(slugValue)) return null;
+
+        slugValue = slugValue.Trim();
+
+        // Mevcut dildeki slug'ı, sonra TR'deki slug'ı kontrol et
+        var posts = allPosts.Where(p => p.IsActive).ToList();
+
+        return CurrentLang switch
+        {
+            "en" => posts.FirstOrDefault(p => string.Equals(p.Slug_EN, slugValue, StringComparison.OrdinalIgnoreCase)
+                                            || string.Equals(p.Slug_TR, slugValue, StringComparison.OrdinalIgnoreCase)),
+            "ar" => posts.FirstOrDefault(p => string.Equals(p.Slug_AR, slugValue, StringComparison.OrdinalIgnoreCase)
+                                            || string.Equals(p.Slug_TR, slugValue, StringComparison.OrdinalIgnoreCase)),
+            _ => posts.FirstOrDefault(p => string.Equals(p.Slug_TR, slugValue, StringComparison.OrdinalIgnoreCase)
+                                        || string.Equals(p.Slug_EN, slugValue, StringComparison.OrdinalIgnoreCase)
+                                        || string.Equals(p.Slug_AR, slugValue, StringComparison.OrdinalIgnoreCase))
+        };
+    }
+
+    private string GetFeaturedUrl()
+    {
+        if (featuredPost == null || featuredPost.Category == null) return "#";
+        return GetPostUrl(featuredPost);
+    }
+
+    private string GetCategorySlug(Category category)
+    {
+        var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "").ToLowerInvariant().Trim();
+
+        return categoryName switch
+        {
+            // Hizmetlerimiz
+            "hizmetlerimiz" or "our services" or "خدماتنا"
+                => CurrentLang == "en" ? "services"
+                 : CurrentLang == "ar" ? "services"
+                 : "hizmetlerimiz",
+
+            // Duyurular
+            "duyurular" or "announcements" or "الإعلانات"
+                => CurrentLang == "en" ? "announcements"
+                 : CurrentLang == "ar" ? "announcements"
+                 : "duyurular",
+
+            // Etkinlikler
+            "etkinlikler" or "events" or "الفعاليات"
+                => CurrentLang == "en" ? "events"
+                 : CurrentLang == "ar" ? "events"
+                 : "etkinlikler",
+
+            // Yayınlar
+            "yayınlar" or "yayinlar" or "publications" or "المنشورات"
+                => CurrentLang == "en" ? "publications"
+                 : CurrentLang == "ar" ? "publications"
+                 : "yayinlar",
+
+            _ => CurrentLang == "en" ? "publications"
+               : CurrentLang == "ar" ? "publications"
+               : "yayinlar"
+        };
+    }
+
+    private string GetPostUrl(Post post)
+    {
+        if (post?.Category == null) return "#";
+
+        var categorySlug = GetCategorySlug(post.Category);
+        var postSlug = CurrentLang switch
+        {
+            "en" => post.Slug_EN ?? post.Slug_TR,
+            "ar" => post.Slug_AR ?? post.Slug_TR,
+            _ => post.Slug_TR ?? post.Slug_EN
+        };
+
+        // Eğer postSlug boşsa, kategorinin anasayfasına yönlendir
+        if (string.IsNullOrWhiteSpace(postSlug))
+        {
+            return CurrentLang switch
+            {
+                "en" => $"/en/{categorySlug}",
+                "ar" => $"/ar/{categorySlug}",
+                _ => $"/{categorySlug}"
+            };
+        }
+
+        return CurrentLang switch
+        {
+            "en" => $"/en/{categorySlug}/{postSlug}",
+            "ar" => $"/ar/{categorySlug}/{postSlug}",
+            _ => $"/{categorySlug}/{postSlug}"
+        };
+    }
+
+    private string GetPostTitle(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Title_EN ?? post.Title_TR,
+            "ar" => post.Title_AR ?? post.Title_TR,
+            _ => post.Title_TR
+        };
+    }
+
+    private string GetCategoryName(Category? category)
+    {
+        if (category == null) return "";
+        return CurrentLang switch
+        {
+            "en" => category.Name_EN ?? category.Name_TR,
+            "ar" => category.Name_AR ?? category.Name_TR,
+            _ => category.Name_TR
+        };
+    }
+
+    private System.Globalization.CultureInfo GetCulture()
+    {
+        return CurrentLang switch
+        {
+            "en" => new System.Globalization.CultureInfo("en-US"),
+            "ar" => new System.Globalization.CultureInfo("ar-SA"),
+            _ => new System.Globalization.CultureInfo("tr-TR")
+        };
+    }
+
+    // İlişkili İçerikler yönetimi
+    private void FilterCategory(int categoryId)
+    {
+        CurrentFilterCategory = categoryId;
+        ShowingAll = false;
+    }
+
+    private void ShowAll()
+    {
+        ShowingAll = true;
+    }
+
+    private List<Post> GetDisplayedRelatedPosts()
+    {
+        var filtered = CurrentFilterCategory == 0
+            ? relatedPosts
+            : relatedPosts.Where(p => p.CategoryId == CurrentFilterCategory).ToList();
+
+        if (ShowingAll)
+        {
+            return filtered;
+        }
+        else
+        {
+            return filtered.Take(InitialDisplayCount).ToList();
+        }
+    }
+
+    private string GetSummary(Post post)
+    {
+        var content = CurrentLang switch
+        {
+            "en" => post.Content_EN ?? post.Content_TR,
+            "ar" => post.Content_AR ?? post.Content_TR,
+            _ => post.Content_TR
+        };
+
+        if (string.IsNullOrWhiteSpace(content)) return "";
+
+        // HTML etiketlerini temizle
+        var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", String.Empty);
+
+        return plainText.Length <= 120
+            ? plainText
+            : plainText.Substring(0, 120) + "...";
+    }
+
+
+    // Basit lokal metinler (detay sayfası)
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["home"] = "Ana Sayfa",
+            ["services"] = "Hizmetlerimiz",
+            ["announcements"] = "Duyurular",
+            ["events"] = "Etkinlikler",
+            ["publications"] = "Yayınlar",
+
+            ["selectService"] = "Hizmet konusu seçin",
+            ["selectAnnouncement"] = "Diğer Duyurular",
+            ["selectEvent"] = "Diğer Etkinlikler",
+            ["selectPublication"] = "Diğer Yayınlar",
+
+            ["noOtherServices"] = "Diğer hizmet bulunamadı.",
+            ["noOtherContent"] = "Bu kategoride başka içerik bulunamadı.",
+
+            ["suggestedContent"] = "Önerilen İçerik", 
+            ["featuredPublications"] = "Öne Çıkan Yayınlar", 
+            ["noFeatured"] = "Öne çıkan yayın bulunamadı.",
+            ["notFound"] = "İçerik bulunamadı.",
+            ["relatedContent"] = "İlişkili İçerikler",
+            ["showAll"] = "Tümünü Göster",
+            ["noRelatedContent"] = "Bu içerikle ilişkili yayın bulunamadı."
+        },
+        ["en"] = new()
+        {
+            ["home"] = "Home",
+            ["services"] = "Services",
+            ["announcements"] = "Announcements",
+            ["events"] = "Events",
+            ["publications"] = "Publications",
+
+            ["selectService"] = "Select service",
+            ["selectAnnouncement"] = "Other Announcements",
+            ["selectEvent"] = "Other Events",
+            ["selectPublication"] = "Other Publications",
+
+            ["noOtherServices"] = "No other services found.",
+            ["noOtherContent"] = "No other content found in this category.",
+
+            ["suggestedContent"] = "Suggested Content",
+            ["featuredPublications"] = "Featured Publications",
+            ["noFeatured"] = "No featured publication found.",
+            ["notFound"] = "Content not found.",
+            ["relatedContent"] = "Related Content",
+            ["showAll"] = "Show All",
+            ["noRelatedContent"] = "No related content found for this post."
+        },
+        ["ar"] = new()
+        {
+            ["home"] = "الرئيسية",
+            ["services"] = "خدماتنا",
+            ["announcements"] = "الإعلانات",
+            ["events"] = "الفعاليات",
+            ["publications"] = "المنشورات",
+
+            ["selectService"] = "اختر موضوع الخدمة",
+            ["selectAnnouncement"] = "إعلانات أخرى",
+            ["selectEvent"] = "فعاليات أخرى",
+            ["selectPublication"] = "منشورات أخرى",
+
+            ["noOtherServices"] = "لا توجد خدمات أخرى.",
+            ["noOtherContent"] = "لا يوجد محتوى آخر في هذه الفئة.",
+
+            ["suggestedContent"] = "محتوى مقترح",
+            ["featuredPublications"] = "المنشورات المميزة",
+            ["noFeatured"] = "لا توجد منشورات مميزة.",
+            ["notFound"] = "المحتوى غير موجود.",
+            ["relatedContent"] = "المحتوى ذو الصلة",
+            ["showAll"] = "عرض الكل",
+            ["noRelatedContent"] = "لا توجد محتويات ذات صلة لهذا المنشور."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+}
+
+<PageTitle>@(GetPostTitle(currentPost ?? new Post()))</PageTitle>
+
+<section class="hero-servicesTemplate-section">
+    <div class="hero-servicesTemplate-bg" style="background-image: url('@currentPost?.CoverImageUrl');"></div>
+    <div class="hero-servicesTemplate-overlay"></div>
+
+    <div class="hero-servicesTemplate-container">
+        <div class="hero-servicesTemplate-title-content">
+            <h2 class="servicesTemplate-hero-title-upper">@GetCategoryName(currentPost?.Category)</h2>
+
+            <div class="hero-servicesTemplate-title-wrapper">
+                <h1 class="hero-servicesTemplate-title">@GetPostTitle(currentPost ?? new Post())</h1>
+
+                <div class="hero-servicesTemplate-breadcrumb">
+                    <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> /
+
+                    @* DİNAMİK KATEGORİ LİNKİ *@
+                    @switch (PageType)
+                    {
+                        case "Services":
+                            <a href="@LanguageService.GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
+                            break;
+                        case "Announcements":
+                            <a href="@LanguageService.GetLocalizedUrl("duyurular")">@GetText("announcements")</a>
+                            break;
+                        case "Events":
+                            <a href="@LanguageService.GetLocalizedUrl("etkinlikler")">@GetText("events")</a>
+                            break;
+                        case "Publications":
+                            <a href="@LanguageService.GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
+                            break;
+                    }
+                    /
+                    <span>@GetPostTitle(currentPost ?? new Post())</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-content service-page-content">
+    <div class="row">
+        <div class="col-lg-9">
+            @if (currentPost != null)
+            {
+                <p>@((MarkupString)(CurrentLang == "en" ? currentPost.Content_EN ?? currentPost.Content_TR : CurrentLang == "ar" ? currentPost.Content_AR ?? currentPost.Content_TR : currentPost.Content_TR))</p>
+            }
+            else
+            {
+                <div class="alert alert-warning">@GetText("notFound")</div>
+            }
+        </div>
+
+        <div class="col-lg-3">
+
+            @if (PageType == "Services")
+            {
+                <div class="dropdown modern-dropdown w-100 mb-3">
+                    <button class="btn dropdown-toggle modern-dropdown-toggle w-100" type="button" id="hizmetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        @GetText("selectService")
+                    </button>
+
+                    <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="hizmetDropdown">
+                        @foreach (var post in servicePosts)
+                        {
+                            <li>
+                                <a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">
+                                    @GetPostTitle(post)
+                                </a>
+                            </li>
+                        }
+
+                        @if (!servicePosts.Any())
+                        {
+                            <li><span class="dropdown-item text-muted">@GetText("noOtherServices")</span></li>
+                        }
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="dropdown modern-dropdown w-100 mb-3">
+                    <button class="btn dropdown-toggle modern-dropdown-toggle w-100" type="button" id="icerikDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        @(PageType == "Announcements" ? GetText("selectAnnouncement") : PageType == "Events" ? GetText("selectEvent") : GetText("selectPublication"))
+                    </button>
+                    <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="icerikDropdown">
+                        @foreach (var post in otherPostsInSameCategory)
+                        {
+                            <li>
+                                <a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">
+                                    @GetPostTitle(post)
+                                </a>
+                            </li>
+                        }
+                        @if (!otherPostsInSameCategory.Any())
+                        {
+                            <li><span class="dropdown-item text-muted">@GetText("noOtherContent")</span></li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="mt-4">
+                <h5 class="suggested-content-title text-center text-lg-start mb-3">@GetText("suggestedContent")</h5>
+
+                @if (featuredPost != null)
+                {
+                    <div class="content-card featured-publication-card p-3">
+                        <p class="created-Date">@featuredPost.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
+                        <img class="featured-img" src="@featuredPost.CoverImageUrl" alt="@GetPostTitle(featuredPost)">
+                        <a href="@GetFeaturedUrl()" class="content-title-link">
+                            <h3 class="textContent">@GetPostTitle(featuredPost)</h3>
+                        </a>
+
+                        @if (featuredPost.Category != null)
+                        {
+                            <a href="@GetFeaturedUrl()">
+                                <button class="content-tag-button">@GetCategoryName(featuredPost.Category)</button>
+                            </a>
+                        }
+
+                        <p class="slug-text">@GetSummary(featuredPost)</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">@GetText("noFeatured")</div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    @* İLİŞKİLİ İÇERİKLER *@
+    <div class="row featured align-items-start mt-5">
+
+        <div class="col-lg-9 col-md-12 mb-4">
+
+            @* KATEGORİ TABS (Yatay) *@
+            <div class="row related-content-nav-row mb-3">
+                <div class="col-sm-12">
+                    <h3 class="related-content-heading">@GetText("relatedContent")</h3>
+
+                    <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
+
+                        <li class="nav-item">
+                            <a class="@(CurrentFilterCategory == 0 ? "nav-link active" : "nav-link")"
+                               href="javascript:void(0)"
+                               @onclick="() => FilterCategory(0)"
+                               @onclick:preventDefault="true">
+                                @GetText("showAll")
+                            </a>
+                        </li>
+
+                        @foreach (var cat in distinctCategories)
+                        {
+                            <li class="nav-item">
+                                <a class="@(CurrentFilterCategory == cat.Id ? "nav-link active" : "nav-link")"
+                                   href="javascript:void(0)"
+                                   @onclick="() => FilterCategory(cat.Id)"
+                                   @onclick:preventDefault="true">
+                                    @GetCategoryName(cat)
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            @* İÇERİK LİSTESİ *@
+            <div class="row content-cards-row" id="contentContainer">
+                @if (!relatedPosts.Any())
+                {
+                    <div class="col-12 text-center">
+                        <p style="font-weight:bold; margin-top:20px;">
+                            @GetText("noRelatedContent")
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var p in GetDisplayedRelatedPosts())
+                    {
+                        var url = GetPostUrl(p);
+
+                        <div class="col-lg-4 mb-4 content-card-wrapper">
+
+                            <div class="content-card">
+
+                                <p class="created-Date">@p.PublishedDate.ToString("dd MMMM", GetCulture())</p>
+
+                                <a href="@url" class="content-title-link">
+                                    <h3 class="textContent">@GetPostTitle(p)</h3>
+                                </a>
+
+                                @if (p.Category != null)
+                                {
+                                    <a href="@url">
+                                        <button class="content-tag-button">@GetCategoryName(p.Category)</button>
+                                    </a>
+                                }
+
+                                <p class="slug-text">@GetSummary(p)</p>
+
+                            </div>
+                        </div>
+                    }
+
+                    @* BOŞ FİLTRE MESAJI *@
+                    @if (!GetDisplayedRelatedPosts().Any() && CurrentFilterCategory != 0)
+                    {
+                        <div class="col-12 text-center">
+                            <p class="alert alert-info" style="font-weight:bold; margin-top:20px;">
+                                @GetText("noRelatedContent")
+                            </p>
+                        </div>
+                    }
+                }
+
+            </div>
+
+            @* TÜMÜNÜ GÖSTER BUTONU *@
+            @if (GetDisplayedRelatedPosts().Count() < relatedPosts.Count() && !ShowingAll && relatedPosts.Any() && CurrentFilterCategory == 0)
+            {
+                <div class="row mt-4 mb-5">
+                    <div class="col-lg-12 text-center">
+                        <button id="showAllButton"
+                                class="show-all-button"
+                                @onclick="ShowAll">
+                            @GetText("showAll")
+                        </button>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="col-lg-3 col-md-12">
+        </div>
+    </div>
+</section>

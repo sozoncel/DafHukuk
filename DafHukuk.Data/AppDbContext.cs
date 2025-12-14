@@ -14,6 +14,8 @@ namespace DafHukuk.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<Lawyer> Lawyers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             base.OnModelCreating(modelbuilder);

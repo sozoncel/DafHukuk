@@ -1,0 +1,290 @@
+﻿@page "/hakkimizda"
+@page "/en/about"
+@page "/ar/about"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<section class="hero-about-section">
+    <div class="hero-about-bg"></div>
+    <div class="hero-about-overlay"></div>
+
+    <div class="hero-about-container">
+        <div class="hero-about-title-content">
+            <h2 class="about-hero-title-upper">@GetText("pageTitle")</h2>
+            <div class="hero-about-title-wrapper">
+                <h1 class="hero-about-title">@GetText("companyName")</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-slogan-wrapper">
+                    <div class="hero-about-slogan-text-style">
+                        @((MarkupString)GetText("slogan"))
+                    </div>
+                </div>
+                <div class="hero-about-breadcrumb">
+                    <a href="@GetLocalizedUrl("")">@GetText("home")</a> / <span>@GetText("about")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-about-sub-nav-bar">
+        <div class="hero-about-sub-nav-container">
+            <a role="button" href="@GetLocalizedUrl("hakkimizda")" class="button active">@GetText("about")</a>
+            <a role="button" href="@GetLocalizedUrl("hakkimizda/odullerimiz")" class="button">@GetText("awards")</a>
+            <a role="button" href="@GetLocalizedUrl("hakkimizda/sosyal-sorumluluk")" class="button">@GetText("socialResponsibility")</a>
+        </div>
+    </div>
+</section>
+
+<section class="about-page-content">
+
+    <div class="content-container content-top-row">
+        <div class="row about-us-row-item">
+            <div class="col-lg-6 about-text-col">
+                <h2>@GetText("whoWeAreTitle")</h2>
+                <p>
+                    @((MarkupString)GetText("whoWeAreText"))
+                </p>
+            </div>
+            <div class="col-lg-6 about-img-col">
+                <div class="img-placeholder">
+                    <img src="/img/sayfalar/hakkimizda/daf-bizkimiz.jpg" alt="@GetText("officeBuilding")" style="width:100%; height:auto;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="bracket" />
+    <div class="content-container content-bottom-row">
+        <div class="row about-us-row-item">
+            <div class="col-lg-6 about-img-col">
+                <div class="img-placeholder">
+                    <img src="/img/sayfalar/hakkimizda/daf-vizyon.jpg" alt="@GetText("vision")" style="width:100%; height:auto;" />
+                </div>
+            </div>
+            <div class="col-lg-6 about-text-col">
+                <h2>@GetText("foundationTitle")</h2>
+                <p>
+                    @GetText("foundationText")
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="counter-section">
+        <div class="content-container">
+            <div class="row counter-row-main">
+                <div class="col-lg-12 counter-items-wrapper">
+                    <div class="counter-item">
+                        <span data-target="25" class="counter-number">0+</span>
+                        <h4>@GetText("yearsExperience")</h4>
+                    </div>
+                    <div class="counter-item">
+                        <span data-target="100" class="counter-number">0+</span>
+                        <h4>@GetText("employees")</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tagline-section">
+        <div class="content-container">
+            <div class="row counter-tagline-row-new">
+                <div class="col-lg-12">
+                    <div class="heading-text">
+                        <span>
+                            <strong>@GetText("oneGoal")</strong>
+                        </span>
+                    </div>
+                    <div class="description-text">
+                        <span>@GetText("clientFocusedSolution")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="down-description">
+        <div class="row">
+            <div class="centered-header col-12">
+                <h2>@GetText("ourValues")</h2>
+            </div>
+        </div>
+        <div class="row values-row-1">
+            <div class="col-lg-3 value-box">
+                <div class="value-img-wrapper">
+                    <div class="img-placeholder">
+                        <img src="/img/sayfalar/hakkimizda/daf-degerlerimiz-01.jpg" alt="@GetText("value1Title")" style="width:100%; height:auto;" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 value-box">
+                <h2>@GetText("value1Title")</h2>
+                <p>@GetText("value1Text")</p>
+            </div>
+            <div class="col-lg-3 value-box">
+                <h2>@GetText("value2Title")</h2>
+                <p>@GetText("value2Text")</p>
+            </div>
+            <div class="col-lg-3 value-box">
+                <h2>@GetText("value3Title")</h2>
+                <p>@GetText("value3Text")</p>
+            </div>
+        </div>
+        <div class="row values-row-2">
+            <div class="col-lg-3 value-box">
+                <h2>@GetText("value4Title")</h2>
+                <p>@GetText("value4Text")</p>
+            </div>
+            <div class="col-lg-3 value-box">
+                <div class="value-img-wrapper">
+                    <div class="img-placeholder">
+                        <img src="/img/sayfalar/hakkimizda/daf-degerlerimiz-02.jpg" alt="@GetText("value4Title")" style="width:100%; height:auto;" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 value-box">
+                <h2>@GetText("value5Title")</h2>
+                <p>@GetText("value5Text")</p>
+            </div>
+            <div class="col-lg-3 value-box">
+                <div class="value-img-wrapper">
+                    <div class="img-placeholder">
+                        <img src="/img/sayfalar/hakkimizda/daf-bizkimiz.jpg" alt="@GetText("value5Title")" style="width:100%; height:auto;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Hakkımızda",
+            ["companyName"] = "Daf Ortak Avukat Bürosu",
+            ["slogan"] = "Senin <br> Başarın. <br> Bizim <br> İşimiz.",
+            ["home"] = "Ana Sayfa",
+            ["about"] = "Hakkımızda",
+            ["awards"] = "Ödüllerimiz",
+            ["socialResponsibility"] = "Sosyal Sorumluluk",
+            ["whoWeAreTitle"] = "Biz Kimiz",
+            ["whoWeAreText"] = "Daf Ortak Avukat Bürosu, yabancı yatırımcılara ve Türk iş dünyasına hukuki danışmanlık ve avukatlık hizmeti sağlamaktadır.<br>120'nin üzerinde çalışanı bulunan İstanbul'da kurulu bir avukatlık bürosudur.<br>Yerli ve yabancı iş dünyasının hemen her alandaki hukuki ihtiyaçlarına geniş bir yelpazede hukuki çözümler sunmaktadır.",
+            ["officeBuilding"] = "Ofis Binası",
+            ["vision"] = "Vizyonumuz",
+            ["foundationTitle"] = "Kuruluşumuz ve Vizyonumuz",
+            ["foundationText"] = "Daf Ortak Avukat Bürosu, yerli ve yabancı iş dünyasına uluslararası standartlarda sonuç odaklı, yaratıcı, yenilikçi, hızlı ve yüksek kalitede hukuki çözümler sunmak felsefesi ile kurulmuştur. Kuruluşundan bugüne kadar bu felsefeyi benimseyen Daf, sektörde öncü olmak, müvekkillerini minimal kaynak ile en kısa sürede sonuca ulaştırmak ve müvekkil memnuniyeti ile onların ihtiyaçlarına cevap vermek hedefleri ile hareket etmektedir. Sektörde güven ve saygı duyulan, büro çalışanlarına ve meslektaşlarına ilham veren, profesyonellik ve etik değerlere sıkı sıkıya bağlı, yüksek düzeyde uzmanlık ve bilgi birikimi ile kaliteli, etkili ve yenilikçi hukuki çözümler sağlayan işyerimiz prensiplerini kurulduğu günden itibaren her zaman korumuştur. Çalışanlarımızın sürekli gelişim ve eğitimini ön planda tutarak, hukuki bilgi ve deneyimlerini artırarak müvekkil memnuniyeti ile hukukun üstünlüğünü, adalet ve sosyal sorumluluk prensiplerine uygun hizmet sunmak anlayışımız eksiksiz, ödünsüz ve değişmez prensibimizdir.",
+            ["yearsExperience"] = "Yıllık Tecrübe",
+            ["employees"] = "Çalışan",
+            ["oneGoal"] = "Tek Hedef",
+            ["clientFocusedSolution"] = "Müvekkil Odaklı Çözüm",
+            ["ourValues"] = "Değerlerimiz",
+            ["value1Title"] = "Müvekkil odaklı",
+            ["value1Text"] = "Müvekkillerimizin ihtiyaçlarını anlamak, çıkarlarını en iyi şekilde temsil etmek, haklarını korumak ve en uygun, yüksek kaliteli ve hızlı çözümler üretmek.",
+            ["value2Title"] = "Profesyonel hizmet anlayışı",
+            ["value2Text"] = "Mesleki etik kuralları, adil ve şeffaflık içinde takip edip uygulayarak, yüksek düzeyde uzmanlık ve bilgi birikimi ile kaliteli, yenilikçi ve yaratıcı hukuki çözümler sunarak müvekkil memnuniyetini en üst düzeye çıkarmak.",
+            ["value3Title"] = "Sürekli gelişim ve eğitim",
+            ["value3Text"] = "Hukukun dinamik doğası ve yasal düzenlemelerdeki değişikliklere uygun olarak sürekli gelişim ve eğitime odaklanmak, hukuk teknolojileri, dijital dönüşüm gibi uygulamaları kullanmak, akademik yayınlarda bulunmak ve yeni hukuk hizmetleri geliştirmek.",
+            ["value4Title"] = "Verimli ve saygın iş ortamı",
+            ["value4Text"] = "Çalışanlarımıza verimli ve saygın bir iş ortamı sunarak, yetkinlik ve becerilerini geliştirmek, açık iletişim, sürekli eğitim, mentorluk, esnek çalışma saatleri, kariyer imkânları ve modern teknolojiler kullanarak çalışanlarımızın doğru iş-yaşam dengesini kurmalarına yardımcı olmak, kişisel ve kariyer gelişimlerine öncelik vermek.",
+            ["value5Title"] = "İletişim ve erişebilirlik",
+            ["value5Text"] = "Geri bildirim uygulamaları, personel eğitimi, teknoloji kullanımı ve yazılımlar ile saygılı ve profesyonel iletişim ve erişilebilirliği artırmak, açık ve anlaşılır bir dil ile müvekkillerimize karmaşık hukuki konuları açıklamak ve sorunları çözmek."
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "About Us",
+            ["companyName"] = "Daf Law Office",
+            ["slogan"] = "Your <br> success. <br> Our <br> business.",
+            ["home"] = "Home",
+            ["about"] = "About Us",
+            ["awards"] = "Awards",
+            ["socialResponsibility"] = "Social Responsibility",
+            ["whoWeAreTitle"] = "Who We Are",
+            ["whoWeAreText"] = "Daf Law Office provides legal consultancy and advocacy services to foreign investors and Turkish business world.<br>It is a law firm established in Istanbul with over 120 employees.<br>It offers a wide range of legal solutions to the legal needs of domestic and foreign business world in almost every field.",
+            ["officeBuilding"] = "Office Building",
+            ["vision"] = "Our Vision",
+            ["foundationTitle"] = "Our Foundation and Vision",
+            ["foundationText"] = "Daf Law Office providing result-oriented, creative, innovative, fast and high-quality legal solutions at international standards to the domestic and foreign business world. Adopting this philosophy since its establishment, Daf acts with the goals of being a pioneer in the sector, bringing its clients to results in the shortest time with minimal resources, and meeting their needs with client satisfaction. Our workplace has always maintained its principles of being trusted and respected in the sector, inspiring its employees and colleagues, strictly adhering to professionalism and ethical values, providing quality, effective and innovative legal solutions with high-level expertise and knowledge accumulation since the day it was founded. Prioritizing the continuous development and training of our employees, increasing their legal knowledge and experience, our understanding of providing services in accordance with the principles of the rule of law, justice and social responsibility with client satisfaction is our complete, uncompromising and unchanging principle.",
+            ["yearsExperience"] = "Years of Experience",
+            ["employees"] = "Employees",
+            ["oneGoal"] = "One Goal",
+            ["clientFocusedSolution"] = "Client-Focused Solution",
+            ["ourValues"] = "Our Values",
+            ["value1Title"] = "Client-focused",
+            ["value1Text"] = "Understanding our clients' needs, representing their interests in the best way, protecting their rights and producing the most appropriate, high-quality and fast solutions.",
+            ["value2Title"] = "Professional service approach",
+            ["value2Text"] = "To maximize client satisfaction by following and applying professional ethical rules fairly and transparently, offering quality, innovative and creative legal solutions with high-level expertise and knowledge accumulation.",
+            ["value3Title"] = "Continuous development and training",
+            ["value3Text"] = "Focusing on continuous development and training in accordance with the dynamic nature of law and changes in legal regulations, using applications such as legal technologies and digital transformation, making academic publications and developing new legal services.",
+            ["value4Title"] = "Efficient and respected work environment",
+            ["value4Text"] = "By providing our employees with an efficient and respected work environment, developing their competencies and skills, helping our employees establish the right work-life balance by using open communication, continuous training, mentoring, flexible working hours, career opportunities and modern technologies, prioritizing their personal and career development.",
+            ["value5Title"] = "Communication and accessibility",
+            ["value5Text"] = "Increasing respectful and professional communication and accessibility through feedback applications, staff training, technology use and software, explaining complex legal issues to our clients in clear and understandable language and solving problems."
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "من نحن",
+            ["companyName"] = "مكتب داف للمحاماة",
+            ["slogan"] = "نجاحك <br> هو <br> عملنا",
+            ["home"] = "الصفحة الرئيسية",
+            ["about"] = "من نحن",
+            ["awards"] = "جوائزنا",
+            ["socialResponsibility"] = "المسؤولية الاجتماعية",
+            ["whoWeAreTitle"] = "من نحن",
+            ["whoWeAreText"] = "يقدم مكتب باكسوي للمحاماة خدمات الاستشارات القانونية والمحاماة للمستثمرين الأجانب وعالم الأعمال التركي.<br>وهو مكتب محاماة تأسس في اسطنبول ويضم أكثر من 120 موظفًا.<br>يقدم مجموعة واسعة من الحلول القانونية للاحتياجات القانونية لعالم الأعمال المحلي والأجنبي في كل مجال تقريبًا.",
+            ["officeBuilding"] = "مبنى المكتب",
+            ["vision"] = "رؤيتنا",
+            ["foundationTitle"] = "تأسيسنا ورؤيتنا",
+            ["foundationText"] = "تأسس مكتب باكسوي للمحاماة في عام 1997 من قبل المحامي سردار باكسوي بفلسفة تقديم حلول قانونية موجهة نحو النتائج وإبداعية ومبتكرة وسريعة وعالية الجودة بمعايير دولية لعالم الأعمال المحلي والأجنبي. يتبنى باكسوي هذه الفلسفة منذ تأسيسه، ويعمل بأهداف أن يكون رائدًا في القطاع، وإيصال عملائه إلى النتائج في أقصر وقت بموارد محدودة، وتلبية احتياجاتهم برضا العميل. لقد حافظ مكان عملنا دائمًا على مبادئه المتمثلة في كونه موثوقًا ومحترمًا في القطاع، ومُلهمًا لموظفيه وزملائه، وملتزمًا بشدة بالاحترافية والقيم الأخلاقية، وتقديم حلول قانونية عالية الجودة وفعالة ومبتكرة بخبرة ومعرفة عالية المستوى منذ اليوم الذي تأسس فيه. إن فهمنا لتقديم الخدمات وفقًا لمبادئ سيادة القانون والعدالة والمسؤولية الاجتماعية مع رضا العميل من خلال إعطاء الأولوية للتطوير والتدريب المستمر لموظفينا وزيادة معرفتهم وخبرتهم القانونية هو مبدأنا الكامل والثابت الذي لا يتغير.",
+            ["yearsExperience"] = "سنوات الخبرة",
+            ["employees"] = "الموظفون",
+            ["oneGoal"] = "هدف واحد",
+            ["clientFocusedSolution"] = "حل يركز على العميل",
+            ["ourValues"] = "قيمنا",
+            ["value1Title"] = "التركيز على العميل",
+            ["value1Text"] = "فهم احتياجات عملائنا، وتمثيل مصالحهم بأفضل طريقة، وحماية حقوقهم وإنتاج الحلول الأكثر ملاءمة وعالية الجودة والسريعة.",
+            ["value2Title"] = "نهج الخدمة المهنية",
+            ["value2Text"] = "لتحقيق أقصى قدر من رضا العملاء من خلال اتباع وتطبيق القواعد الأخلاقية المهنية بشكل عادل وشفاف، وتقديم حلول قانونية عالية الجودة ومبتكرة وإبداعية بخبرة ومعرفة عالية المستوى.",
+            ["value3Title"] = "التطوير والتدريب المستمر",
+            ["value3Text"] = "التركيز على التطوير والتدريب المستمر وفقًا للطبيعة الديناميكية للقانون والتغييرات في اللوائح القانونية، واستخدام التطبيقات مثل التقنيات القانونية والتحول الرقمي، وإجراء المنشورات الأكاديمية وتطوير خدمات قانونية جديدة.",
+            ["value4Title"] = "بيئة عمل فعالة ومحترمة",
+            ["value4Text"] = "من خلال توفير بيئة عمل فعالة ومحترمة لموظفينا، وتطوير كفاءاتهم ومهاراتهم، ومساعدة موظفينا على إنشاء توازن صحيح بين العمل والحياة باستخدام التواصل المفتوح والتدريب المستمر والإرشاد وساعات العمل المرنة وفرص العمل والتقنيات الحديثة، وإعطاء الأولوية لتطورهم الشخصي والمهني.",
+            ["value5Title"] = "التواصل وإمكانية الوصول",
+            ["value5Text"] = "زيادة التواصل المحترم والمهني وإمكانية الوصول من خلال تطبيقات التغذية الراجعة وتدريب الموظفين واستخدام التكنولوجيا والبرمجيات، وشرح القضايا القانونية المعقدة لعملائنا بلغة واضحة ومفهومة وحل المشكلات."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetLocalizedUrl(string path)
+    {
+        return LanguageService.GetLocalizedUrl(path);
+    }
+}

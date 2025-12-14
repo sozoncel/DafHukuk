@@ -1,41 +1,31 @@
-﻿﻿ /* EKIBIMIZ.CSS - Görünüm Güncellemesi */
-/* Temel renk değişkenleri */
-:root {
-    --accent: #1F3363;
-    --muted: #f5f5f5;
-    --card-bg: #ffffff;
-    --card-border: #eee;
+﻿:root {
+    --primary-color: #1F3363; 
+    --accent-gold: #dfb887; 
     --text-dark: #222;
-    --muted-text: #666;
-    --hero-overlay-start: rgba(0,0,0,0.55);
-    --container-max: 1200px;
+    --text-muted: #666;
+    --bg-light: #f8f9fa;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --container-max: 1400px;
 }
 
-/* ANA BÖLÜM */
-.ourteam-content {
-    padding: 48px 0;
-    background-color: #fff;
-}
-
-.ourteam-page-content {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-
-/* HERO (BAŞLIK VE ARKA PLAN) */
+/* ============================================
+   EKİP LİSTESİ HERO SECTION
+============================================ */
 .hero-ourteam-section {
     position: relative;
     width: 100%;
-    height: 44vh;
-    min-height: 260px;
+    height: 40vh;
+    min-height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
     overflow: hidden;
-    color: #fff;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2a4a7f 100%);
+    text-align: center;
+    color: white;
 }
 
 .hero-ourteam-bg {
@@ -44,702 +34,582 @@
     background-image: url("/img/sayfalar/ekibimiz/daf-ekibimiz-office.png");
     background-size: cover;
     background-position: center;
+    opacity: 0.12;
     z-index: 1;
 }
 
 .hero-ourteam-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, var(--hero-overlay-start) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.2) 100%);
+    background: linear-gradient(135deg, rgba(31,51,99,0.85) 0%, rgba(42,74,127,0.75) 100%);
     z-index: 2;
 }
 
 .hero-ourteam-container {
     position: relative;
     z-index: 3;
+    max-width: 1200px;
     width: 100%;
-    max-width: var(--container-max);
-    padding: 18px 20px;
-    box-sizing: border-box;
+    padding: 0 24px;
 }
 
 .hero-ourteam-title-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .ourteam-hero-title-upper {
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 13px;
+    font-size: 0.875rem;
     letter-spacing: 3px;
-    font-weight: 300;
-    color: rgba(226,223,210,0.95);
+    font-weight: 400;
     text-transform: uppercase;
-    opacity: 0.95;
-}
-
-.hero-ourteam-title {
-    font-size: clamp(22px, 4.5vw, 42px);
-    font-weight: 700;
-    color: #fff;
+    opacity: 0.9;
     margin: 0;
 }
 
-/* BİLGİLENDİRME METNİ */
+.hero-ourteam-title {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.hero-iletisim-breadcrumb {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    margin-top: 15px;
+}
+
+    .hero-iletisim-breadcrumb a {
+        color: rgba(255,255,255,0.9);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+        .hero-iletisim-breadcrumb a:hover {
+            color: white;
+        }
+
+    .hero-iletisim-breadcrumb span {
+        font-weight: 600;
+    }
+
+/* ============================================
+   EKİP LİSTESİ İÇERİK BÖLÜMÜ
+============================================ */
+.ourteam-content {
+    padding: 80px 0;
+    background: #fff;
+}
+
+.ourteam-page-content {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
 .info-row {
-    margin: 36px 0 28px;
+    margin-bottom: 60px;
     text-align: center;
 }
 
 .team-info-text {
-    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
-    font-weight: 400;
-    color: var(--muted-text);
-    line-height: 1.6;
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    line-height: 1.7;
+    color: var(--text-muted);
     max-width: 900px;
     margin: 0 auto;
 }
 
-/* FİLTRE VE ARAMA */
-.filter-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-}
 
-.search-col, .filter-col {
-    padding: 0 8px;
-    box-sizing: border-box;
-}
-
-.name-filter .input-group {
-    display: flex;
-    width: 100%;
-    max-width: 420px;
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-}
-
-.name-filter .form-control {
-    border: none;
-    box-shadow: none;
-    padding: 10px 14px;
-    font-size: .95rem;
-    color: var(--text-dark);
-    min-width: 0;
-}
-
-.btn-search-icon {
-    background-color: var(--accent);
-    color: #fff;
-    height: 100%;
-    border: none;
-    padding: 8px 12px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-    .btn-search-icon:hover {
-        background-color: transparent;
-        color: #1F3363;
-        border: 1px solid;
-    }
-
-/* ÖZEL FİLTRE (CUSTOM SELECT) */
-.my_filter_select {
-    width: 100%;
-    max-width: 260px;
-    box-sizing: border-box;
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    background: #fff;
-    cursor: pointer;
-    transition: box-shadow .15s, border-color .15s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    overflow: visible;
-}
-
-.my_filter_selected {
-    padding: 10px 14px;
-    font-size: .95rem;
-    color: var(--text-dark);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    min-height: 44px;
-    box-sizing: border-box;
-}
-
-    .my_filter_selected span {
-        color: var(--muted-text);
-        font-weight: 400;
-        font-size: .9rem;
-    }
-
-.my_filter_select.open {
-    border-color: var(--accent);
-    box-shadow: 0 6px 20px rgba(31,51,99,0.08);
-}
-
-.my_filter_select ul {
-    list-style: none;
-    margin: 0;
-    padding: 6px 0;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(100% + 6px);
-    background: #fff;
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    max-height: 260px;
-    overflow: auto;
-    z-index: 200;
-    display: none;
-}
-
-.my_filter_select.open ul {
-    display: block;
-}
-
-.my_filter_select ul li {
-    padding: 8px 12px;
-    font-size: .95rem;
-    color: var(--text-dark);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid #f2f2f2;
-}
-
-    .my_filter_select ul li:last-child {
-        border-bottom: none;
-    }
-
-    .my_filter_select ul li:hover {
-        background: #f7f7f7;
-    }
-
-/* EKİP KARTLARI */
 .team-cards-row {
-    margin-top: 25px;
-    display: flex;
-    flex-wrap: wrap;
-    margin-left: -12px;
-    margin-right: -12px;
-    justify-content: center;
+    margin-top: 40px;
 }
 
 .team-card-col {
-    margin-top: 5rem;
-    flex: 0 0 25% !important;
-    max-width: 25% !important;
-    padding: 0 12px;
-    box-sizing: border-box;
-
+    margin-bottom: 32px;
+    
 }
 
-/* KART GÖRSEL STİLİ */
-.avukat-card {
-    max-width: 20rem;
+.lawyer-card-v2 {
     background: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    padding: 18px 14px;
-    transition: .2s;
+    max-width: 100%;
     height: 100%;
-    margin: 0 auto;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
 }
 
-    .avukat-card:hover {
+.lawyer-card-link-wrapper {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .lawyer-card-link-wrapper:hover .lawyer-card-v2 {
         transform: translateY(-6px);
-        box-shadow: 0 18px 40px rgba(18,24,40,0.06);
+        box-shadow: 0 14px 32px rgba(0,0,0,0.12);
     }
 
-.avukat-img {
+.lawyer-img-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 125%;
+    background: #f1f3f5;
+}
+
+.lawyer-card-img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 20%;
-    border-radius: 6px;
-    margin-bottom: 12px;
 }
 
-.avukat-name-link {
-    text-decoration: none;
-    display: block;
-    width: 100%;
+.lawyer-card-content {
+    padding: 20px;
+    text-align: center;
 }
 
-.avukat-name {
-    font-size: 1rem;
+.lawyer-card-name {
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--text-dark, #222);
-    margin: 4px 0 2px;
+    margin-bottom: 6px;
 }
 
-.avukat-position {
-    font-size: .88rem;
-    color: var(--muted-text, #666);
-    margin-bottom: 10px;
+.lawyer-card-title {
+    font-size: 0.95rem;
+    color: #666;
 }
 
-.card-divider {
-    width: 42px;
-    height: 3px;
-    background-color: #dfb887;
-    margin: 10px auto;
-    border: none;
-    border-radius: 2px;
+.lawyer-card-meta {
+    position: absolute;
+    top: 12px;
+    right: 12px;
 }
 
 .mail-box-link {
-    color: var(--accent, #1F3363);
-    text-decoration: none;
-    font-size: 16px;
-    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 6px;
+    color: #1f3363;
+    transition: all 0.2s ease;
 }
 
-/* RESPONSIVE DAVRANIŞLAR */
-@media (min-width: 1200px) {
-    .team-card-col {
-        width: 25%;
+    .mail-box-link:hover {
+        background: #1f3363;
+        color: #fff;
     }
 
-    .ourteam-page-content {
-        padding: 0 28px;
-    }
-}
-
-@media (max-width: 1199px) and (min-width: 992px) {
-    .team-card-col {
-        width: 33.3333%;
-    }
-}
-
-@media (max-width: 991px) and (min-width: 576px) {
-    .team-card-col {
-        width: 50%;
-        padding: 0 12px;
+    .mail-box-link i {
+        font-size: 1rem;
     }
 
-    .avukat-img {
-        width: 120px;
-        height: 120px;
-    }
-}
-
-@media (max-width: 575px) {
-    .team-card-col {
-        width: 100%;
-        padding: 0 8px;
-    }
-
-    .avukat-card {
-        padding: 16px;
-        flex-direction: row;
-        gap: 12px;
-        align-items: center;
-        text-align: left;
-    }
-
-    .avukat-img {
-        width: 84px;
-        height: 84px;
-        margin: 0;
-    }
-
-    .avukat-name {
-        font-size: 0.98rem;
-    }
-
-    .avukat-position {
-        font-size: .85rem;
-    }
-
-    .card-divider {
-        display: none;
-    }
-
-    .mail-box-link {
-        margin-left: auto;
-    }
-}
-
-/* SAYFA İÇERİĞİ / BİYOGRAFİ ALANLARI */
-.page-content {
-    max-width: var(--container-max);
-    padding: 26px 20px;
-    margin: 0 auto;
-}
-
-.info-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: 8px;
-}
-
-.text-muted {
-    color: var(--muted-text);
-    font-size: .95rem;
-}
-
-.btn-search-icon:focus, .my_filter_selected:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(31,51,99,0.08);
-}
-
-/* HERO - AVUKAT DETAY (TEMPLATE) */
-.hero-lawyer-section {
+.modern-lawyer-hero {
     position: relative;
     width: 100%;
     height: 70vh;
-    min-height: 520px;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
-    color: white;
-    overflow: hidden;
     justify-content: flex-end;
-}
-
-.hero-lawyer-bg {
-    position: absolute;
-    inset: 0;
     overflow: hidden;
-    z-index: 1;
-    background: linear-gradient(0deg, #B1B6CA 0%, #B1B6CA 50%, #B1B6CA 100%);
+    background: var(--primary-color);
 }
 
-.hero-lawyer-photo {
-    width: 40%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-.hero-lawyer-overlay {
+.modern-hero-bg {
     position: absolute;
     inset: 0;
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+.modern-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center 20%;
+    z-index: 1;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.modern-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(31,51,99,0.75) 0%, rgba(31,51,99,0.5) 40%, rgba(31,51,99,0.3) 60%, transparent 100% );
     z-index: 2;
 }
 
-.hero-lawyer-container {
+.modern-hero-content {
     position: relative;
     z-index: 3;
+    max-width: var(--container-max);
     width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px 100px 40px;
+    padding: 0 40px 120px;
 }
 
-.lawyer-hero-name-upper {
-    font-size: 3rem;
+.modern-hero-text {
+    color: white;
+    max-width: 600px;
+}
+
+.modern-lawyer-name {
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 700;
-    margin-bottom: 5px;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
-.hero-lawyer-name {
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 14px;
-    letter-spacing: 4px;
+.modern-lawyer-title {
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
     font-weight: 300;
-    color: #E2DFD1;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    opacity: 1;
+    opacity: 0.95;
+    margin: 0;
 }
 
-.hero-lawyer-sub-nav-bar {
+.modern-contact-bar {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding-left: 20%;
-    background-color: #1F3363;
+    background: var(--primary-color);
     z-index: 4;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-.hero-nav-row {
-    width: 100%;
-    max-width: 1000px;
+.contact-bar-inner {
+    max-width: var(--container-max);
     margin: 0 auto;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.05);
 }
 
-.nav-item-col {
-    padding: 15px 20px;
-    color: #fff;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+.contact-item {
+    padding: 20px 24px;
+    background: var(--primary-color);
 }
 
-    .nav-item-col:last-child {
-        border-right: none;
-    }
-
-.hero-lawyer-sub-nav-bar span {
+.contact-label {
     display: block;
-    font-size: 0.8rem;
-    opacity: 0.7;
-    margin-bottom: 2px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 6px;
 }
 
-.hero-lawyer-sub-nav-bar p {
-    font-size: 1rem;
-    font-weight: 600;
+.contact-value {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: white;
     margin: 0;
+    word-break: break-word;
 }
 
-/* SAYFA İÇERİĞİ */
-.page-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px 40px;
-}
-
-.info-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.info-col {
-    padding-bottom: 30px;
-}
-
-.info-tag {
-    display: block;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-.award-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-    .award-list li {
-        position: relative;
-        padding-left: 20px;
-        margin-bottom: 5px;
-        font-size: 1rem;
-        color: #555;
+    .contact-value a {
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.2s;
     }
 
-        .award-list li::before {
-            content: "\2022";
-            color: #dfb887;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
+        .contact-value a:hover {
+            opacity: 0.8;
         }
 
-.biography-heading {
-    color: #000;
-    margin-bottom: 20px;
+.modern-biography-section {
+    padding: 80px 0;
+    background: #fff;
 }
 
-.biography-text {
+.modern-biography-container {
+    max-width: 1200px;
+}
+
+.modern-section-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 32px;
+    position: relative;
+    padding-bottom: 16px;
+}
+
+    .modern-section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--accent-gold);
+        border-radius: 2px;
+    }
+
+.modern-biography-text {
     font-size: 1rem;
     line-height: 1.8;
-    color: #333;
+    color: var(--text-dark);
 }
 
-/* İLİŞKİLİ İÇERİK */
-.related-content-heading {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-
-/* İçerik Kartları */
-.content-card {
-    padding: 20px;
-    border: 1px solid #eee;
-    height: 100%;
-    background-color: #f9f9f9;
-    transition: box-shadow 0.3s;
-}
-
-    .content-card:hover {
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    .modern-biography-text p {
+        margin-bottom: 1.5rem;
     }
 
-.created-Date {
-    font-size: 0.9rem;
-    color: #999;
-    margin-bottom: 5px;
+.modern-related-section {
+    padding: 80px 0;
+    background: var(--bg-light);
 }
 
-.content-title-link {
-    text-decoration: none;
-    color: #333;
-    transition: color 0.3s;
+.modern-category-tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.modern-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 12px 24px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+}
+
+    .modern-tab-btn:hover {
+        color: var(--primary-color);
+        background: rgba(31,51,99,0.05);
+    }
+
+    .modern-tab-btn.active {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+        .modern-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+.modern-content-grid {
+    margin-top: 40px;
+}
+
+.modern-content-card {
     display: block;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-    .content-title-link:hover {
-        color: #1F3363;
+    .modern-content-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-color);
     }
 
-.textContent {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 15px;
+.modern-card-date {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.modern-card-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 16px 0;
     line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.slug-text {
-    font-size: 0.9rem;
-    color: #666;
+.modern-card-category {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 12px;
 }
 
-/* Hepsini Göster Button */
-.show-all-button {
-    background-color: transparent;
-    color: #666;
-    border: 1px solid #666;
-    padding: 10px 30px;
-    font-size: 1rem;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+.modern-card-excerpt {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-    .show-all-button:hover {
-        background-color: #1F3363;
-        color: white;
-        border-color: #1F3363;
-        cursor: pointer;
-    }
 
-/* RESPONSIVE (AVUKAT DETAY) */
 @media (max-width: 992px) {
-    .page-content {
-        padding: 40px 24px;
+    .ourteam-content {
+        padding: 60px 0;
+    }
+
+    .modern-biography-section,
+    .modern-related-section {
+        padding: 60px 0;
+    }
+
+    .modern-hero-overlay {
+        background: linear-gradient(to right, rgba(31,51,99,0.8) 0%, rgba(31,51,99,0.6) 50%, rgba(31,51,99,0.4) 100% );
+    }
+
+    .modern-hero-content {
+        padding: 0 24px 100px;
+    }
+
+    .contact-bar-inner {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 24px;
     }
 }
-
 
 @media (max-width: 768px) {
-
-    .hero-lawyer-bg {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-        z-index: 1;
-        background: linear-gradient(0deg, #B1B6CA 0%, #B1B6CA 50%, #B1B6CA 100%);
-    }
-    .hero-lawyer-section {
-        height: 50vh;
-        min-height: 350px;
-    }
-    /* HERO altındaki NAV bar düzeni */
-    .hero-lawyer-sub-nav-bar {
-        padding: 0;
-        background-color: #1F3363;
+    .hero-ourteam-section {
+        height: 30vh;
+        min-height: 250px;
     }
 
-    .hero-nav-row {
-        width: 100% !important;
-        padding: 0 !important;
-        margin: 0 auto !important;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+    .ourteam-content {
+        padding: 40px 0;
+    }
+
+    .info-row {
+        margin-bottom: 40px;
+    }
+
+    .lawyer-card-content {
+        padding: 14px 12px;
+    }
+
+    .lawyer-card-name {
+        font-size: 1.05rem;
+    }
+
+    .lawyer-card-title {
+        font-size: 0.875rem;
+    }
+
+    .modern-lawyer-hero {
+        height: 60vh;
+        min-height: 450px;
+    }
+
+    .modern-hero-img {
+        object-position: center center;
+    }
+
+    .modern-hero-overlay {
+        background: linear-gradient(to bottom, transparent 0%, rgba(31,51,99,0.5) 40%, rgba(31,51,99,0.85) 100% );
+    }
+
+    .modern-hero-content {
+        padding: 0 20px 140px;
         text-align: center;
     }
 
-    .nav-item-col {
-        width: 50% !important; /* 2 sütun */
-        border-right: none !important;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
-        padding: 12px 5px !important;
+    .modern-hero-text {
+        margin: 0 auto;
     }
 
-        .nav-item-col:nth-child(3),
-        .nav-item-col:nth-child(4) {
-            border-bottom: none !important;
+    .modern-breadcrumb-container {
+        padding: 0 20px;
+        text-align: left;
+    }
+
+    .modern-biography-section,
+    .modern-related-section {
+        padding: 40px 0;
+    }
+
+    .modern-section-title {
+        text-align: center;
+    }
+
+        .modern-section-title::after {
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        .nav-item-col span {
-            font-size: 0.78rem;
-            opacity: .85;
+    .contact-bar-inner {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+    }
+
+    .contact-item {
+        padding: 16px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .contact-item:last-child {
+            border-bottom: none;
         }
 
-        .nav-item-col p {
-            font-size: 0.92rem;
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-
-    /* Biyografi alanı merkez */
-    .biography-row,
-    .biography-row .col-lg-12,
-    .biography-row .col-lg-10 {
-        text-align: center !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-
-    /* İlişkili içerikler başlığı ve kategori Tabs ortalama */
-    .related-content-heading {
-        text-align: center !important;
-    }
-
-    .custom-tabs {
-        justify-content: center !important;
-    }
-
-    /* İçerik kartlarının mobilde ortalanması */
-    .content-cards-row {
-        justify-content: center !important;
-        text-align: center !important;
-    }
-
-    .content-card-wrapper {
-        display: flex;
+    .modern-category-tabs {
         justify-content: center;
+    }
+
+    .modern-tab-btn {
+        padding: 10px 16px;
+        font-size: 0.875rem;
     }
 }
 
 @media (max-width: 576px) {
-    .hero-lawyer-container {
-        padding: 0 24px 120px 24px;
+    .lawyer-img-wrapper {
+        padding-top: 100%;
     }
 
-    .page-content {
-        padding: 30px 18px;
-    }
-
-    .content-card {
-        padding: 18px;
+    .modern-tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8125rem;
     }
 }

@@ -1,5 +1,4 @@
-﻿// Program.cs
-using DafHukuk.Core.Entities;
+﻿using DafHukuk.Core.Entities;
 using DafHukuk.Data;
 using DafHukuk.Service;
 using DafHukuk.Service.Interfaces;
@@ -7,16 +6,19 @@ using DafHukuk.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
 using System.Text.Json.Serialization;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. SERVISLERIN EKLENMESI ---
+// =================================================================
+// BÖLÜM 1: SERVİS TANIMLAMALARI (builder.Services)
+// =================================================================
 
-builder.Services.AddHttpContextAccessor(); // Gerekli
-
-// HttpClient'ın BaseAddress'ini appsettings.json'dan okuyarak kurduk (Daha güvenli ve temiz)
-// NavigationManager'ı burada kullanmaya gerek kalmadı.
+// --- TEMEL VE ORTAM SERVİSLERİ ---
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<HttpClient>(sp =>
 {
@@ -28,32 +30,7 @@ builder.Services.AddScoped<HttpClient>(sp =>
     };
 });
 
-// Custom Servislerin Tanımlanması
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IPostService, PostService>();
-
-builder.Services.AddControllersWithViews()
-    .AddJsonOptions(options =>
-    {
-        // Döngüsel referans düzeltmesi
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
-
-// 🛡️ KRİTİK GÜVENLİK DÜZELTMESİ: CORS'u sadece kendi domain'ine kısıtla
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(corsBuilder =>
-    {
-        // SADECE GÜVENDİĞİNİZ ADRESLERE İZİN VERİN (PROD adresi buraya gelmeli)
-        // HTTPS'i ve portu doğru yazmak çok KRİTİK!
-        corsBuilder.WithOrigins("https://localhost:7033", "http://localhost:5240", "https://prod-domaininiz.com")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials(); // Auth çerezleri için zorunlu
-    });
-});
-// ----------------------------------------------------
-
+// --- VERİTABANI VE KİMLİK (IDENTITY) SERVİSLERİ ---
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -61,14 +38,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-// Login yolu ayarı
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Auth/Login";
@@ -76,48 +49,142 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Auth/AccessDenied";
 });
 
+// --- UYGULAMA SERVİSLERİ (BUSINESS LOGIC) ---
+builder.Services.AddScoped<ILanguageService, LanguageService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ILawyerService, LawyerService>(); 
+
+
+// --- CORE VE API SERVİSLERİ ---
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(corsBuilder =>
+    {
+        corsBuilder.WithOrigins("https://localhost:7033", "http://localhost:5240")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+    });
+});
+
+// --- LOKALİZASYON (DİL) SERVİSLERİ ---
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "tr-TR", "en-US", "ar-SA" };
+    options.SetDefaultCulture("tr-TR")
+           .AddSupportedCultures(supportedCultures)
+           .AddSupportedUICultures(supportedCultures);
+});
+
+
 var app = builder.Build();
 
-// --- 2. PIPELINE (SIRALAMA ÇOK ÖNEMLİ) ---
+// =================================================================
+// BÖLÜM 2: MIDDLEWARE PIPELINE (SIRALAMA KRİTİK!)
+// =================================================================
 
+// --- HATA YÖNETİMİ ---
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
 
+// --- TEMEL GÜVENLİK VE DOSYALAR ---
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// 1. Önce Rota Sistemi
+// --- ROUTING VE AUTHENTICATION BAŞLANGICI ---
 app.UseRouting();
+app.UseCors(); // UseRouting'den hemen sonra olmalı.
 
-// 🛡️ KRİTİK DÜZELTME 4: CORS'u UseRouting'den hemen sonra etkinleştir.
-// Eğer UseRouting yoksa, UseAuthentication'dan önce olmalıdır.
-app.UseCors();
-
-// 2. Sonra Kimlik ve Yetki
+// Authentication ve Authorization, Routing'den ve CORS'tan sonra olmalı.
 app.UseAuthentication();
 app.UseAuthorization();
-
-// 3. En Son Antiforgery (Bu, Blazor sayfaları için gereklidir)
 app.UseAntiforgery();
 
-// --- 3. ENDPOINT TANIMLARI ---
 
+// --- LOKALİZASYON MIDDLEWARE'İ ---
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("tr-TR")
+    .AddSupportedCultures("tr-TR", "en-US", "ar-SA")
+    .AddSupportedUICultures("tr-TR", "en-US", "ar-SA");
+
+app.UseRequestLocalization(localizationOptions);
+
+
+// --- CUSTOM DİL YÖNLENDİRME MIDDLEWARE'İ (Kök Dizinde Cookie Kontrolü) ---
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value?.ToLower() ?? "";
+
+    // Sadece kök dizin (/) için kontrol yap
+    if (path == "/")
+    {
+        // Cookie'den dil kontrolü yap - SADECE COOKIE VARSA yönlendir
+        if (context.Request.Cookies.TryGetValue("user_language", out string? cookieLang))
+        {
+            // Cookie değeri TR-TR veya tr-TR ise sadece "tr" alıyoruz.
+            var shortLang = cookieLang.Split('-')[0].ToLower();
+
+            // Eğer cookie EN veya AR ise yönlendir, TR ise varsayılan (/) kalacak
+            if (shortLang == "en")
+            {
+                context.Response.Redirect("/en");
+                return;
+            }
+            else if (shortLang == "ar")
+            {
+                context.Response.Redirect("/ar");
+                return;
+            }
+            // cookieLang == "tr" ise yönlendirme yapma, zaten / Türkçe
+        }
+        // Cookie YOK ise: Varsayılan Türkçe, yönlendirme yok
+    }
+
+    await next();
+});
+
+
+// --- MAPPING (ENDPOINT TANIMLAMALARI) ---
+
+// 1. Controller Routing (MVC/API)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
 
+// 2. Razor Components (Blazor)
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-// --- 4. VERITABANI VE ILK KULLANICI (SEED DATA) ---
-// ... (Mevcut Seeding kodunuzu koruyun) ...
+// 3. 404 Hatası Yönlendirme Middleware'i (En sonda olmalı)
+// Tüm rotalar denendikten sonra 404 oluşursa NotFound sayfasına yönlendirir.
+app.Use(async (context, next) =>
+{
+    await next();
+
+    // Eğer sayfa bulunamadıysa (404) ve yanıt başlamadıysa NotFound sayfasına yönlendir
+    if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+    {
+        // Yönlendirme için Request.Path'i değiştirip, pipeline'ı tekrar yürütme
+        context.Request.Path = "/NotFound";
+        await next();
+    }
+});
+
 
 app.Run();

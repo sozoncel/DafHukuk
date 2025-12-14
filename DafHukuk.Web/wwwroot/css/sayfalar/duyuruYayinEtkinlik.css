@@ -1,7 +1,6 @@
 ﻿/* İÇERİK BÖLÜMÜ */
 .icerikBolumu {
-    /* Değişiklik: Yatay padding'ler kaldırıldı veya azaltıldı */
-    padding: 60px 20px; /* Üst/Alt padding 60px, Sağ/Sol padding 20px (Paksoy'daki gibi az boşluk) */
+    padding: 60px 20px;
 }
 
 /* ANA GÖRSEL (HERO) BÖLÜMÜ */

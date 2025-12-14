@@ -1,0 +1,175 @@
+﻿@page "/hakkimizda/odullerimiz"
+@page "/en/about/awards"
+@page "/ar/about/awards"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<section class="hero-about-section">
+    <div class="hero-about-bg award-bg"></div>
+    <div class="hero-about-overlay"></div>
+
+    <div class="hero-about-container">
+        <div class="hero-about-title-content">
+            <h2 class="about-hero-title-upper">@GetText("pageTitle")</h2>
+            <div class="hero-about-title-wrapper">
+                <h1 class="hero-about-title">@GetText("companyName")</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-slogan-wrapper">
+                    <div class="hero-about-slogan-text-style">
+                        @((MarkupString)GetText("slogan"))
+                    </div>
+                </div>
+                <div class="hero-about-breadcrumb">
+                    <a href="@GetLocalizedUrl("")">@GetText("home")</a> / <span>@GetText("about")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-about-sub-nav-bar">
+        <div class="hero-about-sub-nav-container">
+            <a role="button" href="@GetLocalizedUrl("hakkimizda")" class="button">@GetText("about")</a>
+            <a role="button" href="@GetLocalizedUrl("hakkimizda/odullerimiz")" class="button active">@GetText("awards")</a>
+            <a role="button" href="@GetLocalizedUrl("hakkimizda/sosyal-sorumluluk")" class="button">@GetText("socialResponsibility")</a>
+        </div>
+    </div>
+</section>
+
+<section class="about-awards-section content-container" style="margin-top: 1%;">
+    <div class="row">
+        <div class="main-header col-lg-12">
+            <h2>@GetText("mainHeader")</h2>
+        </div>
+    </div>
+
+    <div class="row awards-main-content">
+        <div class="col-lg-6 col-12 awards-text-col">
+            <p>
+                @GetText("mainText")
+            </p>
+        </div>
+        <div class="col-lg-6 col-12 awards-logos-col">
+            <div class="about-award-box">
+                <img src="/img/sayfalar/hakkimizda/daf-odul-01.jpg" alt="award">
+            </div>
+            <div class="about-award-box">
+                <img src="/img/sayfalar/hakkimizda/daf-odul-02.jpg" alt="award">
+            </div>
+            <div class="about-award-box">
+                <img src="/img/sayfalar/hakkimizda/daf-odul-03.jpg" alt="award">
+            </div>
+            <div class="about-award-box">
+                <img src="/img/sayfalar/hakkimizda/daf-odul-04.jpg" alt="award">
+            </div>
+            <div class="about-award-box">
+                <img src="/img/sayfalar/hakkimizda/daf-odul-02.jpg" alt="award">
+            </div>
+            <div class="about-award-box">
+                <img src="/img/sayfalar/hakkimizda/daf-odul-03.jpg" alt="award">
+            </div>
+        </div>
+    </div>
+
+    <div class="row awards-list-row">
+        <div class="col-lg-6 col-12">
+            <h2 class="list-title">@GetText("listTitle")</h2>
+            <ul class="awards-list">
+                <li>Chambers Europe - Band 1 Türkiye (2023)</li>
+                <li>Legal 500 EMEA - Leading Law Firm (2023)</li>
+                <li>IFLR1000 - Highly Regarded Firm (2023)</li>
+                <li>Who's Who Legal - Turkey Firm of the Year (2022)</li>
+                <li>Chambers Global - Band 1 Türkiye (2022)</li>
+                <li>Legal 500 EMEA - Leading Law Firm (2022)</li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-12">
+            <ul class="awards-list">
+                <li>Chambers Europe - Band 1 Türkiye (2023)</li>
+                <li>Legal 500 EMEA - Leading Law Firm (2023)</li>
+                <li>IFLR1000 - Highly Regarded Firm (2023)</li>
+                <li>Who's Who Legal - Turkey Firm of the Year (2022)</li>
+                <li>Chambers Global - Band 1 Türkiye (2022)</li>
+                <li>Legal 500 EMEA - Leading Law Firm (2022)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+@code {
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Ödüllerimiz",
+            ["companyName"] = "Daf Ortak Avukat Bürosu",
+            ["slogan"] = "Your <br> success. <br> Our <br> business.",
+            ["home"] = "Ana Sayfa",
+            ["about"] = "Hakkımızda",
+            ["awards"] = "Ödüllerimiz",
+            ["socialResponsibility"] = "Sosyal Sorumluluk",
+            ["mainHeader"] = "Başarımızın ölçüsünün müvekkillerimizin hakkımızdaki memnuniyeti olduğuna inanıyoruz.",
+            ["mainText"] = "Bunun yanı sıra, kazandığımız uluslararası ödüller ve saygın uluslararası derecelendirme kuruluşları tarafından adımızın prestijli bir şekilde anılması da bizim için ayrıca değerli.",
+            ["listTitle"] = "Geçmiş Ödüllerimizden Bazıları:"
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Awards",
+            ["companyName"] = "Daf Law Office",
+            ["slogan"] = "Your <br> success. <br> Our <br> business.",
+            ["home"] = "Home",
+            ["about"] = "About Us",
+            ["awards"] = "Awards",
+            ["socialResponsibility"] = "Social Responsibility",
+            ["mainHeader"] = "We believe that the measure of our success is the satisfaction of our clients about us.",
+            ["mainText"] = "In addition, the international awards we have won and the prestigious mention of our name by respected international rating organizations are also valuable to us.",
+            ["listTitle"] = "Some of Our Past Awards:"
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "جوائزنا",
+            ["companyName"] = "مكتب داف للمحاماة",
+            ["slogan"] = "نجاحك <br> هو <br> عملنا",
+            ["home"] = "الصفحة الرئيسية",
+            ["about"] = "من نحن",
+            ["awards"] = "جوائزنا",
+            ["socialResponsibility"] = "المسؤولية الاجتماعية",
+            ["mainHeader"] = "نعتقد أن مقياس نجاحنا هو رضا عملائنا عنا.",
+            ["mainText"] = "بالإضافة إلى ذلك، فإن الجوائز الدولية التي فزنا بها والذكر المرموق لاسمنا من قبل المؤسسات التصنيفية الدولية المحترمة ذات قيمة بالنسبة لنا أيضًا.",
+            ["listTitle"] = "بعض من جوائزنا السابقة:"
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetLocalizedUrl(string path)
+    {
+        return LanguageService.GetLocalizedUrl(path);
+    }
+}

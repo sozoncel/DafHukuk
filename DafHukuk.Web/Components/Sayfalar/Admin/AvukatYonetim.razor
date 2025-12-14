@@ -1,0 +1,791 @@
+﻿@page "/admin/avukatlar"
+@layout DafHukuk.Web.Components.Layout.AdminMainLayout
+@rendermode InteractiveServer
+
+@using DafHukuk.Core.Entities
+@inject ILawyerService LawyerService
+@inject IJSRuntime JS
+
+<div class="container-fluid px-4 py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">@GetText("pageTitle")</h2>
+            <p class="text-muted mb-0">@GetText("pageSubtitle")</p>
+        </div>
+    </div>
+
+    @if (showSuccess)
+    {
+        <div class="modern-alert modern-alert-success" role="alert">
+            <div class="modern-alert-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="modern-alert-content">
+                <strong>@GetText("successTitle")</strong>
+                <p>@successMessage</p>
+            </div>
+            <button class="modern-alert-close" @onclick="() => showSuccess = false">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    }
+
+    @if (showError)
+    {
+        <div class="modern-alert modern-alert-error" role="alert">
+            <div class="modern-alert-icon">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="modern-alert-content">
+                <strong>@GetText("errorTitle")</strong>
+                <p>@errorMessage</p>
+            </div>
+            <button class="modern-alert-close" @onclick="() => showError = false">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    }
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="card admin-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="bi @(isEditMode ? "bi-pencil-square" : "bi-person-plus") me-2"></i>
+                        @(isEditMode? GetText("editLawyer") : GetText("newLawyer"))
+                    </h5>
+
+                    @* Temel Bilgiler *@
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-person me-1"></i>
+                            @GetText("name") *
+                        </label>
+                        <input class="form-control" @bind="newLawyer.Name" placeholder="@GetText("namePlaceholder")" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-envelope me-1"></i>
+                            @GetText("email")
+                        </label>
+                        <input class="form-control" type="email" @bind="newLawyer.Email" placeholder="avukat@dafhukuk.tr" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-phone me-1"></i>
+                                @GetText("mobilePhone")
+                            </label>
+                            <input class="form-control" @bind="newLawyer.MobilePhone" placeholder="+90 5XX XXX XX XX" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-telephone me-1"></i>
+                                @GetText("officePhone")
+                            </label>
+                            <input class="form-control" @bind="newLawyer.OfficePhone" placeholder="+90 3XX XXX XX XX" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-geo-alt me-1"></i>
+                            @GetText("location")
+                        </label>
+                        <input class="form-control" @bind="newLawyer.Location" placeholder="@GetText("locationPlaceholder")" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">@GetText("slug") *</label>
+                        <input class="form-control" @bind="newLawyer.Slug_TR" placeholder="@GetText("slugPlaceholder")" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-image me-1"></i>
+                            @GetText("photoUrl")
+                        </label>
+                        <input class="form-control" @bind="newLawyer.ImageUrl" placeholder="https://..." />
+                        <div class="mt-3 image-preview-wrapper">
+                            <img src="@GetPreviewImage()" class="img-fluid rounded" alt="@GetText("preview")" />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">
+                            <i class="bi bi-activity me-1"></i>
+                            @GetText("activeState")
+                        </label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isActiveSwitch" @bind="newLawyer.IsActive">
+                            <label class="form-check-label" for="isActiveSwitch">
+                                @(newLawyer.IsActive? GetText("active") : GetText("passive"))
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">
+                            <i class="bi bi-translate me-1"></i>
+                            @GetText("languagesToSave")
+                        </label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="langTr" @bind="includeTr" />
+                                <label class="form-check-label" for="langTr">🇹🇷 TR</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="langEn" @bind="includeEn" />
+                                <label class="form-check-label" for="langEn">🇬🇧 EN</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="langAr" @bind="includeAr" />
+                                <label class="form-check-label" for="langAr">🇸🇦 AR</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isEditMode)
+                    {
+                        <button class="btn btn-success btn-lg w-100 mb-2" @onclick="UpdateLawyer" disabled="@isSaving">
+                            <i class="bi @(isSaving ? "bi-hourglass-split" : "bi-check-circle") me-2"></i>
+                            @(isSaving? GetText("updating") : GetText("updateLawyer"))
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg w-100" @onclick="CancelEdit">
+                            <i class="bi bi-x-circle me-2"></i>
+                            @GetText("cancel")
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary btn-lg w-100" @onclick="CreateLawyer" disabled="@isSaving">
+                            <i class="bi @(isSaving ? "bi-hourglass-split" : "bi-save") me-2"></i>
+                            @(isSaving? GetText("saving") : GetText("saveLawyer"))
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card admin-card">
+                <div class="card-header bg-white border-bottom">
+                    <ul class="nav nav-tabs card-header-tabs nav-fill border-0">
+                        <li class="nav-item">
+                            <button class='@GetTabClass("tr")' @onclick='() => SwitchLang("tr")' type="button">🇹🇷 Türkçe</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class='@GetTabClass("en")' @onclick='() => SwitchLang("en")' type="button">🇬🇧 English</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class='@GetTabClass("ar")' @onclick='() => SwitchLang("ar")' type="button">🇸🇦 العربية</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    @* Türkçe *@
+                    <div class='@GetLangClass("tr")'>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("title") *</label>
+                            <input class="form-control form-control-lg" @bind="newLawyer.Title_TR" placeholder="@GetText("titlePlaceholder")" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("biography")</label>
+                            <textarea class="form-control" rows="8" @bind="newLawyer.Biography_TR" placeholder="@GetText("biographyPlaceholder")"></textarea>
+                        </div>
+                    </div>
+
+                    @* İngilizce *@
+                    <div class='@GetLangClass("en")'>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("title")</label>
+                            <input class="form-control form-control-lg" @bind="newLawyer.Title_EN" placeholder="@GetText("titlePlaceholder")" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("slug")</label>
+                            <input class="form-control" @bind="newLawyer.Slug_EN" placeholder="@GetText("slugPlaceholder")" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("biography")</label>
+                            <textarea class="form-control" rows="8" @bind="newLawyer.Biography_EN" placeholder="@GetText("biographyPlaceholder")"></textarea>
+                        </div>
+                    </div>
+
+                    @* Arapça *@
+                    <div class='@GetLangClass("ar")' dir="rtl">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("title")</label>
+                            <input class="form-control form-control-lg" @bind="newLawyer.Title_AR" placeholder="@GetText("titlePlaceholder")" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("slug")</label>
+                            <input class="form-control" style="direction:ltr" @bind="newLawyer.Slug_AR" placeholder="@GetText("slugPlaceholder")" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("biography")</label>
+                            <textarea class="form-control" rows="8" @bind="newLawyer.Biography_AR" placeholder="@GetText("biographyPlaceholder")"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Avukat Listesi *@
+    <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-people me-2"></i>
+            @GetText("lawyerList") (@lawyers.Count)
+        </h3>
+
+        <div class="input-group search-input-group">
+            <input type="text" class="form-control" @bind-value="searchTerm" @bind-value:event="oninput" placeholder="@GetText("searchPlaceholder")" />
+            <button class="btn btn-outline-secondary" @onclick="SearchLawyers">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </div>
+
+    @if (isListLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">@GetText("loadingList")</span>
+            </div>
+            <p class="text-muted mt-2">@GetText("loadingList")</p>
+        </div>
+    }
+    else if (lawyers.Count == 0)
+    {
+        <div class="text-center py-5 border rounded bg-light text-muted">
+            <i class="bi bi-inbox fs-1 mb-3"></i>
+            <p>@GetText("noLawyers")</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var lawyer in lawyers)
+            {
+                <div class="col">
+                    <div class="admin-content-card h-100 d-flex flex-column">
+                        <div class="admin-card-image">
+                            <img src="@(string.IsNullOrWhiteSpace(lawyer.ImageUrl) ? "https://via.placeholder.com/400x400?text=Avatar" : lawyer.ImageUrl)"
+                                 class="card-img-top" alt="@lawyer.Name" />
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-2 fw-bold">@lawyer.Name</h5>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="bi bi-briefcase me-1"></i> @GetLawyerTitle(lawyer)
+                            </p>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="bi bi-envelope me-1"></i> @lawyer.Email
+                            </p>
+                            <p class="card-text text-muted small mb-3">
+                                <i class="bi bi-geo-alt me-1"></i> @lawyer.Location
+                            </p>
+
+                            @if (!lawyer.IsActive)
+                            {
+                                <span class="badge bg-secondary mb-2">@GetText("passive")</span>
+                            }
+                        </div>
+
+                        <div class="card-footer bg-white pt-0 border-0">
+                            <div class="d-flex gap-2 mt-auto">
+                                <button class="btn btn-sm btn-outline-secondary flex-grow-1" @onclick="() => EditLawyer(lawyer)" title="@GetText("edit")">
+                                    <i class="bi bi-pencil me-1"></i> @GetText("edit")
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteLawyer(lawyer.Id, lawyer.Name)" title="@GetText("delete")">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private Lawyer newLawyer = new Lawyer { IsActive = true };
+    private Lawyer? originalLawyer; // Edit için original data
+    private List<Lawyer> lawyers = new();
+    private string activeLang = "tr";
+    private string searchTerm = string.Empty;
+    private bool isSaving = false;
+    private bool isListLoading = true;
+    private bool showSuccess = false;
+    private bool showError = false;
+    private bool isEditMode = false;
+    private string successMessage = string.Empty;
+    private string errorMessage = string.Empty;
+    private bool includeTr { get; set; } = true;
+    private bool includeEn { get; set; } = false;
+    private bool includeAr { get; set; } = false;
+
+    private Dictionary<string, Dictionary<string, string>> translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Avukat Yönetimi",
+            ["pageSubtitle"] = "Ekip üyelerini ekleyin, düzenleyin ve yönetin",
+            ["successTitle"] = "Başarılı!",
+            ["errorTitle"] = "Hata!",
+            ["newLawyer"] = "Yeni Avukat Ekle",
+            ["editLawyer"] = "Avukat Düzenle",
+            ["name"] = "Ad Soyad",
+            ["namePlaceholder"] = "Serdar Bek",
+            ["email"] = "E-posta",
+            ["mobilePhone"] = "Mobil Tel",
+            ["officePhone"] = "Ofis Tel",
+            ["location"] = "Konum",
+            ["locationPlaceholder"] = "Ankara / Türkiye",
+            ["photoUrl"] = "Fotoğraf URL",
+            ["preview"] = "Önizleme",
+            ["activeState"] = "Durum",
+            ["active"] = "Aktif",
+            ["passive"] = "Pasif",
+            ["languagesToSave"] = "Diller",
+            ["title"] = "Ünvan",
+            ["titlePlaceholder"] = "Kurucu Ortak, Yönetici Avukat",
+            ["slug"] = "URL",
+            ["slugPlaceholder"] = "Ad-Soyad şeklinde yazınız. ör. serdar-bek",
+            ["biography"] = "Biyografi",
+            ["biographyPlaceholder"] = "Avukatın özgeçmişi ve deneyimleri...",
+            ["saving"] = "Kaydediliyor...",
+            ["saveLawyer"] = "Avukatı Kaydet",
+            ["updating"] = "Güncelleniyor...",
+            ["updateLawyer"] = "Avukatı Güncelle",
+            ["cancel"] = "İptal",
+            ["lawyerList"] = "Avukat Listesi",
+            ["loadingList"] = "Avukatlar yükleniyor...",
+            ["noLawyers"] = "Henüz avukat eklenmedi.",
+            ["searchPlaceholder"] = "Avukat ara...",
+            ["edit"] = "Düzenle",
+            ["delete"] = "Sil",
+            ["confirmDelete"] = "Bu avukatı silmek istediğinizden emin misiniz?"
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Lawyer Management",
+            ["pageSubtitle"] = "Add, edit and manage team members",
+            ["successTitle"] = "Success!",
+            ["errorTitle"] = "Error!",
+            ["newLawyer"] = "Add New Lawyer",
+            ["editLawyer"] = "Edit Lawyer",
+            ["name"] = "Full Name",
+            ["namePlaceholder"] = "John Doe",
+            ["email"] = "Email",
+            ["mobilePhone"] = "Mobile",
+            ["officePhone"] = "Office",
+            ["location"] = "Location",
+            ["locationPlaceholder"] = "Istanbul / Turkey",
+            ["photoUrl"] = "Photo URL",
+            ["preview"] = "Preview",
+            ["activeState"] = "Status",
+            ["active"] = "Active",
+            ["passive"] = "Passive",
+            ["languagesToSave"] = "Languages",
+            ["title"] = "Title",
+            ["titlePlaceholder"] = "Managing Partner, Senior Attorney",
+            ["slug"] = "URL",
+            ["slugPlaceholder"] = "Write your first and last name. e.g. serdar-bek",
+            ["biography"] = "Biography",
+            ["biographyPlaceholder"] = "Lawyer's CV and experiences...",
+            ["saving"] = "Saving...",
+            ["saveLawyer"] = "Save Lawyer",
+            ["updating"] = "Updating...",
+            ["updateLawyer"] = "Update Lawyer",
+            ["cancel"] = "Cancel",
+            ["lawyerList"] = "Lawyer List",
+            ["loadingList"] = "Loading lawyers...",
+            ["noLawyers"] = "No lawyers added yet.",
+            ["searchPlaceholder"] = "Search lawyer...",
+            ["edit"] = "Edit",
+            ["delete"] = "Delete",
+            ["confirmDelete"] = "Are you sure you want to delete this lawyer?"
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "إدارة المحامين",
+            ["pageSubtitle"] = "إضافة وتحرير وإدارة أعضاء الفريق",
+            ["successTitle"] = "نجاح!",
+            ["errorTitle"] = "خطأ!",
+            ["newLawyer"] = "إضافة محامٍ جديد",
+            ["editLawyer"] = "تعديل المحامي",
+            ["name"] = "الاسم الكامل",
+            ["namePlaceholder"] = "أحمد محمد",
+            ["email"] = "البريد الإلكتروني",
+            ["mobilePhone"] = "الجوال",
+            ["officePhone"] = "المكتب",
+            ["location"] = "الموقع",
+            ["locationPlaceholder"] = "أنقرة / تركيا",
+            ["photoUrl"] = "رابط الصورة",
+            ["preview"] = "معاينة",
+            ["activeState"] = "الحالة",
+            ["active"] = "نشط",
+            ["passive"] = "غير نشط",
+            ["languagesToSave"] = "اللغات",
+            ["title"] = "المنصب",
+            ["titlePlaceholder"] = "شريك مؤسس، محامٍ كبير",
+            ["slug"] = "الرابط",
+            ["slugPlaceholder"] = "يرجى كتابة اسمك ولقبك. على سبيل المثال: سردار-بيك",
+            ["biography"] = "السيرة الذاتية",
+            ["biographyPlaceholder"] = "سيرة المحامي وخبراته...",
+            ["saving"] = "جاري الحفظ...",
+            ["saveLawyer"] = "حفظ المحامي",
+            ["updating"] = "جاري التحديث...",
+            ["updateLawyer"] = "تحديث المحامي",
+            ["cancel"] = "إلغاء",
+            ["lawyerList"] = "قائمة المحامين",
+            ["loadingList"] = "جاري تحميل المحامين...",
+            ["noLawyers"] = "لم يتم إضافة محامين بعد.",
+            ["searchPlaceholder"] = "ابحث عن محامٍ...",
+            ["edit"] = "تعديل",
+            ["delete"] = "حذف",
+            ["confirmDelete"] = "هل أنت متأكد من حذف هذا المحامي؟"
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (translations.ContainsKey(activeLang) && translations[activeLang].ContainsKey(key))
+            return translations[activeLang][key];
+        return key;
+    }
+
+    private string GetTabClass(string lang) => activeLang == lang ? "nav-link active" : "nav-link";
+    private string GetLangClass(string lang) => activeLang == lang ? "d-block" : "d-none";
+    private string GetPreviewImage() => string.IsNullOrWhiteSpace(newLawyer.ImageUrl) ? "https://via.placeholder.com/400x400?text=Avatar" : newLawyer.ImageUrl;
+    private void SwitchLang(string lang) { activeLang = lang; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadLawyers();
+    }
+
+    private async Task LoadLawyers()
+    {
+        isListLoading = true;
+        try
+        {
+            lawyers = await LawyerService.GetAll() ?? new();
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Yükleme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isListLoading = false;
+        }
+    }
+
+    private async Task CreateLawyer()
+    {
+        showError = false;
+        showSuccess = false;
+
+        if (string.IsNullOrWhiteSpace(newLawyer.Name))
+        {
+            showError = true;
+            errorMessage = GetText("errorTitle") + ": Ad Soyad zorunludur!";
+            return;
+        }
+
+        if (includeTr && string.IsNullOrWhiteSpace(newLawyer.Title_TR))
+        {
+            showError = true;
+            errorMessage = GetText("errorTitle") + ": Türkçe ünvan zorunludur!";
+            return;
+        }
+
+        if (includeTr && string.IsNullOrWhiteSpace(newLawyer.Slug_TR))
+        {
+            showError = true;
+            errorMessage = GetText("errorTitle") + ": Türkçe slug zorunludur!";
+            return;
+        }
+
+        try
+        {
+            isSaving = true;
+
+            if (!includeTr)
+            {
+                newLawyer.Title_TR = null;
+                newLawyer.Slug_TR = null;
+                newLawyer.Biography_TR = null;
+            }
+            if (!includeEn)
+            {
+                newLawyer.Title_EN = null;
+                newLawyer.Slug_EN = null;
+                newLawyer.Biography_EN = null;
+            }
+            if (!includeAr)
+            {
+                newLawyer.Title_AR = null;
+                newLawyer.Slug_AR = null;
+                newLawyer.Biography_AR = null;
+            }
+
+            var created = await LawyerService.Create(newLawyer);
+
+            successMessage = activeLang switch
+            {
+                "en" => "Lawyer added successfully!",
+                "ar" => "تمت إضافة المحامي بنجاح!",
+                _ => "Avukat başarıyla eklendi!"
+            };
+
+            newLawyer = new Lawyer { IsActive = true };
+            includeTr = true;
+            includeEn = false;
+            includeAr = false;
+            await LoadLawyers();
+
+            showSuccess = true;
+            await Task.Delay(3000);
+            showSuccess = false;
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Kaydetme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void EditLawyer(Lawyer lawyer)
+    {
+        originalLawyer = new Lawyer
+        {
+            Id = lawyer.Id,
+            Name = lawyer.Name,
+            Email = lawyer.Email,
+            MobilePhone = lawyer.MobilePhone,
+            OfficePhone = lawyer.OfficePhone,
+            Location = lawyer.Location,
+            ImageUrl = lawyer.ImageUrl,
+            Title_TR = lawyer.Title_TR,
+            Slug_TR = lawyer.Slug_TR,
+            Biography_TR = lawyer.Biography_TR,
+            Title_EN = lawyer.Title_EN,
+            Slug_EN = lawyer.Slug_EN,
+            Biography_EN = lawyer.Biography_EN,
+            Title_AR = lawyer.Title_AR,
+            Slug_AR = lawyer.Slug_AR,
+            Biography_AR = lawyer.Biography_AR,
+            IsActive = lawyer.IsActive
+        };
+
+        newLawyer = new Lawyer
+        {
+            Id = lawyer.Id,
+            Name = lawyer.Name,
+            Email = lawyer.Email,
+            MobilePhone = lawyer.MobilePhone,
+            OfficePhone = lawyer.OfficePhone,
+            Location = lawyer.Location,
+            ImageUrl = lawyer.ImageUrl,
+            Title_TR = lawyer.Title_TR,
+            Slug_TR = lawyer.Slug_TR,
+            Biography_TR = lawyer.Biography_TR,
+            Title_EN = lawyer.Title_EN,
+            Slug_EN = lawyer.Slug_EN,
+            Biography_EN = lawyer.Biography_EN,
+            Title_AR = lawyer.Title_AR,
+            Slug_AR = lawyer.Slug_AR,
+            Biography_AR = lawyer.Biography_AR,
+            IsActive = lawyer.IsActive
+        };
+
+        includeTr = !string.IsNullOrWhiteSpace(lawyer.Title_TR);
+        includeEn = !string.IsNullOrWhiteSpace(lawyer.Title_EN);
+        includeAr = !string.IsNullOrWhiteSpace(lawyer.Title_AR);
+
+        isEditMode = true;
+
+        JS.InvokeVoidAsync("window.scrollTo", 0, 0);
+    }
+
+    private async Task UpdateLawyer()
+    {
+        if (originalLawyer == null) return;
+
+        showError = false;
+        showSuccess = false;
+
+        if (string.IsNullOrWhiteSpace(newLawyer.Name))
+        {
+            showError = true;
+            errorMessage = "Ad Soyad zorunludur!";
+            return;
+        }
+
+        try
+        {
+            isSaving = true;
+
+            var updateLawyer = new Lawyer
+            {
+                Id = newLawyer.Id,
+                Name = newLawyer.Name,
+                Email = newLawyer.Email,
+                MobilePhone = newLawyer.MobilePhone,
+                OfficePhone = newLawyer.OfficePhone,
+                Location = newLawyer.Location,
+                ImageUrl = newLawyer.ImageUrl,
+                IsActive = newLawyer.IsActive
+            };
+
+            if (includeTr)
+            {
+                updateLawyer.Title_TR = newLawyer.Title_TR;
+                updateLawyer.Slug_TR = newLawyer.Slug_TR;
+                updateLawyer.Biography_TR = newLawyer.Biography_TR;
+            }
+            else
+            {
+                updateLawyer.Title_TR = originalLawyer.Title_TR;
+                updateLawyer.Slug_TR = originalLawyer.Slug_TR;
+                updateLawyer.Biography_TR = originalLawyer.Biography_TR;
+            }
+
+            if (includeEn)
+            {
+                updateLawyer.Title_EN = newLawyer.Title_EN;
+                updateLawyer.Slug_EN = newLawyer.Slug_EN;
+                updateLawyer.Biography_EN = newLawyer.Biography_EN;
+            }
+            else
+            {
+                updateLawyer.Title_EN = originalLawyer.Title_EN;
+                updateLawyer.Slug_EN = originalLawyer.Slug_EN;
+                updateLawyer.Biography_EN = originalLawyer.Biography_EN;
+            }
+
+            if (includeAr)
+            {
+                updateLawyer.Title_AR = newLawyer.Title_AR;
+                updateLawyer.Slug_AR = newLawyer.Slug_AR;
+                updateLawyer.Biography_AR = newLawyer.Biography_AR;
+            }
+            else
+            {
+                updateLawyer.Title_AR = originalLawyer.Title_AR;
+                updateLawyer.Slug_AR = originalLawyer.Slug_AR;
+                updateLawyer.Biography_AR = originalLawyer.Biography_AR;
+            }
+
+            var updated = await LawyerService.Update(newLawyer.Id, updateLawyer);
+
+            successMessage = "✓ Avukat başarıyla güncellendi!";
+            showSuccess = true;
+
+            await LoadLawyers();
+            CancelEdit();
+
+            await Task.Delay(2000);
+            showSuccess = false;
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Güncelleme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        isEditMode = false;
+        newLawyer = new Lawyer { IsActive = true };
+        originalLawyer = null;
+        includeTr = true;
+        includeEn = false;
+        includeAr = false;
+    }
+
+    private async Task DeleteLawyer(int id, string name)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"{name} isimli avukatı silmek istediğinizden emin misiniz?"))
+        {
+            try
+            {
+                var result = await LawyerService.Delete(id);
+                if (result)
+                {
+                    successMessage = $"'{name}' başarıyla silindi.";
+                    showSuccess = true;
+                    await LoadLawyers();
+
+                    if (isEditMode && newLawyer.Id == id)
+                    {
+                        CancelEdit();
+                    }
+
+                    await Task.Delay(3000);
+                    showSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                showError = true;
+                errorMessage = $"Silme hatası: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task SearchLawyers()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            await LoadLawyers();
+            return;
+        }
+
+        isListLoading = true;
+        try
+        {
+            var allLawyers = await LawyerService.GetAll();
+            lawyers = allLawyers
+                .Where(l => l.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           (l.Email != null && l.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                           (l.Title_TR != null && l.Title_TR.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Arama hatası: {ex.Message}";
+        }
+        finally
+        {
+            isListLoading = false;
+        }
+    }
+
+    private string GetLawyerTitle(Lawyer lawyer)
+    {
+        return activeLang switch
+        {
+            "en" => lawyer.Title_EN ?? lawyer.Title_TR ?? "",
+            "ar" => lawyer.Title_AR ?? lawyer.Title_TR ?? "",
+            _ => lawyer.Title_TR ?? ""
+        };
+    }
+}

@@ -1,33 +1,46 @@
-﻿<!--Üst Menü Başlangıcı-->
+﻿@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@implements IDisposable
+
+<!--Üst Menü Başlangıcı-->
 <header class="header" id="site-header">
 
     <div class="nav-inner">
-        <a href="/" class="logo-link"><div class="logo">Daf Hukuk</div></a>
+        <a href="@GetLocalizedUrl("")" class="logo-link"><div class="logo">@GetText("siteName")</div></a>
         <nav class="menu">
             <div class="underline-effect">
-                <a href="/hakkimizda">Hakkımızda</a>
-                <a href="/hizmetlerimiz">Hizmetlerimiz</a>
-                <a href="/ekibimiz">Ekibimiz</a>
-                <a href="/duyurular">Duyurular</a>
-                <a href="/yayinlar">Yayınlar</a>
-                <a href="/etkinlikler">Etkinlikler</a>
-                <a href="/kariyer">Kariyer</a>
-                <a href="/iletisim">İletişim</a>
+                <a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a>
+                <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
+                <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
+                <a href="@GetLocalizedUrl("duyurular")">@GetText("announcements")</a>
+                <a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
+                <a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a>
+                <a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a>
+                <a href="@GetLocalizedUrl("iletisim")">@GetText("contact")</a>
             </div>
         </nav>
 
         <div class="right-actions">
             <!--Dil Seçim Kısmı-->
             <div class="language-Selection">
-                <a href="#" class="navbar-lang-link">
+                <a href="@GetLanguageChangeUrl("en")"
+                   class="navbar-lang-link @(CurrentLang == "en" ? "active" : "")"
+                   @onclick="@(() => OnLanguageClick("en"))">
                     <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon">
                     <span>EN</span>
                 </a>
-                <a href="#" class="navbar-lang-link false ">
+
+                <a href="@GetLanguageChangeUrl("ar")"
+                   class="navbar-lang-link @(CurrentLang == "ar" ? "active" : "")"
+                   @onclick="@(() => OnLanguageClick("ar"))">
                     <img src="/img/Ortak/flag-ar.png" alt="AR" class="flag-icon">
                     <span>AR</span>
                 </a>
-                <a href="#" class="navbar-lang-link active">
+
+                <a href="@GetLanguageChangeUrl("tr")"
+                   class="navbar-lang-link @(CurrentLang == "tr" ? "active" : "")"
+                   @onclick="@(() => OnLanguageClick("tr"))">
                     <img src="/img/Ortak/flag-tr.svg" alt="TR" class="flag-icon">
                     <span>TR</span>
                 </a>
@@ -51,7 +64,7 @@
         <div class="search-bar-inner">
             <input type="text"
                    class="search-input"
-                   placeholder="İçerik Arayın..."
+                   placeholder="@GetText("searchPlaceholder")"
                    id="desktop-search-input">
             <button type="button" class="search-close-btn" id="desktop-search-close">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -74,25 +87,35 @@
         <!--Mobile Search Trigger-->
         <div class="mobile-search-trigger" id="mobile-search-trigger">
             <i class="fa fa-search"></i>
-            <span>Ara</span>
+            <span>@GetText("search")</span>
         </div>
 
-        <a href="/">Ana Sayfa</a>
-        <a href="/hakkimizda">Hakkımızda</a>
-        <a href="/hizmetlerimiz">Hizmetlerimiz</a>
-        <a href="/ekibimiz">Ekibimiz</a>
-        <a href="/duyurular">Duyurular</a>
-        <a href="/yayinlar">Yayınlar</a>
-        <a href="/etkinlikler">Etkinlikler</a>
-        <a href="/kariyer">Kariyer</a>
-        <a href="/iletisim">İletişim</a>
+        <a href="@GetLocalizedUrl("")">@GetText("home")</a>
+        <a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a>
+        <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
+        <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
+        <a href="@GetLocalizedUrl("duyurular")">@GetText("announcements")</a>
+        <a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
+        <a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a>
+        <a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a>
+        <a href="@GetLocalizedUrl("iletisim")">@GetText("contact")</a>
 
         <div class="mobile-lang-links">
-            <a href="#">
+            <a href="@GetLanguageChangeUrl("en")"
+               class="@(CurrentLang == "en" ? "active" : "")"
+               @onclick="@(() => OnLanguageClick("en"))">
                 <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon">
                 <span>EN</span>
             </a>
-            <a href="#" class="active">
+            <a href="@GetLanguageChangeUrl("ar")"
+               class="@(CurrentLang == "ar" ? "active" : "")"
+               @onclick="@(() => OnLanguageClick("ar"))">
+                <img src="/img/Ortak/flag-ar.png" alt="AR" class="flag-icon">
+                <span>AR</span>
+            </a>
+            <a href="@GetLanguageChangeUrl("tr")"
+               class="@(CurrentLang == "tr" ? "active" : "")"
+               @onclick="@(() => OnLanguageClick("tr"))">
                 <img src="/img/Ortak/flag-tr.svg" alt="TR" class="flag-icon">
                 <span>TR</span>
             </a>
@@ -113,7 +136,102 @@
     <div class="mobile-search-content">
         <input type="text"
                class="mobile-search-input"
-               placeholder="İçerik Arayın..."
+               placeholder="@GetText("searchPlaceholder")"
                id="mobile-search-input">
     </div>
 </div>
+
+@code {
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        // URL değişikliğinde navbar'ı güncelle
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        // Memory leak önlemek için event'i temizle
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["home"] = "Ana Sayfa",
+            ["about"] = "Hakkımızda",
+            ["services"] = "Hizmetlerimiz",
+            ["team"] = "Ekibimiz",
+            ["announcements"] = "Duyurular",
+            ["publications"] = "Yayınlar",
+            ["events"] = "Etkinlikler",
+            ["career"] = "Kariyer",
+            ["contact"] = "İletişim",
+            ["siteName"] = "Daf Hukuk",
+            ["search"] = "Ara",
+            ["searchPlaceholder"] = "İçerik Arayın..."
+        },
+        ["en"] = new()
+        {
+            ["home"] = "Home",
+            ["about"] = "About Us",
+            ["services"] = "Services",
+            ["team"] = "Our Team",
+            ["announcements"] = "Announcements",
+            ["publications"] = "Publications",
+            ["events"] = "Events",
+            ["career"] = "Careers",
+            ["contact"] = "Contact",
+            ["siteName"] = "DAF LAW FIRM",
+            ["search"] = "Search",
+            ["searchPlaceholder"] = "Search Content..."
+        },
+        ["ar"] = new()
+        {
+            ["home"] = "الصفحة الرئيسية",
+            ["about"] = "من نحن",
+            ["services"] = "خدماتنا",
+            ["team"] = "فريقنا",
+            ["announcements"] = "إعلانات",
+            ["publications"] = "منشورات",
+            ["events"] = "فعاليات",
+            ["career"] = "وظائف",
+            ["contact"] = "اتصل بنا",
+            ["siteName"] = "داف للمحاماة",
+            ["search"] = "بحث",
+            ["searchPlaceholder"] = "ابحث عن المحتوى..."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetLocalizedUrl(string path)
+    {
+        return LanguageService.GetLocalizedUrl(path);
+    }
+    private string GetLanguageChangeUrl(string newLang)
+    {
+        var uri = new Uri(Navigation.Uri);
+        var currentPath = uri.AbsolutePath + uri.Query;
+        return $"/language/change?lang={newLang}&returnUrl={Uri.EscapeDataString(currentPath)}";
+    }
+
+    private async Task OnLanguageClick(string newLang)
+    {
+        await JS.InvokeVoidAsync("eval", $@"
+            document.cookie = 'user_language={newLang}; path=/; max-age=31536000; SameSite=Lax';
+        ");
+    }
+}

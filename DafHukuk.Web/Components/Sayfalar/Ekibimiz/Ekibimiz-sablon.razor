@@ -1,0 +1,348 @@
+﻿@page "/ekibimiz/{slug}"
+@page "/en/team/{slug}"
+@page "/ar/team/{slug}"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@using DafHukuk.Core.Entities
+@using DafHukuk.Service.Interfaces
+
+@inject ILawyerService LawyerService
+@inject IPostService PostService
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager NavManager
+
+@if (Lawyer == null)
+{
+    <PageTitle>@GetText("loadingTitle")</PageTitle>
+    <section class="page-content container">
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h2>@GetText("loading")</h2>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <PageTitle>@Lawyer.Name - @GetText("pageTitle")</PageTitle>
+
+    <!-- MODERN HERO SECTION (BACKGROUND FOTOĞRAF) -->
+    <section class="modern-lawyer-hero">
+        <!-- FOTOĞRAF now rendered as img with object-fit for crisper scaling -->
+        <img class="modern-hero-img"
+             src="@(string.IsNullOrEmpty(Lawyer.ImageUrl) ? "/img/placeholder.jpg" : Lawyer.ImageUrl)"
+             alt="@Lawyer.Name" />
+
+        <div class="modern-hero-overlay"></div>
+
+        <div class="modern-hero-content">
+            <div class="modern-hero-text">
+                <h1 class="modern-lawyer-name">@Lawyer.Name</h1>
+                <p class="modern-lawyer-title">@GetLawyerTitle(Lawyer)</p>
+            </div>
+        </div>
+
+        <!-- CONTACT INFO BAR -->
+        <div class="modern-contact-bar">
+            <div class="contact-bar-inner">
+                <div class="contact-item">
+                    <span class="contact-label">@GetText("email")</span>
+                    <a href="mailto:@Lawyer.Email" class="contact-value">@Lawyer.Email</a>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">@GetText("mobilePhone")</span>
+                    <p class="contact-value">@Lawyer.MobilePhone</p>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">@GetText("officePhone")</span>
+                    <p class="contact-value">@Lawyer.OfficePhone</p>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">@GetText("location")</span>
+                    <p class="contact-value">@Lawyer.Location</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BIOGRAPHY SECTION -->
+    <section class="modern-biography-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <h2 class="modern-section-title">@GetText("biographyHeading")</h2>
+                    <div class="modern-biography-text">
+                        @((MarkupString)GetLawyerBiography(Lawyer))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RELATED CONTENT SECTION -->
+    @if (relatedPosts.Any())
+    {
+        <section class="modern-related-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="modern-section-title">@GetText("relatedContentHeading")</h2>
+                    </div>
+                </div>
+
+                <!-- CATEGORY TABS -->
+                <div class="row mt-4 mb-4">
+                    <div class="col-12">
+                        <ul class="modern-category-tabs">
+                            <li>
+                                <button class="modern-tab-btn @(SelectedCategoryId == 0 ? "active" : "")"
+                                        @onclick="() => FilterCategory(0)">
+                                    @GetText("showAll")
+                                </button>
+                            </li>
+                            @foreach (var cat in distinctCategories)
+                            {
+                                <li>
+                                    <button class="modern-tab-btn @(SelectedCategoryId == cat.Id ? "active" : "")"
+                                            @onclick="() => FilterCategory(cat.Id)">
+                                        @GetCategoryName(cat)
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CONTENT CARDS -->
+                <div class="row modern-content-grid">
+                    @if (FilteredPosts.Count == 0)
+                    {
+                        <div class="col-12 text-center py-5">
+                            <p class="text-muted">@GetText("noContentMessage")</p>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var p in FilteredPosts)
+                        {
+                            var url = GetPostUrl(p);
+
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <a href="@LanguageService.GetLocalizedUrl(url)" class="modern-content-card">
+                                    <span class="modern-card-date">@p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</span>
+                                    <h3 class="modern-card-title">@GetPostTitle(p)</h3>
+                                    <span class="modern-card-category" style="background: @GetCategoryColor(GetCategoryName(p.Category));">
+                                        @GetCategoryName(p.Category)
+                                    </span>
+                                    <p class="modern-card-excerpt">@GetSummary(p)</p>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+
+@code {
+    [Parameter]
+    public string? Slug { get; set; }
+
+    private Lawyer? Lawyer;
+    private List<Post> relatedPosts = new();
+    private List<Post> FilteredPosts = new();
+    private List<Category> distinctCategories = new();
+    private int SelectedCategoryId = 0;
+
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Daf Hukuk",
+            ["loadingTitle"] = "Yükleniyor...",
+            ["loading"] = "Avukat bilgileri yükleniyor...",
+            ["email"] = "E-posta",
+            ["mobilePhone"] = "Mobil Telefon",
+            ["officePhone"] = "Ofis Telefon",
+            ["location"] = "Konum",
+            ["biographyHeading"] = "Biyografi",
+            ["relatedContentHeading"] = "İlişkili İçerikler",
+            ["showAll"] = "Hepsini Göster",
+            ["noContentMessage"] = "Bu kategoride içerik bulunmamaktadır."
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Daf Law",
+            ["loadingTitle"] = "Loading...",
+            ["loading"] = "Loading lawyer information...",
+            ["email"] = "Email",
+            ["mobilePhone"] = "Mobile Phone",
+            ["officePhone"] = "Office Phone",
+            ["location"] = "Location",
+            ["biographyHeading"] = "Biography",
+            ["relatedContentHeading"] = "Related Content",
+            ["showAll"] = "Show All",
+            ["noContentMessage"] = "No content found in this category."
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "داف للمحاماة",
+            ["loadingTitle"] = "جار التحميل...",
+            ["loading"] = "جار تحميل معلومات المحامي...",
+            ["email"] = "البريد الإلكتروني",
+            ["mobilePhone"] = "الهاتف المحمول",
+            ["officePhone"] = "هاتف المكتب",
+            ["location"] = "الموقع",
+            ["biographyHeading"] = "السيرة الذاتية",
+            ["relatedContentHeading"] = "المحتوى ذو الصلة",
+            ["showAll"] = "عرض الكل",
+            ["noContentMessage"] = "لم يتم العثور على محتوى في هذه الفئة."
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Lawyer = await LawyerService.GetBySlug(Slug, CurrentLang);
+
+        if (Lawyer == null)
+        {
+            NavManager.NavigateTo(LanguageService.GetLocalizedUrl("NotFound"), replace: true);
+            return;
+        }
+
+        var allPosts = await PostService.GetAll();
+        relatedPosts = allPosts
+            .Where(p => p.Category != null && !p.Category.Name_TR.Equals("Hizmetlerimiz", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        distinctCategories = relatedPosts
+            .Select(p => p.Category!)
+            .DistinctBy(c => c.Id)
+            .OrderBy(c => GetCategoryName(c))
+            .ToList();
+
+        FilteredPosts = relatedPosts;
+    }
+
+    private void FilterCategory(int categoryId)
+    {
+        SelectedCategoryId = categoryId;
+        FilteredPosts = categoryId == 0
+            ? relatedPosts
+            : relatedPosts.Where(p => p.CategoryId == categoryId).ToList();
+    }
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetLawyerTitle(Lawyer lawyer)
+    {
+        return CurrentLang switch
+        {
+            "en" => lawyer.Title_EN ?? lawyer.Title_TR,
+            "ar" => lawyer.Title_AR ?? lawyer.Title_TR,
+            _ => lawyer.Title_TR
+        };
+    }
+
+    private string GetLawyerBiography(Lawyer lawyer)
+    {
+        return CurrentLang switch
+        {
+            "en" => lawyer.Biography_EN ?? lawyer.Biography_TR ?? GetText("noContentMessage"),
+            "ar" => lawyer.Biography_AR ?? lawyer.Biography_TR ?? GetText("noContentMessage"),
+            _ => lawyer.Biography_TR ?? GetText("noContentMessage")
+        };
+    }
+
+    private string GetPostTitle(Post p)
+    {
+        return CurrentLang switch
+        {
+            "en" => p.Title_EN ?? p.Title_TR,
+            "ar" => p.Title_AR ?? p.Title_TR,
+            _ => p.Title_TR ?? ""
+        };
+    }
+
+    private string GetCategoryName(Category? c)
+    {
+        if (c == null) return "";
+        return CurrentLang switch
+        {
+            "en" => c.Name_EN ?? c.Name_TR,
+            "ar" => c.Name_AR ?? c.Name_TR,
+            _ => c.Name_TR ?? ""
+        };
+    }
+
+    private string GetSummary(Post p)
+    {
+        var content = CurrentLang switch
+        {
+            "en" => p.Content_EN ?? p.Content_TR,
+            "ar" => p.Content_AR ?? p.Content_TR,
+            _ => p.Content_TR
+        };
+
+        if (string.IsNullOrWhiteSpace(content)) return "";
+        content = content.Replace(Environment.NewLine, " ").Trim();
+        return content.Length > 120 ? content.Substring(0, 120) + "..." : content;
+    }
+
+    private string GetPostUrl(Post p)
+    {
+        if (p?.Category?.Name_TR == null) return "#";
+
+        var categorySlug = p.Category.Name_TR.ToLowerInvariant() switch
+        {
+            "hizmetlerimiz" => CurrentLang == "en" ? "services" : CurrentLang == "ar" ? "services" : "hizmetlerimiz",
+            "duyurular" => CurrentLang == "en" ? "announcements" : CurrentLang == "ar" ? "announcements" : "duyurular",
+            "etkinlikler" => CurrentLang == "en" ? "events" : CurrentLang == "ar" ? "events" : "etkinlikler",
+            "yayınlar" or "yayinlar" => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar",
+            _ => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar"
+        };
+
+        var postSlug = CurrentLang switch
+        {
+            "en" => p.Slug_EN ?? p.Slug_TR,
+            "ar" => p.Slug_AR ?? p.Slug_TR,
+            _ => p.Slug_TR
+        };
+
+        return $"{categorySlug}/{postSlug}";
+    }
+
+    private string GetCategoryColor(string? categoryName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryName)) return "#366C80";
+
+        var normalized = categoryName.ToLowerInvariant();
+        return normalized switch
+        {
+            "hizmetlerimiz" or "services" or "خدمات" => "#366C80",
+            "duyurular" or "announcements" or "إعلانات" => "#5c7341",
+            "etkinlikler" or "events" or "فعاليات" => "#78514A",
+            "yayınlar" or "yayinlar" or "publications" or "منشورات" => "#dfb899",
+            _ => "#366C80"
+        };
+    }
+
+    private System.Globalization.CultureInfo GetCulture()
+    {
+        return CurrentLang switch
+        {
+            "en" => new System.Globalization.CultureInfo("en-US"),
+            "ar" => new System.Globalization.CultureInfo("ar-SA"),
+            _ => new System.Globalization.CultureInfo("tr-TR")
+        };
+    }
+}

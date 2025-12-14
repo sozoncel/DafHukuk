@@ -1,0 +1,189 @@
+﻿@page "/ekibimiz"
+@page "/en/team"
+@page "/ar/team"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@using DafHukuk.Core.Entities
+@using DafHukuk.Service.Interfaces
+
+@inject ILawyerService LawyerService
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>@GetText("pageTitle")</PageTitle>
+
+<section class="hero-ourteam-section">
+    <div class="hero-ourteam-bg"></div>
+    <div class="hero-ourteam-overlay"></div>
+
+    <div class="hero-ourteam-container">
+        <div class="hero-ourteam-title-content">
+            <h2 class="ourteam-hero-title-upper">@GetText("pageTitleUpper")</h2>
+            <h1 class="hero-ourteam-title">@GetText("mainTitle")</h1>
+
+            <div class="hero-iletisim-breadcrumb">
+                <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("breadcrumbHome")</a>
+                /
+                <span>@GetText("breadcrumbTeam")</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ourteam-content">
+    <div class="ourteam-page-content">
+
+        <div class="row info-row">
+            <div class="col-12">
+                <p class="team-info-text">@GetText("teamInfoText")</p>
+            </div>
+        </div>
+
+        <div class="row team-cards-row">
+
+            @if (Lawyers == null)
+            {
+                <div class="col-12 text-center">
+                    <em>@GetText("loading")</em>
+                </div>
+            }
+            else if (Lawyers.Count == 0)
+            {
+                <div class="col-12 text-center">
+                    <p>@GetText("noMembers")</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var lawyer in Lawyers)
+                {
+                    <div class="col-lg-4  team-card-col">
+                        <a href="@GetLocalizedMemberUrl(lawyer)"
+                           class="lawyer-card-link-wrapper">
+
+                            <div class="lawyer-card-v2">
+
+                                <div class="lawyer-img-wrapper">
+                                    <img src="@(string.IsNullOrEmpty(lawyer.ImageUrl) ? "/img/placeholder.jpg" : lawyer.ImageUrl)"
+                                         alt="@lawyer.Name"
+                                         class="lawyer-card-img" />
+                                </div>
+
+                                <div class="lawyer-card-content">
+                                    <h3 class="lawyer-card-name">@lawyer.Name</h3>
+                                    <span class="lawyer-card-title">
+                                        @GetLawyerTitle(lawyer)
+                                    </span>
+                                </div>
+
+                                <div class="lawyer-card-meta">
+                                    <a href="mailto:@lawyer.Email"
+                                       class="mail-box-link"
+                                       onclick="event.stopPropagation()">
+                                        <i class="bi bi-envelope"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<Lawyer>? Lawyers { get; set; }
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Lawyers = await LawyerService.GetAll();
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Ekibimiz - Daf Hukuk",
+            ["pageTitleUpper"] = "Ekibimiz",
+            ["mainTitle"] = "Daf Ekibiyle Tanışın",
+            ["breadcrumbHome"] = "Ana Sayfa",
+            ["breadcrumbTeam"] = "Ekibimiz",
+            ["teamInfoText"] = "120'nin üzerinde avukat ve uzman kadromuzla müvekkillerimize yüksek standartlarda hizmet sunuyoruz.",
+            ["loading"] = "Ekip üyeleri yükleniyor...",
+            ["noMembers"] = "Ekip üyesi bulunamadı."
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Our Team - Daf Law",
+            ["pageTitleUpper"] = "Our Team",
+            ["mainTitle"] = "Meet the Daf Team",
+            ["breadcrumbHome"] = "Home",
+            ["breadcrumbTeam"] = "Our Team",
+            ["teamInfoText"] = "With over 120 lawyers and professionals, we deliver high-standard legal services.",
+            ["loading"] = "Loading team members...",
+            ["noMembers"] = "No team members found."
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "فريقنا - داف",
+            ["pageTitleUpper"] = "فريقنا",
+            ["mainTitle"] = "تعرف على فريق داف",
+            ["breadcrumbHome"] = "الرئيسية",
+            ["breadcrumbTeam"] = "فريقنا",
+            ["teamInfoText"] = "يضم فريق داف أكثر من 120 محاميًا ومتخصصًا.",
+            ["loading"] = "جارٍ تحميل أعضاء الفريق...",
+            ["noMembers"] = "لا يوجد أعضاء."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) &&
+            Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+
+        return Translations["tr"].GetValueOrDefault(key, key);
+    }
+
+    private string GetLawyerTitle(Lawyer lawyer) =>
+        CurrentLang switch
+        {
+            "en" => lawyer.Title_EN ?? lawyer.Title_TR,
+            "ar" => lawyer.Title_AR ?? lawyer.Title_TR,
+            _ => lawyer.Title_TR
+        };
+
+    private string GetLocalizedMemberUrl(Lawyer lawyer)
+    {
+        var slug = CurrentLang switch
+        {
+            "en" => lawyer.Slug_EN,
+            "ar" => lawyer.Slug_AR,
+            _ => lawyer.Slug_TR
+        };
+
+        var basePath = CurrentLang == "tr" ? "ekibimiz" : "team";
+        return LanguageService.GetLocalizedUrl($"{basePath}/{slug}");
+    }
+}

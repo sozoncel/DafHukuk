@@ -1,0 +1,477 @@
+﻿@page "/hizmetlerimiz"
+@page "/en/services"
+@page "/ar/services"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+
+@using DafHukuk.Core.Entities
+@inject DafHukuk.Service.Interfaces.IPostService PostService
+@inject DafHukuk.Service.Interfaces.ICategoryService CategoryService
+@inject DafHukuk.Service.ILanguageService LanguageService
+
+<PageTitle>@GetText("pageTitle")</PageTitle>
+
+<section class="hero-services-section">
+    <div class="hero-services-bg"></div>
+    <div class="hero-services-overlay"></div>
+
+    <div class="hero-services-container">
+        <div class="hero-services-title-content">
+            <h2 class="services-hero-title-upper">@GetText("upperTitle")</h2>
+            <div class="hero-services-title-wrapper">
+                <h1 class="hero-services-title">@GetText("mainTitle")</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-slogan-wrapper">
+                    <div class="hero-about-slogan-text-style">
+                        @((MarkupString)GetText("slogan"))
+                    </div>
+                </div>
+                <div class="hero-about-breadcrumb">
+                    <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> / <span>@GetText("mainTitle")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services-content">
+    <div class="services-page-content">
+        <div class="content-container intro-container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h3>@GetText("sectionIntroTitle")</h3>
+                    <p>@GetText("sectionIntroText")</p>
+                    <a href="#practiceAreas" class="pageMove">@GetText("practiceAnchor")</a>
+                </div>
+
+                <div class="col-lg-6">
+                    <img src="/img/sayfalar/hizmetlerimiz/daf-hizmetlerimiz.png" alt="Modern Ofis Koridoru">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 id="practiceAreas" class="section-title">@GetText("practiceAreas")</h2>
+            </div>
+        </div>
+
+        <!-- KATEGORİ TABS (İsteğe bağlı, varsa göster) -->
+        @if (DistinctCategories.Any())
+        {
+            <div class="row related-content-nav-row mb-4">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
+                        <li class="nav-item">
+                            <a class="nav-link @(CurrentCategoryId == 0 ? "active" : "")"
+                               href="javascript:void(0)"
+                               @onclick="() => FilterCategory(0)"
+                               @onclick:preventDefault="true">
+                                @GetText("showAll")
+                            </a>
+                        </li>
+
+                        @foreach (var cat in DistinctCategories)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(CurrentCategoryId == cat.Id ? "active" : "")"
+                                   href="javascript:void(0)"
+                                   @onclick="() => FilterCategory(cat.Id)"
+                                   @onclick:preventDefault="true">
+                                    @GetCategoryName(cat)
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+
+        <div class="row g-4 practice-cards-row">
+            @if (IsLoading)
+            {
+                <div class="col-12 loading-state">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">@GetText("loading")</span>
+                    </div>
+                    <p class="loading-text">@GetText("loadingText")</p>
+                </div>
+            }
+            else if (!FilteredPosts.Any())
+            {
+                <div class="col-12">
+                    <div class="alert alert-warning" role="alert">
+                        @GetText("noServices")
+                    </div>
+                </div>
+            }
+            else
+            {
+                @foreach (var post in DisplayedPosts)
+                {
+                    var postUrl = GetPostUrl(post);
+
+                    <div class="col-lg-3">
+                        <div class="practice-card">
+                            <img src="@post.CoverImageUrl" alt="@GetPostTitle(post)" />
+                            <a href="@postUrl">
+                                <h3 class="practice-title">@GetPostTitle(post)</h3>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- İletişim CTA -->
+        <div class="row-contact">
+            <div class="col-12">
+                <p class="contact-text">@GetText("contactText")</p>
+                <a href="@LanguageService.GetLocalizedUrl("iletisim")" class="contact-button">
+                    @GetText("contactButton") <span class="arrow-icon"></span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Related content (content cards grid) -->
+        <div class="row related-content-nav-row mt-5 mb-3">
+            <div class="col-sm-12">
+                <h3 class="related-content-heading">@GetText("relatedHeading")</h3>
+            </div>
+        </div>
+
+        <div class="row content-cards-row" id="contentContainer">
+            @if (AllPostsContent.Any())
+            {
+                @foreach (var p in AllPostsContent)
+                {
+                    var url = GetPostUrl(p);
+                    <div class="col-lg-4 mb-4 content-card-wrapper" data-category="@p.CategoryId">
+                        <div class="content-card">
+                            <p class="created-Date">@p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
+
+                            <a href="@url" class="content-title-link">
+                                <h3 class="textContent">@GetPostTitle(p)</h3>
+                            </a>
+
+                            <a href="@url">
+                                <button class="content-tag-button" style="background:@GetCategoryColor(GetCategoryName(p.Category))">
+                                    @GetCategoryName(p.Category)
+                                </button>
+                            </a>
+
+                            <p class="slug-text">@GetSummary(p)</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <p class="text-muted">@GetText("noRelatedContent")</p>
+                </div>
+            }
+        </div>
+
+        <!-- Tümünü Göster butonu -->
+        @if (ShowLoadMoreButton && !IsLoading)
+        {
+            <div class="row mt-4 mb-5">
+                <div class="col-lg-12 text-center">
+                    <button class="show-all-button" @onclick="ShowAll" id="showAllButton">@GetText("showAllButton")</button>
+                </div>
+            </div>
+        }
+
+    </div>
+</section>
+
+@code {
+    // Query'den veya servislerden gelen post'lar
+    private List<Post> AllPosts { get; set; } = new();
+    private List<Post> AllPostsContent { get; set; } = new(); 
+    private List<Post> ServicePosts { get; set; } = new(); 
+    private List<Post> FilteredPosts { get; set; } = new();
+    private List<Post> DisplayedPosts { get; set; } = new();
+    private List<Category> DistinctCategories { get; set; } = new();
+
+    private int CurrentCategoryId { get; set; } = 0;
+    private bool IsLoading { get; set; } = true;
+    private int InitialDisplayCount { get; set; } = 9;
+    private bool ShowingAll { get; set; } = false;
+
+    private bool ShowLoadMoreButton => FilteredPosts.Count > InitialDisplayCount && !ShowingAll;
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    // Lokal çeviri dictionary (sayfa statik metinleri)
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Hizmetlerimiz",
+            ["upperTitle"] = "Hizmetlerimiz",
+            ["mainTitle"] = "Çalışma Alanlarımız",
+            ["slogan"] = "Senin <br> Başarın. <br> Bizim <br> İşimiz.",
+            ["home"] = "Ana Sayfa",
+            ["sectionIntroTitle"] = "Hizmetlerimiz",
+            ["sectionIntroText"] = "Müvekkillerimize, ulusal ve uluslararası alanda karşılaştıkları hukuki zorluklarda, uzman kadromuz ve geniş tecrübemizle kapsamlı ve stratejik çözümler sunuyoruz.",
+            ["practiceAnchor"] = "Çalışma Alanları",
+            ["practiceAreas"] = "Çalışma Alanları",
+            ["loading"] = "Yükleniyor...",
+            ["loadingText"] = "İçerikler yükleniyor...",
+            ["noServices"] = "Hizmet bulunamadı.",
+            ["contactText"] = "Birlikte çalışmak için iletişime geçebilirsiniz.",
+            ["contactButton"] = "İLETİŞİM",
+            ["relatedHeading"] = "İlişkili İçerikler",
+            ["showAll"] = "Hepsini Göster",
+            ["showAllButton"] = "Tümünü Göster",
+            ["noRelatedContent"] = "İlişkili içerik bulunamadı."
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Services",
+            ["upperTitle"] = "Our Services",
+            ["mainTitle"] = "Practice Areas",
+            ["slogan"] = "Your <br> Success. <br> Our <br> Business.",
+            ["home"] = "Home",
+            ["sectionIntroTitle"] = "Services",
+            ["sectionIntroText"] = "We provide comprehensive and strategic legal solutions to our clients on national and international matters with our expert team.",
+            ["practiceAnchor"] = "Practice Areas",
+            ["practiceAreas"] = "Practice Areas",
+            ["loading"] = "Loading...",
+            ["loadingText"] = "Loading contents...",
+            ["noServices"] = "No services found.",
+            ["contactText"] = "Contact us to work together.",
+            ["contactButton"] = "CONTACT",
+            ["relatedHeading"] = "Related Content",
+            ["showAll"] = "Show All",
+            ["showAllButton"] = "Show All",
+            ["noRelatedContent"] = "No related content found."
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "خدماتنا",
+            ["upperTitle"] = "خدماتنا",
+            ["mainTitle"] = "مجالات العمل",
+            ["slogan"] = "نجاحك. <br> هو <br> عملنا. <br>",
+            ["home"] = "الرئيسية",
+            ["sectionIntroTitle"] = "خدماتنا",
+            ["sectionIntroText"] = "نقدم لعملائنا حلولاً قانونية شاملة واستراتيجية على المستويين الوطني والدولي بفريقنا الخبير.",
+            ["practiceAnchor"] = "مجالات العمل",
+            ["practiceAreas"] = "مجالات العمل",
+            ["loading"] = "جارٍ التحميل...",
+            ["loadingText"] = "جارٍ تحميل المحتويات...",
+            ["noServices"] = "لم يتم العثور على خدمات.",
+            ["contactText"] = "تواصل معنا للعمل معاً.",
+            ["contactButton"] = "اتصل",
+            ["relatedHeading"] = "محتويات ذات صلة",
+            ["showAll"] = "عرض الكل",
+            ["showAllButton"] = "عرض الكل",
+            ["noRelatedContent"] = "لا يوجد محتوى ذي صلة."
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        try
+        {
+            // Tüm aktif postları al
+            AllPosts = await PostService.GetAll();
+
+            DistinctCategories = AllPosts
+                .Where(p => p.Category != null)
+                .GroupBy(p => p.Category.Id)
+                .Select(g => new Category
+                {
+                    Id = g.Key,
+                    Name_TR = g.First().Category.Name_TR,
+                    Name_EN = g.First().Category.Name_EN,
+                    Name_AR = g.First().Category.Name_AR,
+                    Posts = g.ToList()
+                })
+                .OrderBy(c => GetCategoryName(c))
+                .ToList();
+
+            AllPostsContent = AllPosts.Where(p => p.IsActive).ToList();
+
+            var categories = await CategoryService.GetAll();
+            var hizmetCategory = categories.FirstOrDefault(c =>
+                string.Equals(c.Name_TR?.Trim(), "Hizmetlerimiz", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(c.Name_EN?.Trim(), "Our Services", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(c.Name_AR?.Trim(), "خدماتنا", StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (hizmetCategory != null)
+            {
+                ServicePosts = await PostService.GetAll(hizmetCategory.Id);
+            }
+            else
+            {
+                ServicePosts = AllPosts.Where(p => p.CategoryId == 18 && p.IsActive).OrderBy(p => GetPostTitle(p)).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hata PostService.GetAll(): {ex.Message}");
+            AllPosts = new List<Post>();
+            AllPostsContent = new List<Post>();
+            ServicePosts = new List<Post>();
+            DistinctCategories = new List<Category>();
+        }
+
+        FilteredPosts = ServicePosts.ToList();
+        UpdateDisplayedPosts();
+
+        IsLoading = false;
+    }
+
+    private void FilterCategory(int categoryId)
+    {
+        CurrentCategoryId = categoryId;
+        ShowingAll = false;
+
+        if (CurrentCategoryId == 0)
+            FilteredPosts = ServicePosts.ToList();
+        else
+            FilteredPosts = ServicePosts.Where(p => p.CategoryId == categoryId).ToList();
+
+        UpdateDisplayedPosts();
+        StateHasChanged();
+    }
+
+    private void ShowAll()
+    {
+        ShowingAll = true;
+        UpdateDisplayedPosts();
+    }
+
+    private void UpdateDisplayedPosts()
+    {
+        DisplayedPosts = ShowingAll ? FilteredPosts : FilteredPosts.Take(InitialDisplayCount).ToList();
+    }
+
+    private string GetPostUrl(Post post)
+    {
+        if (post?.Category == null) return "#";
+
+        var categorySlug = GetCategorySlug(post.Category);
+        var postSlug = GetPostSlug(post);
+
+        return CurrentLang switch
+        {
+            "en" => $"/en/{categorySlug}/{postSlug}",
+            "ar" => $"/ar/{categorySlug}/{postSlug}",
+            _ => $"/{categorySlug}/{postSlug}"
+        };
+    }
+
+    private string GetCategorySlug(Category category)
+    {
+       
+        var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "").ToLowerInvariant().Trim();
+
+        return categoryName switch
+        {
+            "hizmetlerimiz" or "our services" or "خدماتنا"
+                => CurrentLang == "en" ? "services" : CurrentLang == "ar" ? "services" : "hizmetlerimiz",
+
+            // Duyurular
+            "duyurular" or "announcements" or "الإعلانات"
+                => CurrentLang == "en" ? "announcements" : CurrentLang == "ar" ? "announcements" : "duyurular",
+
+            // Etkinlikler
+            "etkinlikler" or "events" or "الفعاليات"
+                => CurrentLang == "en" ? "events" : CurrentLang == "ar" ? "events" : "etkinlikler",
+
+            // Yayınlar
+            "yayınlar" or "yayinlar" or "publications" or "المنشورات"
+                => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar",
+
+            _ => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar"
+        };
+    }
+
+    private string GetCategoryColor(string? categoryName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return "#3b82f6";
+
+        var normalized = categoryName.ToLowerInvariant().Trim();
+
+        return normalized switch
+        {
+            "hizmetlerimiz" or "our services" or "خدماتنا" => "#366C80",
+            "duyurular" or "announcements" or "الإعلانات" => "#5c7341",
+            "etkinlikler" or "events" or "الفعاليات" => "#78514A",
+            "yayınlar" or "yayinlar" or "publications" or "المنشورات" => "#dfb899",
+            _ => "#3b82f6"
+        };
+    }
+
+    private string GetSummary(Post post)
+    {
+        var content = CurrentLang switch
+        {
+            "en" => post.Content_EN ?? post.Content_TR,
+            "ar" => post.Content_AR ?? post.Content_TR,
+            _ => post.Content_TR
+        };
+
+        if (string.IsNullOrWhiteSpace(content)) return "";
+        content = content.Replace(Environment.NewLine, " ").Trim();
+        return content.Length > 120 ? content.Substring(0, 120) + "..." : content;
+    }
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetPostTitle(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Title_EN ?? post.Title_TR,
+            "ar" => post.Title_AR ?? post.Title_TR,
+            _ => post.Title_TR
+        };
+    }
+
+    private string GetPostSlug(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Slug_EN ?? post.Slug_TR,
+            "ar" => post.Slug_AR ?? post.Slug_TR,
+            _ => post.Slug_TR
+        };
+    }
+
+    private string GetCategoryName(Category? category)
+    {
+        if (category == null) return "";
+
+        return CurrentLang switch
+        {
+            "en" => category.Name_EN ?? category.Name_TR,
+            "ar" => category.Name_AR ?? category.Name_TR,
+            _ => category.Name_TR
+        };
+    }
+
+    private System.Globalization.CultureInfo GetCulture()
+    {
+        return CurrentLang switch
+        {
+            "en" => new System.Globalization.CultureInfo("en-US"),
+            "ar" => new System.Globalization.CultureInfo("ar-SA"),
+            _ => new System.Globalization.CultureInfo("tr-TR")
+        };
+    }
+}

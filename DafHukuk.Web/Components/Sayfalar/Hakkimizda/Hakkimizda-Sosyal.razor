@@ -1,0 +1,193 @@
+﻿@page "/hakkimizda/sosyal-sorumluluk"
+@page "/en/about/social-responsibility"
+@page "/ar/about/social-responsibility"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<section class="hero-about-section">
+    <div class="hero-about-bg social-bg"></div>
+    <div class="hero-about-overlay"></div>
+
+    <div class="hero-about-container">
+        <div class="hero-about-title-content">
+            <h2 class="about-hero-title-upper">@GetText("pageTitle")</h2>
+            <div class="hero-about-title-wrapper">
+                <h1 class="hero-about-title">@GetText("companyName")</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-slogan-wrapper">
+                    <div class="hero-about-slogan-text-style">
+                        @((MarkupString)GetText("slogan"))
+                    </div>
+                </div>
+                <div class="hero-about-breadcrumb">
+                    <a href="@GetLocalizedUrl("")">@GetText("home")</a> / <span>@GetText("about")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-about-sub-nav-bar">
+        <div class="hero-about-sub-nav-container">
+            <a role="button" href="@GetLocalizedUrl("hakkimizda")" class="button">@GetText("about")</a>
+            <a role="button" href="@GetLocalizedUrl("hakkimizda/odullerimiz")" class="button">@GetText("awards")</a>
+            <a role="button" href="@GetLocalizedUrl("hakkimizda/sosyal-sorumluluk")" class="button active">@GetText("socialResponsibility")</a>
+        </div>
+    </div>
+</section>
+
+<section class="about-social-section">
+    <div class="row">
+        <div class="social-main-header">
+            <div class="col-lg-12">
+                <h2>@GetText("mainHeader")</h2>
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <h2 class="social-row-header">@GetText("projectsTitle")</h2>
+        </div>
+    </div>
+
+    <div class="row social-project-row">
+        <div class="col-lg-3">
+            <img src="/img/sayfalar/hakkimizda/daf-sosyalsorumluluk-02.jpg" class="img-fluid" alt="social1" />
+        </div>
+        <div class="col-lg-6">
+            <h2 class="social-row-header">
+                @GetText("project1Title")
+            </h2>
+            <p>
+                @GetText("project1Text")
+            </p>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+
+    <div class="row social-project-row">
+        <div class="col-lg-3">
+            <img src="/img/sayfalar/hakkimizda/daf-sosyalsorumluluk-01.jpg" class="img-fluid" alt="social1" />
+        </div>
+        <div class="col-lg-6">
+            <h2 class="social-row-header">
+                @GetText("project2Title")
+            </h2>
+            <p>
+                @GetText("project2Text")
+            </p>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+
+    <div class="row social-project-row">
+        <div class="col-lg-3">
+            <img src="/img/sayfalar/hakkimizda/daf-sosyalsorumluluk-03.jpg" class="img-fluid" alt="social1" />
+        </div>
+        <div class="col-lg-6">
+            <h2 class="social-row-header">
+                @GetText("project3Title")
+            </h2>
+            <p>
+                @GetText("project3Text")
+            </p>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+</section>
+
+@code {
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Sosyal Sorumluluk",
+            ["companyName"] = "Daf Ortak Avukat Bürosu",
+            ["slogan"] = "Your <br> success. <br> Our <br> business.",
+            ["home"] = "Ana Sayfa",
+            ["about"] = "Hakkımızda",
+            ["awards"] = "Ödüllerimiz",
+            ["socialResponsibility"] = "Sosyal Sorumluluk",
+            ["mainHeader"] = "Toplumumuz ve hukuk camiası için karşılıksız olarak hizmet sunmanın görevlerimiz arasında yer aldığına inanıyoruz ve bunu gerçekleştirebilmek için kendimize hedefler koyuyoruz.",
+            ["projectsTitle"] = "Sosyal Sorumluluk Projeleri",
+            ["project1Title"] = "Geleceğin Avukatları",
+            ["project1Text"] = "Hukuk alanının ve mesleğimizin geleceğini parlak kılmak için geleceğin avukatları ile etkileşimde bulunup onların eğitimlerine katkı sağlamak için elimizden geleni yapıyoruz. Donanımı tam, mesleğimizi layığıyla yerine getirecek avukatların yetişmesinde Paksoy'un katkısı olması gerektiğini düşünüyor ve bunun için gelecek vadeden öğrencilerin hukuk eğitimlerine destek olmak için burs imkanı sağlıyoruz.",
+            ["project2Title"] = "\"Eğitimin Sigortası: Öğretmenlerimiz\" Projesi",
+            ["project2Text"] = "Proje Türkiye'nin kırsal bölgelerinde görev yapan kadın öğretmenlerin mesleki ve kişisel gelişimleri, yetkinlikleri ve girişimciliklerine katkı sağlamaya yönelik olup; Paksoy bu projenin sözleşme ve protokollerinin incelenmesi, yorumlanması, müzakeresi ve imzalanması aşamalarında pro bono hukuk danışmanlığı vermiştir. Milli Eğitim Bakanlığının da yer aldığı proje, Z Zurich Foundation'ın TED'e sağladığı fon ile hayata geçirilecektir. Projenin altı yıl sürmesi ve 1.000 kadın öğretmene ulaşılması planlanmaktadır.",
+            ["project3Title"] = "Kişisel Verilerin Korunması Mevzuatı ile İlgili Eğitimler",
+            ["project3Text"] = "Daf, İstanbul Bilgi Üniversitesi Pro Bono Ağı iş birliğiyle, kişisel verilerin korunması mevzuatı ile ilgili pro bono hukuki eğitimler vermektedir. Bu eğitimlere şimdiye dek farklı toplumsal amaçlar için çalışan birçok STK katılmıştır."
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Social Responsibility",
+            ["companyName"] = "Daf Law Office",
+            ["slogan"] = "Your <br> success. <br> Our <br> business.",
+            ["home"] = "Home",
+            ["about"] = "About Us",
+            ["awards"] = "Awards",
+            ["socialResponsibility"] = "Social Responsibility",
+            ["mainHeader"] = "We believe that providing services to our community and the legal community free of charge is among our duties, and we set goals for ourselves to achieve this.",
+            ["projectsTitle"] = "Social Responsibility Projects",
+            ["project1Title"] = "Lawyers of the Future",
+            ["project1Text"] = "We do our best to interact with future lawyers and contribute to their education in order to make the future of the field of law and our profession bright. We think that Paksoy should contribute to the training of fully equipped lawyers who will fulfill our profession properly, and for this reason, we provide scholarship opportunities to support the legal education of promising students.",
+            ["project2Title"] = "\"Insurance of Education: Our Teachers\" Project",
+            ["project2Text"] = "The project aims to contribute to the professional and personal development, competencies and entrepreneurship of female teachers working in rural areas of Turkey; Paksoy provided pro bono legal consultancy during the review, interpretation, negotiation and signing of the contracts and protocols of this project. The project, which also includes the Ministry of National Education, will be implemented with the fund provided by Z Zurich Foundation to TED. The project is planned to last six years and reach 1,000 female teachers.",
+            ["project3Title"] = "Training on Personal Data Protection Legislation",
+            ["project3Text"] = "Daf provides pro bono legal training on personal data protection legislation in cooperation with Istanbul Bilgi University Pro Bono Network. Many NGOs working for different social purposes have participated in these trainings so far."
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "المسؤولية الاجتماعية",
+            ["companyName"] = "مكتب داف للمحاماة",
+            ["slogan"] = "نجاحك <br> هو <br> عملنا",
+            ["home"] = "الصفحة الرئيسية",
+            ["about"] = "من نحن",
+            ["awards"] = "جوائزنا",
+            ["socialResponsibility"] = "المسؤولية الاجتماعية",
+            ["mainHeader"] = "نعتقد أن تقديم الخدمات لمجتمعنا والمجتمع القانوني مجانًا هو من بين واجباتنا، ونضع أهدافًا لأنفسنا لتحقيق ذلك.",
+            ["projectsTitle"] = "مشاريع المسؤولية الاجتماعية",
+            ["project1Title"] = "محامو المستقبل",
+            ["project1Text"] = "نبذل قصارى جهدنا للتفاعل مع محامي المستقبل والمساهمة في تعليمهم من أجل جعل مستقبل مجال القانون ومهنتنا مشرقًا. نعتقد أن باكسوي يجب أن يساهم في تدريب المحامين المجهزين تجهيزًا كاملاً الذين سيؤدون مهنتنا بشكل صحيح، ولهذا السبب، نقدم فرص منح دراسية لدعم التعليم القانوني للطلاب الواعدين.",
+            ["project2Title"] = "مشروع \"تأمين التعليم: معلمونا\"",
+            ["project2Text"] = "يهدف المشروع إلى المساهمة في التطوير المهني والشخصي والكفاءات وريادة الأعمال للمعلمات العاملات في المناطق الريفية في تركيا؛ قدم باكسوي استشارات قانونية مجانية خلال مراجعة وتفسير والتفاوض والتوقيع على عقود وبروتوكولات هذا المشروع. سيتم تنفيذ المشروع، الذي يتضمن أيضًا وزارة التربية الوطنية، بالتمويل الذي قدمته مؤسسة Z Zurich لـ TED. من المقرر أن يستمر المشروع ستة أعوام ويصل إلى 1000 معلمة.",
+            ["project3Title"] = "التدريب على تشريعات حماية البيانات الشخصية",
+            ["project3Text"] = "يقدم داف تدريبًا قانونيًا مجانيًا حول تشريعات حماية البيانات الشخصية بالتعاون مع شبكة المساعدة القانونية المجانية بجامعة إسطنبول بيلجي. شاركت العديد من المنظمات غير الحكومية التي تعمل لأغراض اجتماعية مختلفة في هذه التدريبات حتى الآن."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetLocalizedUrl(string path)
+    {
+        return LanguageService.GetLocalizedUrl(path);
+    }
+}

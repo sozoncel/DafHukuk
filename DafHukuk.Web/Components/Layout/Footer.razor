@@ -1,40 +1,45 @@
-﻿<footer class="footer">
+﻿@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@implements IDisposable
+
+<footer class="footer">
     <div class="footer-container">
         <div class="footer-top">
             <div class="footer-column footer-brand">
-                <h2 class="footer-logo">Daf Hukuk</h2>
-                <h3 class="footer-title">Bültenimize kaydolun</h3>
-                <p class="footer-description">Güncel sektörel yayınlar ve duyurular için bültenimize kaydolun.</p>
+                <h2 class="footer-logo">@GetText("siteName")</h2>
+                <h3 class="footer-title">@GetText("newsletterTitle")</h3>
+                <p class="footer-description">@GetText("newsletterDesc")</p>
                 <a href="#" class="footer-cta-button">
-                    BÜLTENİMİZE KAYDOLUN
+                    @GetText("newsletterButton")
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </a>
             </div>
             <div class="footer-column">
-                <h4 class="footer-column-title" data-target="bizi-tanıyın">Bizi Tanıyın<span class="mobile-toggle-icon"></span></h4>
+                <h4 class="footer-column-title" data-target="bizi-tanıyın">@GetText("getToKnowUs")<span class="mobile-toggle-icon"></span></h4>
                 <ul class="footer-links" id="bizi-tanıyın">
-                    <li><a href="/hakkimizda">Hakkımızda</a></li>
-                    <li><a href="#">Hizmetlerimiz</a></li>
-                    <li><a href="#">Ödüllerimiz</a></li>
-                    <li><a href="#">Ekibimiz</a></li>
-                    <li><a href="#">Kariyer</a></li>
-                    <li><a href="#">İletişim</a></li>
+                    <li><a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a></li>
+                    <li><a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a></li>
+                    <li><a href="#">@GetText("awards")</a></li>
+                    <li><a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a></li>
+                    <li><a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a></li>
+                    <li><a href="@GetLocalizedUrl("iletisim")">@GetText("contact")</a></li>
                 </ul>
             </div>
 
             <div class="footer-column">
-                <h4 class="footer-column-title" data-target="duyurular">Duyurular & Yayınlar<span class="mobile-toggle-icon"></span></h4>
+                <h4 class="footer-column-title" data-target="duyurular">@GetText("newsAndPublications")<span class="mobile-toggle-icon"></span></h4>
                 <ul class="footer-links" id="duyurular">
-                    <li><a href="#">Duyurular</a></li>
-                    <li><a href="#">Yayınlar</a></li>
-                    <li><a href="#">Etkinlikler</a></li>
+                    <li><a href="@GetLocalizedUrl("duyurular")">@GetText("announcements")</a></li>
+                    <li><a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a></li>
+                    <li><a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a></li>
                 </ul>
             </div>
 
             <div class="footer-column">
-                <h4 class="footer-column-title">Takip et</h4>
+                <h4 class="footer-column-title">@GetText("followUs")</h4>
                 <div class="footer-social">
                     <a href="#" class="social-link" aria-label="LinkedIn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -48,28 +53,151 @@
         <div class="footer-bottom">
             <div class="footer-bottom-left">
                 <div class="footer-language">
-                    <a href="#" class="footer-lang-link">
+                    <a href="@GetLanguageChangeUrl("en")"
+                       class="footer-lang-link @(CurrentLang == "en" ? "active" : "")"
+                       @onclick="@(() => OnLanguageClick("en"))">
                         <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon">
                         <span>EN</span>
                     </a>
-                    <a href="#" class="footer-lang-link false ">
+                    <a href="@GetLanguageChangeUrl("ar")"
+                       class="footer-lang-link @(CurrentLang == "ar" ? "active" : "")"
+                       @onclick="@(() => OnLanguageClick("ar"))">
                         <img src="/img/Ortak/flag-ar.png" alt="AR" class="flag-icon">
                         <span>AR</span>
                     </a>
-                    <a href="#" class="footer-lang-link active">
+                    <a href="@GetLanguageChangeUrl("tr")"
+                       class="footer-lang-link @(CurrentLang == "tr" ? "active" : "")"
+                       @onclick="@(() => OnLanguageClick("tr"))">
                         <img src="/img/Ortak/flag-tr.svg" alt="TR" class="flag-icon">
                         <span>TR</span>
                     </a>
                 </div>
                 <div class="footer-legal">
-                    <a href="#">Çerez Tercihleri</a>
+                    <a href="#">@GetText("cookiePreferences")</a>
                     <span class="separator">|</span>
-                    <a href="#">Hüküm ve Koşullar</a>
+                    <a href="#">@GetText("termsAndConditions")</a>
                 </div>
             </div>
             <div class="footer-bottom-right">
-                <p class="footer-copyright">© Daf Hukuk 2025. Tüm hakları saklıdır.</p>
+                <p class="footer-copyright">@GetText("copyright")</p>
             </div>
         </div>
     </div>
 </footer>
+
+@code {
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        // URL değişikliğinde footer'ı güncelle
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        // Memory leak önlemek için event'i temizle
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["newsletterTitle"] = "Bültenimize kaydolun",
+            ["newsletterDesc"] = "Güncel sektörel yayınlar ve duyurular için bültenimize kaydolun.",
+            ["newsletterButton"] = "BÜLTENİMİZE KAYDOLUN",
+            ["getToKnowUs"] = "Bizi Tanıyın",
+            ["about"] = "Hakkımızda",
+            ["services"] = "Hizmetlerimiz",
+            ["awards"] = "Ödüllerimiz",
+            ["team"] = "Ekibimiz",
+            ["career"] = "Kariyer",
+            ["contact"] = "İletişim",
+            ["siteName"] = "Daf Hukuk",
+            ["newsAndPublications"] = "Duyurular & Yayınlar",
+            ["announcements"] = "Duyurular",
+            ["publications"] = "Yayınlar",
+            ["events"] = "Etkinlikler",
+            ["followUs"] = "Takip et",
+            ["cookiePreferences"] = "Çerez Tercihleri",
+            ["termsAndConditions"] = "Hüküm ve Koşullar",
+            ["copyright"] = "© Daf Hukuk 2025. Tüm hakları saklıdır."
+        },
+        ["en"] = new()
+        {
+            ["newsletterTitle"] = "Subscribe to our newsletter",
+            ["newsletterDesc"] = "Subscribe to our newsletter for current sector publications and announcements.",
+            ["newsletterButton"] = "SUBSCRIBE TO OUR NEWSLETTER",
+            ["getToKnowUs"] = "Get to Know Us",
+            ["about"] = "About Us",
+            ["services"] = "Services",
+            ["awards"] = "Awards",
+            ["team"] = "Our Team",
+            ["career"] = "Careers",
+            ["contact"] = "Contact",
+            ["siteName"] = "DAF LAW FIRM",
+            ["newsAndPublications"] = "News & Publications",
+            ["announcements"] = "Announcements",
+            ["publications"] = "Publications",
+            ["events"] = "Events",
+            ["followUs"] = "Follow Us",
+            ["cookiePreferences"] = "Cookie Preferences",
+            ["termsAndConditions"] = "Terms and Conditions",
+            ["copyright"] = "© Daf Hukuk 2025. All rights reserved."
+        },
+        ["ar"] = new()
+        {
+            ["newsletterTitle"] = "اشترك في نشرتنا الإخبارية",
+            ["newsletterDesc"] = "اشترك في نشرتنا الإخبارية للحصول على المنشورات والإعلانات القطاعية الحالية.",
+            ["newsletterButton"] = "اشترك في نشرتنا الإخبارية",
+            ["getToKnowUs"] = "تعرف علينا",
+            ["about"] = "من نحن",
+            ["services"] = "خدماتنا",
+            ["awards"] = "جوائزنا",
+            ["team"] = "فريقنا",
+            ["career"] = "وظائف",
+            ["contact"] = "اتصل بنا",
+            ["siteName"] = "داف للمحاماة",
+            ["newsAndPublications"] = "الأخبار والمنشورات",
+            ["announcements"] = "إعلانات",
+            ["publications"] = "منشورات",
+            ["events"] = "فعاليات",
+            ["followUs"] = "تابعنا",
+            ["cookiePreferences"] = "تفضيلات ملفات تعريف الارتباط",
+            ["termsAndConditions"] = "الشروط والأحكام",
+            ["copyright"] = "© Daf Hukuk 2025. جميع الحقوق محفوظة."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetLocalizedUrl(string path)
+    {
+        return LanguageService.GetLocalizedUrl(path);
+    }
+
+    private string GetLanguageChangeUrl(string newLang)
+    {
+        var uri = new Uri(Navigation.Uri);
+        var currentPath = uri.AbsolutePath + uri.Query;
+        return $"/language/change?lang={newLang}&returnUrl={Uri.EscapeDataString(currentPath)}";
+    }
+
+    private async Task OnLanguageClick(string newLang)
+    {
+        await JS.InvokeVoidAsync("eval", $@"
+            document.cookie = 'user_language={newLang}; path=/; max-age=31536000; SameSite=Lax';
+        ");
+    }
+}

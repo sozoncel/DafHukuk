@@ -1134,7 +1134,6 @@
     RESPONSIVE TASARIM
 ========================================================= */
 
-/* Tablet ve Küçük Ekranlar (768px - 991px) */
 @media (max-width: 991px) {
     .admin-sidebar {
         width: 260px;
@@ -1681,47 +1680,6 @@
     .admin-mobile-overlay.active {
         opacity: 1;
         visibility: visible;
-    }
-
-.admin-lang-links {
-    display: flex;
-    gap: 8px;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.admin-lang-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    text-decoration: none;
-    color: #cbd5e1;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    flex: 1;
-}
-
-    .admin-lang-link:hover {
-        background: rgba(59, 130, 246, 0.1);
-        color: #60a5fa;
-    }
-
-    .admin-lang-link.active {
-        background: rgba(59, 130, 246, 0.2);
-        color: #60a5fa;
-    }
-
-    .admin-lang-link .flag-icon {
-        width: 18px;
-        height: 18px;
-        object-fit: cover;
-        border-radius: 3px;
     }
 
 /* =========================================================

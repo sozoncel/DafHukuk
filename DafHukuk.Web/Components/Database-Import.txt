@@ -223,3 +223,90 @@ VALUES
 'تهنئة العام الجديد وأطيب التمنيات', 
 'نتمنى لجميع شركائنا عاماً جديداً ناجحاً وصحياً.', 
 'تهنئة-العام-الجديد-وأطيب-التمنيات');
+
+
+
+
+
+-- Lawyers tablosuna 5 adet sahte avukat kaydı ekleme
+-- CreatedDate ve IsActive alanları için varsayılan değerleri kullanıyoruz.
+
+-- 1. Ayşe Yılmaz (Partner / Ortak)
+INSERT INTO [dbo].[Lawyers] (
+    [Name], [Email], [MobilePhone], [OfficePhone], [Location], [ImageUrl], 
+    [Title_TR], [Title_EN], [Title_AR], 
+    [Slug_TR], [Slug_EN], [Slug_AR], 
+    [Biography_TR], [Biography_EN], [Biography_AR],
+    [CreatedDate], [IsActive]
+) 
+VALUES (
+    N'Ayşe Yılmaz', 'ayse.yilmaz@daf.com', '+905321234567', '+902129876543', N'İstanbul', 'https://randomuser.me/api/portraits/women/1.jpg',
+    N'Yönetici Ortak', N'Managing Partner', N'الشريك الإداري',
+    N'ayse-yilmaz', N'ayse-yilmaz', N'ayse-yilmaz', 
+    N'Ayşe Yılmaz, Ticaret Hukuku ve Gayrimenkul alanında 15 yılı aşkın deneyime sahiptir.', N'Ayşe Yılmaz has over 15 years of experience in Commercial Law and Real Estate.', N'تتمتع عائشة يلماز بخبرة تزيد عن 15 عامًا في القانون التجاري والعقارات.',
+    GETDATE(), 1
+);
+
+-- 2. Emre Demir (Kıdemli Avukat)
+INSERT INTO [dbo].[Lawyers] (
+    [Name], [Email], [MobilePhone], [OfficePhone], [Location], [ImageUrl], 
+    [Title_TR], [Title_EN], [Title_AR], 
+    [Slug_TR], [Slug_EN], [Slug_AR], 
+    [Biography_TR], [Biography_EN], [Biography_AR],
+    [CreatedDate], [IsActive]
+) 
+VALUES (
+    N'Emre Demir', 'emre.demir@daf.com', '+905327654321', '+902121234567', N'Ankara', 'https://randomuser.me/api/portraits/men/2.jpg',
+    N'Kıdemli Avukat', N'Senior Associate', N'محامي أول',
+    N'emre-demir', N'emre-demir', N'emre-demir', 
+    N'Emre Demir, Fikri Mülkiyet Hukuku ve Teknoloji alanlarında uzmanlaşmıştır.', N'Emre Demir specializes in Intellectual Property Law and Technology.', N'يتخصص إمره دمير في قانون الملكية الفكرية والتكنولوجيا.',
+    GETDATE(), 1
+);
+
+-- 3. Serap Kara (Avukat)
+INSERT INTO [dbo].[Lawyers] (
+    [Name], [Email], [MobilePhone], [OfficePhone], [Location], [ImageUrl], 
+    [Title_TR], [Title_EN], [Title_AR], 
+    [Slug_TR], [Slug_EN], [Slug_AR], 
+    [Biography_TR], [Biography_EN], [Biography_AR],
+    [CreatedDate], [IsActive]
+) 
+VALUES (
+    N'Serap Kara', 'serap.kara@daf.com', '+905551112233', '+902125554433', N'İzmir', 'https://randomuser.me/api/portraits/women/3.jpg',
+    N'Avukat', N'Associate', N'محامية',
+    N'serap-kara', N'serap-kara', N'serap-kara', 
+    N'Serap Kara, İcra ve İflas Hukuku davalarında deneyimlidir.', N'Serap Kara is experienced in Enforcement and Bankruptcy Law cases.', N'تتمتع سيراب كارا بالخبرة في قضايا قانون التنفيذ والإفلاس.',
+    GETDATE(), 1
+);
+
+-- 4. Mustafa Öztürk (Danışman)
+INSERT INTO [dbo].[Lawyers] (
+    [Name], [Email], [MobilePhone], [OfficePhone], [Location], [ImageUrl], 
+    [Title_TR], [Title_EN], [Title_AR], 
+    [Slug_TR], [Slug_EN], [Slug_AR], 
+    [Biography_TR], [Biography_EN], [Biography_AR],
+    [CreatedDate], [IsActive]
+) 
+VALUES (
+    N'Mustafa Öztürk', 'mustafa.ozturk@daf.com', '+905449998877', '+902127776655', N'İstanbul', 'https://randomuser.me/api/portraits/men/4.jpg',
+    N'Hukuk Danışmanı', N'Legal Consultant', N'مستشار قانوني',
+    N'mustafa-ozturk', N'mustafa-ozturk', N'mustafa-ozturk', 
+    N'Mustafa Öztürk, Vergi Hukuku ve şirket birleşmeleri konularında danışmanlık vermektedir.', N'Mustafa Öztürk consults on Tax Law and corporate mergers.', N'يقدم مصطفى أوزتورك الاستشارات في قانون الضرائب وعمليات اندماج الشركات.',
+    GETDATE(), 1
+);
+
+-- 5. Zeynep Işık (Junior Avukat)
+INSERT INTO [dbo].[Lawyers] (
+    [Name], [Email], [MobilePhone], [OfficePhone], [Location], [ImageUrl], 
+    [Title_TR], [Title_EN], [Title_AR], 
+    [Slug_TR], [Slug_EN], [Slug_AR], 
+    [Biography_TR], [Biography_EN], [Biography_AR],
+    [CreatedDate], [IsActive]
+) 
+VALUES (
+    N'Zeynep Işık', 'zeynep.isik@daf.com', '+905051002030', '+902123004050', N'İstanbul', 'https://randomuser.me/api/portraits/women/5.jpg',
+    N'Stajyer Avukat', N'Junior Associate', N'محامية متدربة',
+    N'zeynep-isik', N'zeynep-isik', N'zeynep-isik', 
+    N'Zeynep Işık, genç ve dinamik yapısıyla ekibimize destek olmaktadır.', N'Zeynep Işık supports our team with her young and dynamic structure.', N'تدعم زينب إيشيك فريقنا بهيكلها الشاب والديناميكي.',
+    GETDATE(), 1
+);

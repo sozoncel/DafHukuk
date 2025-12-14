@@ -1,0 +1,308 @@
+﻿@page "/duyurular"
+@page "/en/announcements"
+@page "/ar/announcements"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@using DafHukuk.Core.Entities
+@inject DafHukuk.Service.Interfaces.IPostService PostService
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager NavManager
+
+
+@code {
+    private List<Post> currentCategoryPosts = new();
+    private List<Post> filteredPosts = new();
+    private List<Post> otherPostsInSameCategory = new();
+    private Category? currentCategory;
+    private string searchQuery = "";
+
+    // Duyurular kategorisinin ID'si (Veritabanı bağımlı)
+    private const int PageCategoryId = 13;
+
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allPosts = await PostService.GetAll();
+
+        currentCategoryPosts = allPosts
+            .Where(p => p.CategoryId == PageCategoryId && p.IsActive)
+            .OrderByDescending(p => p.PublishedDate)
+            .ToList();
+
+        currentCategory = allPosts.FirstOrDefault(p => p.CategoryId == PageCategoryId)?.Category;
+        otherPostsInSameCategory = currentCategoryPosts.ToList();
+        filteredPosts = currentCategoryPosts.ToList();
+    }
+
+    private void PerformSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+        {
+            filteredPosts = currentCategoryPosts.ToList();
+        }
+        else
+        {
+            var normalizedQuery = searchQuery.Trim();
+
+            filteredPosts = currentCategoryPosts
+                .Where(p =>
+                    (CurrentLang == "en" && ((p.Title_EN != null && p.Title_EN.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase)) ||
+                                             (p.Content_EN != null && p.Content_EN.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase)))) ||
+                    (CurrentLang == "ar" && ((p.Title_AR != null && p.Title_AR.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase)) ||
+                                             (p.Content_AR != null && p.Content_AR.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase)))) ||
+                    ((p.Title_TR != null && p.Title_TR.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase)) ||
+                     (p.Content_TR != null && p.Content_TR.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase))))
+                .ToList();
+        }
+    }
+
+    private void HandleSearchKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            PerformSearch();
+        }
+    }
+
+    private string GetCategorySlug(Category category)
+    {
+        return CurrentLang switch
+        {
+            "en" => "announcements",
+            "ar" => "announcements",
+            _ => "duyurular"
+        };
+    }
+
+    private string GetPostSlug(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Slug_EN ?? post.Slug_TR,
+            "ar" => post.Slug_AR ?? post.Slug_TR,
+            _ => post.Slug_TR ?? post.Slug_EN
+        };
+    }
+
+    private string GetPostUrl(Post p)
+    {
+        if (p?.Category == null) return "#";
+
+        var categorySlug = GetCategorySlug(p.Category);
+        var postSlug = GetPostSlug(p);
+
+        return CurrentLang switch
+        {
+            "en" => $"/en/{categorySlug}/{postSlug}",
+            "ar" => $"/ar/{categorySlug}/{postSlug}",
+            _ => $"/{categorySlug}/{postSlug}"
+        };
+    }
+
+    private string GetPostTitle(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Title_EN ?? post.Title_TR,
+            "ar" => post.Title_AR ?? post.Title_TR,
+            _ => post.Title_TR
+        };
+    }
+
+    private string GetSummary(Post p)
+    {
+        var content = CurrentLang switch
+        {
+            "en" => p.Content_EN ?? p.Content_TR,
+            "ar" => p.Content_AR ?? p.Content_TR,
+            _ => p.Content_TR
+        };
+
+        if (string.IsNullOrWhiteSpace(content)) return "";
+        var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", String.Empty);
+
+        return plainText.Length > 120
+            ? plainText.Substring(0, 120) + "..."
+            : plainText;
+    }
+
+    private System.Globalization.CultureInfo GetCulture()
+    {
+        return CurrentLang switch
+        {
+            "en" => new System.Globalization.CultureInfo("en-US"),
+            "ar" => new System.Globalization.CultureInfo("ar-SA"),
+            _ => new System.Globalization.CultureInfo("tr-TR")
+        };
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Duyurular",
+            ["upperTitle"] = "DUYURULARIMIZ",
+            ["mainTitle"] = "Duyurular",
+            ["home"] = "Ana Sayfa",
+            ["searchPlaceholder"] = "Duyuru Ara",
+            ["dropdownButton"] = "Diğer Duyuruları Gör",
+            ["noContentInDropdown"] = "Bu kategoride içerik bulunamadı.",
+            ["noSearchResultsTitle"] = "Sonuç bulunamadı!",
+            ["noSearchResultsText"] = "için duyuru bulunamadı.",
+            ["noContentText"] = "Bu kategoride yayınlanmış içerik bulunmamaktadır.",
+            ["readMore"] = "Devamını Oku"
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Announcements",
+            ["upperTitle"] = "OUR ANNOUNCEMENTS",
+            ["mainTitle"] = "Announcements",
+            ["home"] = "Home",
+            ["searchPlaceholder"] = "Search Announcement",
+            ["dropdownButton"] = "View Other Announcements",
+            ["noContentInDropdown"] = "No content found in this category.",
+            ["noSearchResultsTitle"] = "No results found!",
+            ["noSearchResultsText"] = "announcements found for",
+            ["noContentText"] = "There is no published content in this category.",
+            ["readMore"] = "Read More"
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "الإعلانات",
+            ["upperTitle"] = "إعلاناتنا",
+            ["mainTitle"] = "الإعلانات",
+            ["home"] = "الرئيسية",
+            ["searchPlaceholder"] = "البحث عن إعلان",
+            ["dropdownButton"] = "عرض الإعلانات الأخرى",
+            ["noContentInDropdown"] = "لا يوجد محتوى في هذه الفئة.",
+            ["noSearchResultsTitle"] = "لم يتم العثور على نتائج!",
+            ["noSearchResultsText"] = "إعلانات لـ",
+            ["noContentText"] = "لا يوجد محتوى منشور في هذه الفئة.",
+            ["readMore"] = "اقرأ المزيد"
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+}
+
+<PageTitle>@GetText("pageTitle")</PageTitle>
+
+<section class="hero-news-section">
+    <div class="hero-services-bg"></div>
+    <div class="hero-services-overlay"></div>
+
+    <div class="hero-services-container">
+        <div class="hero-services-title-content">
+            <h2 class="services-hero-title-upper">@GetText("upperTitle")</h2>
+            <div class="hero-services-title-wrapper">
+                <h1 class="hero-services-title">@GetText("mainTitle")</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-breadcrumb">
+                    <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> / <span>@GetText("mainTitle")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="icerikBolumu services-page-content">
+
+    <div class="row mb-5">
+
+        @* ARAMA ÇUBUĞU *@
+        <div class="col-lg-6">
+            <div class="search-bar">
+                <input class="form-control form-control-lg"
+                       type="search"
+                       placeholder="@GetText("searchPlaceholder")"
+                       aria-label="Search"
+                       @bind="searchQuery"
+                       @bind:event="oninput"
+                       @onkeydown="HandleSearchKeyDown">
+                <button class="btn btn-primary px-4" type="button" @onclick="PerformSearch">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        @* DİĞER DUYURULAR DROPDOWN *@
+        <div class="col-lg-6">
+            <div class="dropdown modern-dropdown w-100">
+                <button class="btn dropdown-toggle modern-dropdown-toggle w-100"
+                        type="button"
+                        id="duyuruDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    @GetText("dropdownButton")
+                </button>
+
+                <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="duyuruDropdown">
+                    @foreach (var post in otherPostsInSameCategory)
+                    {
+                        <li><a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">@GetPostTitle(post)</a></li>
+                    }
+                    @if (!otherPostsInSameCategory.Any())
+                    {
+                        <li><span class="dropdown-item text-muted">@GetText("noContentInDropdown")</span></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    @* İÇERİK KARTLARI KISMI *@
+    <div class="row icerik-Kart">
+        @if (!filteredPosts.Any())
+        {
+            @if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                <div class="col-12 text-center my-5">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>@GetText("noSearchResultsTitle")</strong>
+                        "@searchQuery" @GetText("noSearchResultsText")
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 text-center my-5"><p>@GetText("noContentText")</p></div>
+            }
+        }
+        else
+        {
+            @for (int i = 0; i < filteredPosts.Count; i++)
+            {
+                var post = filteredPosts[i];
+                var url = GetPostUrl(post);
+                string columnClass = "col-lg-4 mb-5";
+
+                if (i % 3 == 1) { columnClass += " card-offset-style"; }
+
+                <div class="@columnClass">
+                    <div class="content-card-item">
+                        <a href="@url"><img src="@post.CoverImageUrl" alt="@GetPostTitle(post)" class="img-fluid post-cover-image"></a>
+
+                        <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
+
+                        <a href="@url"><h2 class="textTitle">@GetPostTitle(post)</h2></a>
+
+                        <p class="slugText">@GetSummary(post)</p>
+                        <hr>
+                        <a href="@url" class="read-more-link">@GetText("readMore")</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>

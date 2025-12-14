@@ -1,0 +1,146 @@
+﻿@page "/"
+@page "/en"
+@page "/ar"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@inject IPostService PostService
+@inject ILanguageService LanguageService
+
+<section class="ana-gorsel-bolumu">
+    <div class="ana-gorsel-arka-plan"></div>
+    <div class="ana-gorsel-katman"></div>
+    <div class="ana-gorsel-konteyner">
+        <div class="row">
+            <div class="col-lg-8 ana-gorsel-icerik-sutunu">
+                <p class="ana-gorsel-giris-metni">
+                    @GetText("introText")
+                </p>
+            </div>
+        </div>
+        <div class="ana-gorsel-alt-satir">
+            <div class="slogan-kapsayici">
+                <div class="slogan-metin-stili">
+                    @((MarkupString)GetText("slogan"))
+                </div>
+            </div>
+
+            <div class="haber-araci">
+                <div class="haber-baslik-kutusu">
+                    <span>@((MarkupString)GetText("newsTitle"))</span>
+                </div>
+
+                <div class="haber-icerik-kutusu">
+                    @if (lastPost != null)
+                    {
+                        <div class="haber-gorsel-kapsayici">
+                            <img src="@lastPost.CoverImageUrl" alt="@GetPostTitle(lastPost)" />
+                        </div>
+
+                        <div class="haber-bilgi">
+                            <span class="haber-tarih">
+                                @lastPost.PublishedDate.ToString("dd MMMM yyyy", GetCulture())
+                            </span>
+
+                            <a href="/@GetCategoryName(lastPost)/@GetPostSlug(lastPost)" class="haber-baglanti">
+                                @GetPostTitle(lastPost)
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>@GetText("noNews")</p>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@code {
+    private Post lastPost;
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["introText"] = "Hukuki danışmanlık alanında Türkiye'nin en güçlü isimlerinden biri olan Paksoy, hizmetlerini derin hukuki deneyime ve farklı alanlarda tecrübeye sahip 120'nin üstünde avukat, danışman ve destek biriminden oluşan yetkin bir ekiple sunmaktadır.",
+            ["slogan"] = "Senin <br> Başarın. <br> Bizim <br> İşimiz.",
+            ["newsTitle"] = "Duyurular & <br> Yayınlar",
+            ["noNews"] = "Henüz yayınlanmış bir haber bulunmuyor."
+        },
+        ["en"] = new()
+        {
+            ["introText"] = "Paksoy, one of Turkey's leading names in legal consultancy, provides its services with a competent team of over 120 lawyers, consultants and support staff with deep legal experience and expertise in various fields.",
+            ["slogan"] = "Your <br> success. <br> Our <br> business.",
+            ["newsTitle"] = "Announcements & <br> Publications",
+            ["noNews"] = "No news published yet."
+        },
+        ["ar"] = new()
+        {
+            ["introText"] = "تقدم باكسوي، إحدى الأسماء الرائدة في تركيا في مجال الاستشارات القانونية، خدماتها من خلال فريق مؤهل يضم أكثر من 120 محاميًا ومستشارًا وموظف دعم يتمتعون بخبرة قانونية عميقة وخبرة في مجالات مختلفة.",
+            ["slogan"] = "نجاحك <br> هو <br> عملنا",
+            ["newsTitle"] = "الإعلانات و <br> المنشورات",
+            ["noNews"] = "لا توجد أخبار منشورة بعد."
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var posts = await PostService.GetAll();
+
+        lastPost = posts
+            .OrderByDescending(p => p.PublishedDate)
+            .FirstOrDefault();
+    }
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetPostTitle(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Title_EN ?? post.Title_TR,
+            "ar" => post.Title_AR ?? post.Title_TR,
+            _ => post.Title_TR
+        };
+    }
+
+    private string GetPostSlug(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Slug_EN ?? post.Slug_TR,
+            "ar" => post.Slug_AR ?? post.Slug_TR,
+            _ => post.Slug_TR
+        };
+    }
+
+    private string GetCategoryName(Post post)
+    {
+        if (post.Category == null) return "";
+
+        return CurrentLang switch
+        {
+            "en" => post.Category.Name_EN ?? post.Category.Name_TR,
+            "ar" => post.Category.Name_AR ?? post.Category.Name_TR,
+            _ => post.Category.Name_TR
+        };
+    }
+
+    private System.Globalization.CultureInfo GetCulture()
+    {
+        return CurrentLang switch
+        {
+            "en" => new System.Globalization.CultureInfo("en-US"),
+            "ar" => new System.Globalization.CultureInfo("ar-SA"),
+            _ => new System.Globalization.CultureInfo("tr-TR")
+        };
+    }
+}

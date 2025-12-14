@@ -1,0 +1,21 @@
+﻿@inject ILanguageService LanguageService
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter]
+    public string PagePath { get; set; } = "";
+
+    [Parameter]
+    public string ExpectedLang { get; set; } = "tr";
+
+    protected override void OnInitialized()
+    {
+        var currentLang = LanguageService.GetCurrentLanguage();
+
+        if (currentLang != ExpectedLang)
+        {
+            var localizedUrl = LanguageService.GetLocalizedUrl(PagePath, currentLang);
+            Navigation.NavigateTo(localizedUrl, forceLoad: true);
+        }
+    }
+}
