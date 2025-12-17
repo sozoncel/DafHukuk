@@ -1,6 +1,6 @@
 ﻿:root {
-    --primary-color: #1F3363; 
-    --accent-gold: #dfb887; 
+    --primary-color: #1F3363;
+    --accent-gold: #dfb887;
     --text-dark: #222;
     --text-muted: #666;
     --bg-light: #f8f9fa;
@@ -12,18 +12,18 @@
 }
 
 /* ============================================
-   EKİP LİSTESİ HERO SECTION
+   EKİP LİSTESİ HERO SECTION - daf STYLE
 ============================================ */
 .hero-ourteam-section {
     position: relative;
     width: 100%;
-    height: 40vh;
-    min-height: 300px;
+    height: 50vh;
+    min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--primary-color) 0%, #2a4a7f 100%);
+    background: #1a1a1a;
     text-align: center;
     color: white;
 }
@@ -34,14 +34,14 @@
     background-image: url("/img/sayfalar/ekibimiz/daf-ekibimiz-office.png");
     background-size: cover;
     background-position: center;
-    opacity: 0.12;
+    opacity: 0.3;
     z-index: 1;
 }
 
 .hero-ourteam-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(31,51,99,0.85) 0%, rgba(42,74,127,0.75) 100%);
+    background: linear-gradient(to bottom, rgba(26,26,26,0.6) 0%, rgba(26,26,26,0.8) 100%);
     z-index: 2;
 }
 
@@ -57,33 +57,33 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .ourteam-hero-title-upper {
-    font-size: 0.875rem;
-    letter-spacing: 3px;
-    font-weight: 400;
+    font-size: 0.8125rem;
+    letter-spacing: 4px;
+    font-weight: 500;
     text-transform: uppercase;
-    opacity: 0.9;
+    opacity: 0.8;
     margin: 0;
 }
 
 .hero-ourteam-title {
-    font-size: clamp(1.75rem, 5vw, 3rem);
-    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 .hero-iletisim-breadcrumb {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.9rem;
-    margin-top: 15px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.875rem;
+    margin-top: 20px;
 }
 
     .hero-iletisim-breadcrumb a {
-        color: rgba(255,255,255,0.9);
+        color: rgba(255,255,255,0.8);
         text-decoration: none;
         transition: color 0.2s;
     }
@@ -93,21 +93,21 @@
         }
 
     .hero-iletisim-breadcrumb span {
-        font-weight: 600;
+        font-weight: 400;
     }
 
 /* ============================================
-   EKİP LİSTESİ İÇERİK BÖLÜMÜ
+   EKİP LİSTESİ İÇERİK BÖLÜMÜ - daf STYLE
 ============================================ */
 .ourteam-content {
-    padding: 80px 0;
-    background: #fff;
+    padding: 80px 0 100px;
+    background: #f8f9fa;
 }
 
 .ourteam-page-content {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 40px;
 }
 
 .info-row {
@@ -116,13 +116,13 @@
 }
 
 .team-info-text {
-    font-size: clamp(1rem, 2vw, 1.125rem);
-    line-height: 1.7;
-    color: var(--text-muted);
-    max-width: 900px;
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: #333;
+    max-width: 1000px;
     margin: 0 auto;
+    font-weight: 300;
 }
-
 
 .team-cards-row {
     margin-top: 40px;
@@ -130,18 +130,17 @@
 
 .team-card-col {
     margin-bottom: 32px;
-    
 }
 
 .lawyer-card-v2 {
     background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    border: none;
+    border-radius: 0;
     overflow: hidden;
     max-width: 100%;
     height: 100%;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
+    box-shadow: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lawyer-card-link-wrapper {
@@ -152,15 +151,20 @@
 }
 
     .lawyer-card-link-wrapper:hover .lawyer-card-v2 {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 32px rgba(0,0,0,0.12);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .lawyer-card-link-wrapper:hover .lawyer-card-img {
+        transform: scale(1.05);
     }
 
 .lawyer-img-wrapper {
     position: relative;
     width: 100%;
     padding-top: 125%;
-    background: #f1f3f5;
+    background: #e5e7eb;
+    overflow: hidden;
 }
 
 .lawyer-card-img {
@@ -169,129 +173,136 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lawyer-card-content {
-    padding: 20px;
-    text-align: center;
+    padding: 24px 20px;
+    text-align: left;
+    background: #fff;
 }
 
 .lawyer-card-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 6px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1a1a1a;
 }
 
 .lawyer-card-title {
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     color: #666;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
 .lawyer-card-meta {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10;
 }
 
 .mail-box-link {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
     background: rgba(255,255,255,0.95);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #1f3363;
+    color: #1a1a1a;
     transition: all 0.2s ease;
+    text-decoration: none;
 }
 
     .mail-box-link:hover {
-        background: #1f3363;
+        background: #1a1a1a;
         color: #fff;
     }
 
     .mail-box-link i {
-        font-size: 1rem;
+        font-size: 1.125rem;
     }
 
-.modern-lawyer-hero {
+/* ============================================
+   DETAY SAYFA - DAF STİLİ HERO (GRİ TONLAR)
+============================================ */
+.daf-lawyer-hero {
     position: relative;
     width: 100%;
-    height: 70vh;
-    min-height: 500px;
+    justify-content: center;
+    justify-items: center;
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    overflow: hidden;
+}
+
+.daf-hero-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    min-height: 70vh;
+    align-items: stretch;
+}
+
+.daf-hero-image {
+    position: relative;
+    margin-top: 3rem;
+    width: 100%;
+    height: 90%;
+    justify-items: center;
+    overflow: hidden;
+    background: #e8e8e8;
+}
+
+    .daf-hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        display: block;
+    }
+
+.daf-hero-content {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    overflow: hidden;
-    background: var(--primary-color);
-}
-
-.modern-hero-bg {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center 20%;
-    background-repeat: no-repeat;
-    z-index: 1;
-}
-
-.modern-hero-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; 
-    object-position: center 20%;
-    z-index: 1;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-}
-
-.modern-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(31,51,99,0.75) 0%, rgba(31,51,99,0.5) 40%, rgba(31,51,99,0.3) 60%, transparent 100% );
-    z-index: 2;
-}
-
-.modern-hero-content {
-    position: relative;
-    z-index: 3;
-    max-width: var(--container-max);
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 40px 120px;
-}
-
-.modern-hero-text {
+    justify-content: center;
+    padding: 60px 80px;
     color: white;
-    max-width: 600px;
 }
 
-.modern-lawyer-name {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+.daf-name-wrapper {
+    margin-bottom: 20px;
+}
+
+.daf-lawyer-name {
+    font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 700;
-    margin: 0 0 8px 0;
+    margin: 0 0 16px 0;
+    line-height: 1.1;
     letter-spacing: -0.02em;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    color: white;
 }
 
-.modern-lawyer-title {
-    font-size: clamp(0.875rem, 2vw, 1.125rem);
+.daf-divider {
+    width: 80px;
+    height: 3px;
+    background: rgba(255,255,255,0.9);
+}
+
+.daf-lawyer-title {
+    font-size: clamp(1rem, 2vw, 1.25rem);
     font-weight: 300;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.95;
+    line-height: 1.6;
     margin: 0;
+    opacity: 0.95;
+    letter-spacing: 0.5px;
 }
 
 .modern-contact-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     width: 100%;
     background: var(--primary-color);
-    z-index: 4;
     border-top: 1px solid rgba(255,255,255,0.1);
 }
 
@@ -486,10 +497,21 @@
     overflow: hidden;
 }
 
-
+/* ============================================
+   RESPONSIVE DESIGN
+============================================ */
 @media (max-width: 992px) {
+    .hero-ourteam-section {
+        height: 40vh;
+        min-height: 350px;
+    }
+
     .ourteam-content {
-        padding: 60px 0;
+        padding: 60px 0 80px;
+    }
+
+    .ourteam-page-content {
+        padding: 0 24px;
     }
 
     .modern-biography-section,
@@ -497,12 +519,17 @@
         padding: 60px 0;
     }
 
-    .modern-hero-overlay {
-        background: linear-gradient(to right, rgba(31,51,99,0.8) 0%, rgba(31,51,99,0.6) 50%, rgba(31,51,99,0.4) 100% );
+    .daf-hero-container {
+        grid-template-columns: 1fr;
+        min-height: auto;
     }
 
-    .modern-hero-content {
-        padding: 0 24px 100px;
+    .daf-hero-image {
+        min-height: 50vh;
+    }
+
+    .daf-hero-content {
+        padding: 50px 40px;
     }
 
     .contact-bar-inner {
@@ -513,55 +540,66 @@
 
 @media (max-width: 768px) {
     .hero-ourteam-section {
-        height: 30vh;
-        min-height: 250px;
+        height: 35vh;
+        min-height: 300px;
     }
 
     .ourteam-content {
-        padding: 40px 0;
+        padding: 40px 0 60px;
+    }
+
+    .ourteam-page-content {
+        padding: 0 20px;
     }
 
     .info-row {
         margin-bottom: 40px;
     }
 
+    .team-info-text {
+        font-size: 1rem;
+    }
+
+    .team-card-col {
+        margin-bottom: 24px;
+    }
+
     .lawyer-card-content {
-        padding: 14px 12px;
+        padding: 18px 16px;
     }
 
     .lawyer-card-name {
-        font-size: 1.05rem;
+        font-size: 1rem;
     }
 
     .lawyer-card-title {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
     }
 
-    .modern-lawyer-hero {
-        height: 60vh;
-        min-height: 450px;
+    .mail-box-link {
+        width: 36px;
+        height: 36px;
     }
 
-    .modern-hero-img {
-        object-position: center center;
+        .mail-box-link i {
+            font-size: 1rem;
+        }
+
+    .daf-hero-image {
+        min-height: 40vh;
     }
 
-    .modern-hero-overlay {
-        background: linear-gradient(to bottom, transparent 0%, rgba(31,51,99,0.5) 40%, rgba(31,51,99,0.85) 100% );
-    }
-
-    .modern-hero-content {
-        padding: 0 20px 140px;
+    .daf-hero-content {
+        padding: 40px 24px;
         text-align: center;
     }
 
-    .modern-hero-text {
-        margin: 0 auto;
+    .daf-lawyer-name {
+        font-size: 2rem;
     }
 
-    .modern-breadcrumb-container {
-        padding: 0 20px;
-        text-align: left;
+    .daf-divider {
+        margin: 0 auto 16px;
     }
 
     .modern-biography-section,
@@ -605,11 +643,32 @@
 
 @media (max-width: 576px) {
     .lawyer-img-wrapper {
-        padding-top: 100%;
+        padding-top: 110%;
     }
 
     .modern-tab-btn {
         padding: 8px 12px;
         font-size: 0.8125rem;
+    }
+
+    .hero-ourteam-title {
+        font-size: 1.75rem;
+    }
+
+    .ourteam-hero-title-upper {
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+    }
+
+    .daf-hero-image {
+        min-height: 35vh;
+    }
+
+    .daf-lawyer-name {
+        font-size: 1.75rem;
+    }
+
+    .daf-lawyer-title {
+        font-size: 0.9375rem;
     }
 }

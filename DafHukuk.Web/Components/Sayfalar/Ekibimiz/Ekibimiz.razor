@@ -59,7 +59,7 @@
             {
                 @foreach (var lawyer in Lawyers)
                 {
-                    <div class="col-lg-4  team-card-col">
+                    <div class="col-lg-4 col-md-6 team-card-col">
                         <a href="@GetLocalizedMemberUrl(lawyer)"
                            class="lawyer-card-link-wrapper">
 
@@ -76,14 +76,6 @@
                                     <span class="lawyer-card-title">
                                         @GetLawyerTitle(lawyer)
                                     </span>
-                                </div>
-
-                                <div class="lawyer-card-meta">
-                                    <a href="mailto:@lawyer.Email"
-                                       class="mail-box-link"
-                                       onclick="event.stopPropagation()">
-                                        <i class="bi bi-envelope"></i>
-                                    </a>
                                 </div>
 
                             </div>

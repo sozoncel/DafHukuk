@@ -27,41 +27,44 @@ else
 {
     <PageTitle>@Lawyer.Name - @GetText("pageTitle")</PageTitle>
 
-    <!-- MODERN HERO SECTION (BACKGROUND FOTOĞRAF) -->
-    <section class="modern-lawyer-hero">
-        <!-- FOTOĞRAF now rendered as img with object-fit for crisper scaling -->
-        <img class="modern-hero-img"
-             src="@(string.IsNullOrEmpty(Lawyer.ImageUrl) ? "/img/placeholder.jpg" : Lawyer.ImageUrl)"
-             alt="@Lawyer.Name" />
+    <!-- daf STYLE HERO SECTION (FOTOĞRAF SOLDA, İSİM SAĞDA) -->
+    <section class="daf-lawyer-hero">
+        <div class="daf-hero-container">
+            <!-- FOTOĞRAF SOLDA -->
+            <div class="daf-hero-image">
+                <img src="@(string.IsNullOrEmpty(Lawyer.ImageUrl) ? "/img/placeholder.jpg" : Lawyer.ImageUrl)"
+                     alt="@Lawyer.Name" />
+            </div>
 
-        <div class="modern-hero-overlay"></div>
-
-        <div class="modern-hero-content">
-            <div class="modern-hero-text">
-                <h1 class="modern-lawyer-name">@Lawyer.Name</h1>
-                <p class="modern-lawyer-title">@GetLawyerTitle(Lawyer)</p>
+            <!-- İÇERİK SAĞDA -->
+            <div class="daf-hero-content">
+                <div class="daf-name-wrapper">
+                    <h1 class="daf-lawyer-name">@Lawyer.Name</h1>
+                    <div class="daf-divider"></div>
+                </div>
+                <p class="daf-lawyer-title">@GetLawyerTitle(Lawyer)</p>
             </div>
         </div>
+    </section>
 
-        <!-- CONTACT INFO BAR -->
-        <div class="modern-contact-bar">
-            <div class="contact-bar-inner">
-                <div class="contact-item">
-                    <span class="contact-label">@GetText("email")</span>
-                    <a href="mailto:@Lawyer.Email" class="contact-value">@Lawyer.Email</a>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-label">@GetText("mobilePhone")</span>
-                    <p class="contact-value">@Lawyer.MobilePhone</p>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-label">@GetText("officePhone")</span>
-                    <p class="contact-value">@Lawyer.OfficePhone</p>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-label">@GetText("location")</span>
-                    <p class="contact-value">@Lawyer.Location</p>
-                </div>
+    <!-- CONTACT INFO BAR -->
+    <section class="modern-contact-bar">
+        <div class="contact-bar-inner">
+            <div class="contact-item">
+                <span class="contact-label">@GetText("email")</span>
+                <a href="mailto:@Lawyer.Email" class="contact-value">@Lawyer.Email</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">@GetText("mobilePhone")</span>
+                <p class="contact-value">@Lawyer.MobilePhone</p>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">@GetText("officePhone")</span>
+                <p class="contact-value">@Lawyer.OfficePhone</p>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">@GetText("location")</span>
+                <p class="contact-value">@Lawyer.Location</p>
             </div>
         </div>
     </section>

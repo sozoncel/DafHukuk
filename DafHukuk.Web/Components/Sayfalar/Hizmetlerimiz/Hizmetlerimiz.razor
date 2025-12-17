@@ -58,30 +58,28 @@
             </div>
         </div>
 
-        <!-- KATEGORİ TABS (İsteğe bağlı, varsa göster) -->
+        <!-- KATEGORİ TABS (ServicePosts içindeki kategoriler) -->
         @if (DistinctCategories.Any())
         {
             <div class="row related-content-nav-row mb-4">
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
                         <li class="nav-item">
-                            <a class="nav-link @(CurrentCategoryId == 0 ? "active" : "")"
-                               href="javascript:void(0)"
-                               @onclick="() => FilterCategory(0)"
-                               @onclick:preventDefault="true">
+                            <button class="nav-link @(CurrentCategoryId == 0 ? "active" : "")"
+                                    type="button"
+                                    @onclick="() => FilterCategory(0)">
                                 @GetText("showAll")
-                            </a>
+                            </button>
                         </li>
 
                         @foreach (var cat in DistinctCategories)
                         {
                             <li class="nav-item">
-                                <a class="nav-link @(CurrentCategoryId == cat.Id ? "active" : "")"
-                                   href="javascript:void(0)"
-                                   @onclick="() => FilterCategory(cat.Id)"
-                                   @onclick:preventDefault="true">
+                                <button class="nav-link @(CurrentCategoryId == cat.Id ? "active" : "")"
+                                        type="button"
+                                        @onclick="() => FilterCategory(cat.Id)">
                                     @GetCategoryName(cat)
-                                </a>
+                                </button>
                             </li>
                         }
                     </ul>
@@ -125,6 +123,16 @@
             }
         </div>
 
+        <!-- Tümünü Göster butonu -->
+        @if (ShowLoadMoreButton && !IsLoading)
+        {
+            <div class="row mt-4 mb-5">
+                <div class="col-lg-12 text-center">
+                    <button class="show-all-button" @onclick="ShowAll">@GetText("showAllButton")</button>
+                </div>
+            </div>
+        }
+
         <!-- İletişim CTA -->
         <div class="row-contact">
             <div class="col-12">
@@ -135,64 +143,12 @@
             </div>
         </div>
 
-        <!-- Related content (content cards grid) -->
-        <div class="row related-content-nav-row mt-5 mb-3">
-            <div class="col-sm-12">
-                <h3 class="related-content-heading">@GetText("relatedHeading")</h3>
-            </div>
-        </div>
-
-        <div class="row content-cards-row" id="contentContainer">
-            @if (AllPostsContent.Any())
-            {
-                @foreach (var p in AllPostsContent)
-                {
-                    var url = GetPostUrl(p);
-                    <div class="col-lg-4 mb-4 content-card-wrapper" data-category="@p.CategoryId">
-                        <div class="content-card">
-                            <p class="created-Date">@p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
-
-                            <a href="@url" class="content-title-link">
-                                <h3 class="textContent">@GetPostTitle(p)</h3>
-                            </a>
-
-                            <a href="@url">
-                                <button class="content-tag-button" style="background:@GetCategoryColor(GetCategoryName(p.Category))">
-                                    @GetCategoryName(p.Category)
-                                </button>
-                            </a>
-
-                            <p class="slug-text">@GetSummary(p)</p>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p class="text-muted">@GetText("noRelatedContent")</p>
-                </div>
-            }
-        </div>
-
-        <!-- Tümünü Göster butonu -->
-        @if (ShowLoadMoreButton && !IsLoading)
-        {
-            <div class="row mt-4 mb-5">
-                <div class="col-lg-12 text-center">
-                    <button class="show-all-button" @onclick="ShowAll" id="showAllButton">@GetText("showAllButton")</button>
-                </div>
-            </div>
-        }
-
     </div>
 </section>
 
 @code {
-    // Query'den veya servislerden gelen post'lar
     private List<Post> AllPosts { get; set; } = new();
-    private List<Post> AllPostsContent { get; set; } = new(); 
-    private List<Post> ServicePosts { get; set; } = new(); 
+    private List<Post> ServicePosts { get; set; } = new(); // Sadece Hizmetlerimiz kategorisindeki postlar
     private List<Post> FilteredPosts { get; set; } = new();
     private List<Post> DisplayedPosts { get; set; } = new();
     private List<Category> DistinctCategories { get; set; } = new();
@@ -205,7 +161,6 @@
     private bool ShowLoadMoreButton => FilteredPosts.Count > InitialDisplayCount && !ShowingAll;
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 
-    // Lokal çeviri dictionary (sayfa statik metinleri)
     private Dictionary<string, Dictionary<string, string>> Translations = new()
     {
         ["tr"] = new()
@@ -224,10 +179,8 @@
             ["noServices"] = "Hizmet bulunamadı.",
             ["contactText"] = "Birlikte çalışmak için iletişime geçebilirsiniz.",
             ["contactButton"] = "İLETİŞİM",
-            ["relatedHeading"] = "İlişkili İçerikler",
             ["showAll"] = "Hepsini Göster",
-            ["showAllButton"] = "Tümünü Göster",
-            ["noRelatedContent"] = "İlişkili içerik bulunamadı."
+            ["showAllButton"] = "Tümünü Göster"
         },
         ["en"] = new()
         {
@@ -245,10 +198,8 @@
             ["noServices"] = "No services found.",
             ["contactText"] = "Contact us to work together.",
             ["contactButton"] = "CONTACT",
-            ["relatedHeading"] = "Related Content",
             ["showAll"] = "Show All",
-            ["showAllButton"] = "Show All",
-            ["noRelatedContent"] = "No related content found."
+            ["showAllButton"] = "Show All"
         },
         ["ar"] = new()
         {
@@ -266,10 +217,8 @@
             ["noServices"] = "لم يتم العثور على خدمات.",
             ["contactText"] = "تواصل معنا للعمل معاً.",
             ["contactButton"] = "اتصل",
-            ["relatedHeading"] = "محتويات ذات صلة",
             ["showAll"] = "عرض الكل",
-            ["showAllButton"] = "عرض الكل",
-            ["noRelatedContent"] = "لا يوجد محتوى ذي صلة."
+            ["showAllButton"] = "عرض الكل"
         }
     };
 
@@ -279,25 +228,9 @@
 
         try
         {
-            // Tüm aktif postları al
             AllPosts = await PostService.GetAll();
 
-            DistinctCategories = AllPosts
-                .Where(p => p.Category != null)
-                .GroupBy(p => p.Category.Id)
-                .Select(g => new Category
-                {
-                    Id = g.Key,
-                    Name_TR = g.First().Category.Name_TR,
-                    Name_EN = g.First().Category.Name_EN,
-                    Name_AR = g.First().Category.Name_AR,
-                    Posts = g.ToList()
-                })
-                .OrderBy(c => GetCategoryName(c))
-                .ToList();
-
-            AllPostsContent = AllPosts.Where(p => p.IsActive).ToList();
-
+            // Hizmetlerimiz kategorisini bul
             var categories = await CategoryService.GetAll();
             var hizmetCategory = categories.FirstOrDefault(c =>
                 string.Equals(c.Name_TR?.Trim(), "Hizmetlerimiz", StringComparison.OrdinalIgnoreCase) ||
@@ -307,18 +240,33 @@
 
             if (hizmetCategory != null)
             {
-                ServicePosts = await PostService.GetAll(hizmetCategory.Id);
+                // Sadece Hizmetlerimiz kategorisindeki postları al
+                ServicePosts = AllPosts
+                    .Where(p => p.CategoryId == hizmetCategory.Id && p.IsActive)
+                    .OrderBy(p => GetPostTitle(p))
+                    .ToList();
             }
             else
             {
-                ServicePosts = AllPosts.Where(p => p.CategoryId == 18 && p.IsActive).OrderBy(p => GetPostTitle(p)).ToList();
+                // Fallback: CategoryId = 18
+                ServicePosts = AllPosts
+                    .Where(p => p.CategoryId == 18 && p.IsActive)
+                    .OrderBy(p => GetPostTitle(p))
+                    .ToList();
             }
+
+            // ServicePosts içindeki benzersiz kategorileri al (alt kategoriler varsa)
+            DistinctCategories = ServicePosts
+                .Where(p => p.Category != null)
+                .Select(p => p.Category!)
+                .DistinctBy(c => c.Id)
+                .OrderBy(c => GetCategoryName(c))
+                .ToList();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Hata PostService.GetAll(): {ex.Message}");
             AllPosts = new List<Post>();
-            AllPostsContent = new List<Post>();
             ServicePosts = new List<Post>();
             DistinctCategories = new List<Category>();
         }
@@ -335,9 +283,13 @@
         ShowingAll = false;
 
         if (CurrentCategoryId == 0)
+        {
             FilteredPosts = ServicePosts.ToList();
+        }
         else
+        {
             FilteredPosts = ServicePosts.Where(p => p.CategoryId == categoryId).ToList();
+        }
 
         UpdateDisplayedPosts();
         StateHasChanged();
@@ -371,26 +323,18 @@
 
     private string GetCategorySlug(Category category)
     {
-       
         var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "").ToLowerInvariant().Trim();
 
         return categoryName switch
         {
             "hizmetlerimiz" or "our services" or "خدماتنا"
                 => CurrentLang == "en" ? "services" : CurrentLang == "ar" ? "services" : "hizmetlerimiz",
-
-            // Duyurular
             "duyurular" or "announcements" or "الإعلانات"
                 => CurrentLang == "en" ? "announcements" : CurrentLang == "ar" ? "announcements" : "duyurular",
-
-            // Etkinlikler
             "etkinlikler" or "events" or "الفعاليات"
                 => CurrentLang == "en" ? "events" : CurrentLang == "ar" ? "events" : "etkinlikler",
-
-            // Yayınlar
             "yayınlar" or "yayinlar" or "publications" or "المنشورات"
                 => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar",
-
             _ => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar"
         };
     }
