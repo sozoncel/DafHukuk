@@ -45,6 +45,9 @@ namespace DafHukuk.Service
 
         public async Task<Lawyer> Create(Lawyer lawyer)
         {
+            // ✅ UTC kullanımı
+            lawyer.CreatedDate = DateTime.UtcNow;
+
             _context.Lawyers.Add(lawyer);
             await _context.SaveChangesAsync();
             return lawyer;
@@ -56,7 +59,6 @@ namespace DafHukuk.Service
             if (existing == null)
                 return null;
 
-            // Alanları Güncelleme
             existing.Name = lawyer.Name;
             existing.Email = lawyer.Email;
             existing.MobilePhone = lawyer.MobilePhone;
@@ -64,9 +66,9 @@ namespace DafHukuk.Service
             existing.Location = lawyer.Location;
             existing.ImageUrl = lawyer.ImageUrl;
             existing.IsActive = lawyer.IsActive;
-            existing.UpdatedDate = DateTime.Now;
 
-            // Çoklu Dil Alanlarını Güncelleme
+            existing.UpdatedDate = DateTime.UtcNow;
+
             existing.Title_TR = lawyer.Title_TR;
             existing.Title_EN = lawyer.Title_EN;
             existing.Title_AR = lawyer.Title_AR;

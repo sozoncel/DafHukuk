@@ -22,8 +22,8 @@
                 <ul class="footer-links" id="bizi-tanıyın">
                     <li><a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a></li>
                     <li><a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a></li>
-                    <li><a href="#">@GetText("awards")</a></li>
                     <li><a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a></li>
+                    <li><a href="@GetLocalizedPartners()">@GetText("partners")</a></li>
                     <li><a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a></li>
                     <li><a href="@GetLocalizedUrl("iletisim")">@GetText("contact")</a></li>
                 </ul>
@@ -32,7 +32,6 @@
             <div class="footer-column">
                 <h4 class="footer-column-title" data-target="duyurular">@GetText("newsAndPublications")<span class="mobile-toggle-icon"></span></h4>
                 <ul class="footer-links" id="duyurular">
-                    <li><a href="@GetLocalizedUrl("duyurular")">@GetText("announcements")</a></li>
                     <li><a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a></li>
                     <li><a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a></li>
                 </ul>
@@ -90,7 +89,6 @@
 
     protected override void OnInitialized()
     {
-        // URL değişikliğinde footer'ı güncelle
         Navigation.LocationChanged += OnLocationChanged;
     }
 
@@ -101,7 +99,6 @@
 
     public void Dispose()
     {
-        // Memory leak önlemek için event'i temizle
         Navigation.LocationChanged -= OnLocationChanged;
     }
 
@@ -115,13 +112,12 @@
             ["getToKnowUs"] = "Bizi Tanıyın",
             ["about"] = "Hakkımızda",
             ["services"] = "Hizmetlerimiz",
-            ["awards"] = "Ödüllerimiz",
             ["team"] = "Ekibimiz",
+            ["partners"] = "Çözüm Ortakları",
             ["career"] = "Kariyer",
             ["contact"] = "İletişim",
             ["siteName"] = "DAF Hukuk ve Danışmanlık",
             ["newsAndPublications"] = "Duyurular & Yayınlar",
-            ["announcements"] = "Duyurular",
             ["publications"] = "Yayınlar",
             ["events"] = "Etkinlikler",
             ["followUs"] = "Takip et",
@@ -137,13 +133,12 @@
             ["getToKnowUs"] = "Get to Know Us",
             ["about"] = "About Us",
             ["services"] = "Services",
-            ["awards"] = "Awards",
             ["team"] = "Our Team",
+            ["partners"] = "Partners",
             ["career"] = "Careers",
             ["contact"] = "Contact",
             ["siteName"] = "DAF LAW FIRM",
             ["newsAndPublications"] = "News & Publications",
-            ["announcements"] = "Announcements",
             ["publications"] = "Publications",
             ["events"] = "Events",
             ["followUs"] = "Follow Us",
@@ -159,13 +154,12 @@
             ["getToKnowUs"] = "تعرف علينا",
             ["about"] = "من نحن",
             ["services"] = "خدماتنا",
-            ["awards"] = "جوائزنا",
             ["team"] = "فريقنا",
+            ["partners"] = "الشركاء",
             ["career"] = "وظائف",
             ["contact"] = "اتصل بنا",
             ["siteName"] = "داف للمحاماة",
             ["newsAndPublications"] = "الأخبار والمنشورات",
-            ["announcements"] = "إعلانات",
             ["publications"] = "منشورات",
             ["events"] = "فعاليات",
             ["followUs"] = "تابعنا",
@@ -185,6 +179,17 @@
     private string GetLocalizedUrl(string path)
     {
         return LanguageService.GetLocalizedUrl(path);
+    }
+
+    // ✅ DÜZELTME: Çözüm Ortakları için özel routing
+    private string GetLocalizedPartners()
+    {
+        return CurrentLang switch
+        {
+            "en" => "/en/partners",
+            "ar" => "/ar/partners",
+            _ => "/cozum-ortaklari"
+        };
     }
 
     private string GetLanguageChangeUrl(string newLang)

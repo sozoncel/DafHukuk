@@ -1,19 +1,19 @@
-﻿@page "/ekibimiz/{slug}"
-@page "/en/team/{slug}"
-@page "/ar/team/{slug}"
+﻿@page "/cozum-ortaklari/{slug}"
+@page "/en/partners/{slug}"
+@page "/ar/partners/{slug}"
 @layout DafHukuk.Web.Components.Layout.MainLayout
 @rendermode InteractiveServer
 
 @using DafHukuk.Core.Entities
 @using DafHukuk.Service.Interfaces
 
-@inject ILawyerService LawyerService
+@inject ISolutionPartnerService PartnerService
 @inject IPostService PostService
 @inject ICategoryService CategoryService
 @inject DafHukuk.Service.ILanguageService LanguageService
 @inject NavigationManager NavManager
 
-@if (Lawyer == null)
+@if (Partner == null)
 {
     <PageTitle>@GetText("loadingTitle")</PageTitle>
     <section class="page-content container">
@@ -26,55 +26,37 @@
 }
 else
 {
-    <PageTitle>@Lawyer.Name - @GetText("pageTitle")</PageTitle>
+    <PageTitle>@Partner.Name - @GetText("pageTitle")</PageTitle>
 
-    <section class="daf-lawyer-hero">
-        <div class="daf-hero-container">
-            <div class="daf-hero-image">
-                <img src="@(string.IsNullOrEmpty(Lawyer.ImageUrl) ? "/img/placeholder.jpg" : Lawyer.ImageUrl)"
-                     alt="@Lawyer.Name" />
+    <section class="partner-detail-hero">
+        <div class="partner-detail-container">
+            <div class="partner-detail-logo">
+                <img src="@(string.IsNullOrEmpty(Partner.ImageUrl) ? "/img/placeholder.jpg" : Partner.ImageUrl)"
+                     alt="@Partner.Name" />
             </div>
 
-            <div class="daf-hero-content">
-                <div class="daf-name-wrapper">
-                    <h1 class="daf-lawyer-name">@Lawyer.Name</h1>
-                    <div class="daf-divider"></div>
+            <div class="partner-detail-content">
+                <div class="partner-name-wrapper">
+                    <h1 class="partner-detail-name">@Partner.Name</h1>
+                    <div class="partner-detail-divider"></div>
                 </div>
-                <p class="daf-lawyer-title">@GetLawyerTitle(Lawyer)</p>
+                <p class="partner-detail-description">@GetPartnerDescription(Partner)</p>
+                @if (!string.IsNullOrWhiteSpace(Partner.WebsiteUrl))
+                {
+                    <a href="@Partner.WebsiteUrl" target="_blank" rel="noopener" class="partner-website-btn">
+                        <i class="bi bi-globe me-2"></i>
+                        @GetText("visitWebsite")
+                    </a>
+                }
             </div>
         </div>
     </section>
 
-    <section class="modern-contact-bar">
-        <div class="contact-bar-inner">
-            <div class="contact-item">
-                <span class="contact-label">@GetText("email")</span>
-                <a href="mailto:@Lawyer.Email" class="contact-value">@Lawyer.Email</a>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">@GetText("mobilePhone")</span>
-                <p class="contact-value">@Lawyer.MobilePhone</p>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">@GetText("officePhone")</span>
-                <p class="contact-value">@Lawyer.OfficePhone</p>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">@GetText("location")</span>
-                <p class="contact-value">@Lawyer.Location</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="modern-biography-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 offset-lg-1">
-                    <h2 class="modern-section-title">@GetText("biographyHeading")</h2>
-                    <div class="modern-biography-text">
-                        @((MarkupString)GetLawyerBiography(Lawyer))
-                    </div>
-                </div>
+    <section class="partner-info-section">
+        <div class="services-container">
+            <h2 class="partner-section-title">@GetText("aboutPartner")</h2>
+            <div class="partner-info-text">
+                <p>@GetPartnerFullDescription(Partner)</p>
             </div>
         </div>
     </section>
@@ -88,7 +70,7 @@ else
                 <div class="row mt-4 mb-4">
                     <div class="col-12">
                         <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
-                            @* 1. TÜMÜNÜ GÖSTER *@
+                            @* ✅ DÜZELTME 1: İLK TAB ARTIK "TÜMÜNÜ GÖSTER" *@
                             <li class="nav-item">
                                 <a class="@(CurrentFilterCategory == 0 ? "nav-link active" : "nav-link")"
                                    href="javascript:void(0)"
@@ -98,20 +80,15 @@ else
                                 </a>
                             </li>
 
-                            @* 2. HİZMETLERİMİZ (Özel Tab) *@
-                            @if (servicePosts.Any())
-                            {
-                                <li class="nav-item">
-                                    <a class="@(CurrentFilterCategory == -1 ? "nav-link active" : "nav-link")"
-                                       href="javascript:void(0)"
-                                       @onclick="() => FilterCategory(-1)"
-                                       @onclick:preventDefault="true">
-                                        @GetText("servicesHeading")
-                                    </a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="@(CurrentFilterCategory == -1 ? "nav-link active" : "nav-link")"
+                                   href="javascript:void(0)"
+                                   @onclick="() => FilterCategory(-1)"
+                                   @onclick:preventDefault="true">
+                                    @GetText("servicesHeading")
+                                </a>
+                            </li>
 
-                            @* 3. DİĞER KATEGORİLER *@
                             @foreach (var cat in distinctCategories)
                             {
                                 <li class="nav-item">
@@ -131,7 +108,7 @@ else
                     @if (!GetDisplayedRelatedPosts().Any())
                     {
                         <div class="col-12 text-center py-5">
-                            <p class="text-muted fs-5">@GetText("noContentMessage")</p>
+                            <p class="text-muted">@GetText("noContentMessage")</p>
                         </div>
                     }
                     else
@@ -146,11 +123,9 @@ else
                                      alt="@GetPostTitle(p)"
                                      class="service-card-image" />
                                 <div class="service-card-content">
-                                    <span class="modern-card-date">
-                                        <i class="bi bi-calendar3 me-1"></i>
-                                        @p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())
-                                    </span>
+                                    <span class="modern-card-date">@p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</span>
                                     <h3 class="service-card-title">@GetPostTitle(p)</h3>
+                                    @* ✅ DÜZELTME 2: data-category ATTRIBUTE EKLENDİ (CSS İÇİN) *@
                                     <button class="content-tag-button" data-category="@categoryName">@categoryName</button>
                                 </div>
                             </a>
@@ -163,7 +138,6 @@ else
                     <div class="row mt-5">
                         <div class="col-lg-12 text-center">
                             <button class="show-all-button" @onclick="ShowAll">
-                                <i class="bi bi-grid-3x3-gap me-2"></i>
                                 @GetText("showAll")
                             </button>
                         </div>
@@ -178,12 +152,12 @@ else
     [Parameter]
     public string? Slug { get; set; }
 
-    private Lawyer? Lawyer;
+    private SolutionPartner? Partner;
     private List<Post> relatedPosts = new();
-    private List<Post> servicePosts = new();
     private List<Post> FilteredPosts = new();
+    private List<Post> servicePosts = new();
     private List<Category> distinctCategories = new();
-    private int CurrentFilterCategory = 0;
+    private int CurrentFilterCategory = 0; // ✅ BAŞLANGIÇ DEĞERİ 0 (TÜMÜNÜ GÖSTER)
     private bool ShowingAll = false;
     private int InitialDisplayCount = 6;
 
@@ -195,12 +169,9 @@ else
         {
             ["pageTitle"] = "DAF Hukuk ve Danışmanlık",
             ["loadingTitle"] = "Yükleniyor...",
-            ["loading"] = "Avukat bilgileri yükleniyor...",
-            ["email"] = "E-posta",
-            ["mobilePhone"] = "Mobil Telefon",
-            ["officePhone"] = "Ofis Telefon",
-            ["location"] = "Konum",
-            ["biographyHeading"] = "Biyografi",
+            ["loading"] = "Ortak bilgileri yükleniyor...",
+            ["visitWebsite"] = "Web Sitesini Ziyaret Et",
+            ["aboutPartner"] = "Ortak Hakkında",
             ["servicesHeading"] = "Hizmetlerimiz",
             ["relatedContentHeading"] = "İlişkili İçerikler",
             ["showAll"] = "Tümünü Göster",
@@ -210,12 +181,9 @@ else
         {
             ["pageTitle"] = "DAF Law",
             ["loadingTitle"] = "Loading...",
-            ["loading"] = "Loading lawyer information...",
-            ["email"] = "Email",
-            ["mobilePhone"] = "Mobile Phone",
-            ["officePhone"] = "Office Phone",
-            ["location"] = "Location",
-            ["biographyHeading"] = "Biography",
+            ["loading"] = "Loading partner information...",
+            ["visitWebsite"] = "Visit Website",
+            ["aboutPartner"] = "About Partner",
             ["servicesHeading"] = "Our Services",
             ["relatedContentHeading"] = "Related Content",
             ["showAll"] = "Show All",
@@ -225,12 +193,9 @@ else
         {
             ["pageTitle"] = "داف للمحاماة",
             ["loadingTitle"] = "جار التحميل...",
-            ["loading"] = "جار تحميل معلومات المحامي...",
-            ["email"] = "البريد الإلكتروني",
-            ["mobilePhone"] = "الهاتف المحمول",
-            ["officePhone"] = "هاتف المكتب",
-            ["location"] = "الموقع",
-            ["biographyHeading"] = "السيرة الذاتية",
+            ["loading"] = "جار تحميل معلومات الشريك...",
+            ["visitWebsite"] = "زيارة الموقع",
+            ["aboutPartner"] = "حول الشريك",
             ["servicesHeading"] = "خدماتنا",
             ["relatedContentHeading"] = "المحتوى ذو الصلة",
             ["showAll"] = "عرض الكل",
@@ -240,9 +205,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Lawyer = await LawyerService.GetBySlug(Slug, CurrentLang);
+        Partner = await GetPartnerBySlug(Slug, CurrentLang);
 
-        if (Lawyer == null)
+        if (Partner == null)
         {
             NavManager.NavigateTo(LanguageService.GetLocalizedUrl("NotFound"), replace: true);
             return;
@@ -250,7 +215,6 @@ else
 
         var allPosts = await PostService.GetAll();
         var categories = await CategoryService.GetAll();
-
         var serviceCategory = categories.FirstOrDefault(c =>
             string.Equals(c.Name_TR?.Trim(), "Hizmetlerimiz", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(c.Name_EN?.Trim(), "Our Services", StringComparison.OrdinalIgnoreCase) ||
@@ -279,6 +243,21 @@ else
             .ToList();
 
         FilteredPosts = relatedPosts.Concat(servicePosts).ToList();
+    }
+
+    private async Task<SolutionPartner?> GetPartnerBySlug(string? slug, string lang)
+    {
+        if (string.IsNullOrWhiteSpace(slug)) return null;
+
+        var allPartners = await PartnerService.GetAll();
+        var lowerSlug = slug.ToLower();
+
+        return lang switch
+        {
+            "en" => allPartners.FirstOrDefault(p => p.Slug_EN != null && p.Slug_EN.ToLower() == lowerSlug),
+            "ar" => allPartners.FirstOrDefault(p => p.Slug_AR != null && p.Slug_AR.ToLower() == lowerSlug),
+            _ => allPartners.FirstOrDefault(p => p.Slug_TR != null && p.Slug_TR.ToLower() == lowerSlug)
+        };
     }
 
     private void FilterCategory(int categoryId)
@@ -324,23 +303,26 @@ else
         return key;
     }
 
-    private string GetLawyerTitle(Lawyer lawyer)
+    private string GetPartnerDescription(SolutionPartner partner)
     {
-        return CurrentLang switch
+        var desc = CurrentLang switch
         {
-            "en" => lawyer.Title_EN ?? lawyer.Title_TR,
-            "ar" => lawyer.Title_AR ?? lawyer.Title_TR,
-            _ => lawyer.Title_TR
+            "en" => partner.Description_EN ?? partner.Description_TR,
+            "ar" => partner.Description_AR ?? partner.Description_TR,
+            _ => partner.Description_TR
         };
+
+        if (string.IsNullOrWhiteSpace(desc)) return "";
+        return desc.Length > 200 ? desc.Substring(0, 200) + "..." : desc;
     }
 
-    private string GetLawyerBiography(Lawyer lawyer)
+    private string GetPartnerFullDescription(SolutionPartner partner)
     {
         return CurrentLang switch
         {
-            "en" => lawyer.Biography_EN ?? lawyer.Biography_TR ?? GetText("noContentMessage"),
-            "ar" => lawyer.Biography_AR ?? lawyer.Biography_TR ?? GetText("noContentMessage"),
-            _ => lawyer.Biography_TR ?? GetText("noContentMessage")
+            "en" => partner.Description_EN ?? partner.Description_TR ?? GetText("noContentMessage"),
+            "ar" => partner.Description_AR ?? partner.Description_TR ?? GetText("noContentMessage"),
+            _ => partner.Description_TR ?? GetText("noContentMessage")
         };
     }
 

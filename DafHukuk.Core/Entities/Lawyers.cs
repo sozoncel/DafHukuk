@@ -51,10 +51,9 @@ namespace DafHukuk.Core.Entities
         public string? Biography_TR { get; set; }
         public string? Biography_EN { get; set; }
         public string? Biography_AR { get; set; }
+
         public bool IsActive { get; set; } = true;
-
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; }
-
     }
 }

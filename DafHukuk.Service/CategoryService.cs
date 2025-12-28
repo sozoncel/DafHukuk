@@ -26,6 +26,8 @@ namespace DafHukuk.Service
 
         public async Task<Category> Create(Category category)
         {
+            category.CreatedDate = DateTime.UtcNow;
+
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
             return category;

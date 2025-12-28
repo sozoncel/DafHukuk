@@ -1,0 +1,180 @@
+﻿@page "/cozum-ortaklari"
+@page "/en/partners"
+@page "/ar/partners"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+@rendermode InteractiveServer
+
+@using DafHukuk.Core.Entities
+@using DafHukuk.Service.Interfaces
+
+@inject ISolutionPartnerService PartnerService
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>@GetText("pageTitle")</PageTitle>
+
+<section class="partner-hero">
+    <div class="partner-hero-bg"></div>
+    <div class="partner-hero-overlay"></div>
+
+    <div class="partner-hero-container">
+        <div class="partner-hero-content">
+            <h2 class="partner-hero-label">@GetText("pageTitleUpper")</h2>
+            <h1 class="partner-hero-title">İş <strong>Birliği</strong> Yaptığımız Kurumlar</h1>
+
+            <div class="partner-hero-breadcrumb">
+                <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("breadcrumbHome")</a>
+                /
+                <span>@GetText("breadcrumbPartners")</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="partner-content">
+    <div class="partner-page-content">
+
+        <div class="row partner-info-row">
+            <div class="col-12">
+                <p class="partner-info-text">@GetText("partnersInfoText")</p>
+            </div>
+        </div>
+
+        @if (Partners == null)
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <em>@GetText("loading")</em>
+                </div>
+            </div>
+        }
+        else if (Partners.Count == 0)
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>@GetText("noPartners")</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="partner-grid">
+                @foreach (var partner in Partners)
+                {
+                    <a href="@GetLocalizedPartnerUrl(partner)" class="partner-card-link">
+                        <div class="partner-card">
+                            <div class="partner-logo-wrapper">
+                                <img src="@(string.IsNullOrEmpty(partner.ImageUrl) ? "/img/placeholder.jpg" : partner.ImageUrl)"
+                                     alt="@partner.Name"
+                                     class="partner-card-logo" />
+                            </div>
+
+                            <div class="partner-card-content">
+                                <h3 class="partner-card-name">@partner.Name</h3>
+                                <span class="partner-card-description">
+                                    @GetPartnerDescription(partner)
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<SolutionPartner>? Partners { get; set; }
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Partners = await PartnerService.GetAll();
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Çözüm Ortaklarımız - DAF Hukuk ve Danışmanlık",
+            ["pageTitleUpper"] = "Çözüm Ortaklarımız",
+            ["mainTitle"] = "İş Birliği Yaptığımız Kurumlar",
+            ["breadcrumbHome"] = "Ana Sayfa",
+            ["breadcrumbPartners"] = "Çözüm Ortaklarımız",
+            ["partnersInfoText"] = "Müvekkillerimize en iyi hizmeti sunmak için güvenilir çözüm ortaklarımızla birlikte çalışıyoruz.",
+            ["loading"] = "Ortaklar yükleniyor...",
+            ["noPartners"] = "Henüz ortak eklenmedi."
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Our Partners - DAF Law",
+            ["pageTitleUpper"] = "Our Partners",
+            ["mainTitle"] = "Trusted Business Partners",
+            ["breadcrumbHome"] = "Home",
+            ["breadcrumbPartners"] = "Our Partners",
+            ["partnersInfoText"] = "We work with trusted solution partners to provide the best service to our clients.",
+            ["loading"] = "Loading partners...",
+            ["noPartners"] = "No partners added yet."
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "شركاؤنا - داف",
+            ["pageTitleUpper"] = "شركاؤنا",
+            ["mainTitle"] = "شركاء الأعمال الموثوقون",
+            ["breadcrumbHome"] = "الرئيسية",
+            ["breadcrumbPartners"] = "شركاؤنا",
+            ["partnersInfoText"] = "نعمل مع شركاء حلول موثوقين لتقديم أفضل خدمة لعملائنا.",
+            ["loading"] = "جارٍ تحميل الشركاء...",
+            ["noPartners"] = "لا يوجد شركاء بعد."
+        }
+    };
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return Translations["tr"].GetValueOrDefault(key, key);
+    }
+
+    private string GetPartnerDescription(SolutionPartner partner)
+    {
+        var desc = CurrentLang switch
+        {
+            "en" => partner.Description_EN ?? partner.Description_TR,
+            "ar" => partner.Description_AR ?? partner.Description_TR,
+            _ => partner.Description_TR
+        };
+
+        if (string.IsNullOrWhiteSpace(desc)) return "";
+        return desc.Length > 120 ? desc.Substring(0, 120) + "..." : desc;
+    }
+
+    private string GetLocalizedPartnerUrl(SolutionPartner partner)
+    {
+        var slug = CurrentLang switch
+        {
+            "en" => partner.Slug_EN,
+            "ar" => partner.Slug_AR,
+            _ => partner.Slug_TR
+        };
+
+        var basePath = CurrentLang == "tr" ? "cozum-ortaklari" : "partners";
+        return LanguageService.GetLocalizedUrl($"{basePath}/{slug}");
+    }
+}

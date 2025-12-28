@@ -29,18 +29,15 @@
     private Post? featuredPost;
     private List<Post> allPosts = new();
 
-    // Sayfa türüne göre dinamik içerik için değişkenler
-    private string PageType = "Services"; // "Services", "Announcements", "Events", "Publications"
-    private List<Post> servicePosts = new(); // Sadece Hizmetler için Diğer Hizmetler
-    private List<Post> otherPostsInSameCategory = new(); // Diğer sayfalar için Aynı Kategorideki içerikler
+    private string PageType = "Services";
+    private List<Post> servicePosts = new();
+    private List<Post> otherPostsInSameCategory = new();
 
-    // İlişkili İçerikler (Ortak)
     private List<Post> relatedPosts = new();
     private List<Category> distinctCategories = new();
     private bool ShowingAll = false;
     private int InitialDisplayCount = 6;
-    private int CurrentFilterCategory = 0; // 0 = Hepsini Göster
-
+    private int CurrentFilterCategory = 0;
 
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 
@@ -56,7 +53,6 @@
             allPosts = new List<Post>();
         }
 
-        // 1. Sayfa Türünü Belirle
         var prefix = GetPostUrlPrefix();
         PageType = prefix switch
         {
@@ -67,15 +63,12 @@
             _ => "Unknown"
         };
 
-        // 2. Bulunan post: slug'a göre mevcut dile uygun slug alanıyla arama
         currentPost = GetPostBySlug(slug);
 
         if (currentPost != null)
         {
-            // 3. Sayfa Türüne Özgü Yan İçeriği Yükle (Sidebar)
             if (PageType == "Services")
             {
-                // Hizmetlerimiz için: Diğer Hizmetleri getir
                 servicePosts = allPosts
                     .Where(p => p.Category != null &&
                                 (string.Equals(p.Category.Name_TR?.Trim(), "Hizmetlerimiz", StringComparison.OrdinalIgnoreCase) ||
@@ -87,7 +80,6 @@
             }
             else if (currentPost.Category != null)
             {
-                // Duyuru/Etkinlik/Yayın için: Aynı Kategorideki diğer içerikleri getir
                 otherPostsInSameCategory = allPosts
                     .Where(p => p.Category != null &&
                                 p.Category.Id == currentPost.Category.Id &&
@@ -98,7 +90,6 @@
             }
         }
 
-        // 4. Öne çıkan yayın/Önerilen İçerik: son 12 ay içinde olanlardan ya da genel listeden rastgele seç (Ortak)
         var dateCutOff = DateTime.Now.AddMonths(-12);
         var recent = allPosts
             .Where(p => p.Id != currentPost?.Id && p.PublishedDate >= dateCutOff && p.IsActive)
@@ -112,7 +103,6 @@
             featuredPost = candidateList[rnd.Next(candidateList.Count)];
         }
 
-        // 5. İlişkili İçerikleri Hazırlama (Ortak)
         relatedPosts = allPosts
             .Where(p => p.Id != currentPost?.Id && p.IsActive)
             .OrderByDescending(p => p.PublishedDate)
@@ -140,14 +130,11 @@
         return "";
     }
 
-
     private Post? GetPostBySlug(string slugValue)
     {
         if (string.IsNullOrWhiteSpace(slugValue)) return null;
 
         slugValue = slugValue.Trim();
-
-        // Mevcut dildeki slug'ı, sonra TR'deki slug'ı kontrol et
         var posts = allPosts.Where(p => p.IsActive).ToList();
 
         return CurrentLang switch
@@ -174,25 +161,21 @@
 
         return categoryName switch
         {
-            // Hizmetlerimiz
             "hizmetlerimiz" or "our services" or "خدماتنا"
                 => CurrentLang == "en" ? "services"
                  : CurrentLang == "ar" ? "services"
                  : "hizmetlerimiz",
 
-            // Duyurular
             "duyurular" or "announcements" or "الإعلانات"
                 => CurrentLang == "en" ? "announcements"
                  : CurrentLang == "ar" ? "announcements"
                  : "duyurular",
 
-            // Etkinlikler
             "etkinlikler" or "events" or "الفعاليات"
                 => CurrentLang == "en" ? "events"
                  : CurrentLang == "ar" ? "events"
                  : "etkinlikler",
 
-            // Yayınlar
             "yayınlar" or "yayinlar" or "publications" or "المنشورات"
                 => CurrentLang == "en" ? "publications"
                  : CurrentLang == "ar" ? "publications"
@@ -216,7 +199,6 @@
             _ => post.Slug_TR ?? post.Slug_EN
         };
 
-        // Eğer postSlug boşsa, kategorinin anasayfasına yönlendir
         if (string.IsNullOrWhiteSpace(postSlug))
         {
             return CurrentLang switch
@@ -266,7 +248,6 @@
         };
     }
 
-    // İlişkili İçerikler yönetimi
     private void FilterCategory(int categoryId)
     {
         CurrentFilterCategory = categoryId;
@@ -305,7 +286,6 @@
 
         if (string.IsNullOrWhiteSpace(content)) return "";
 
-        // HTML etiketlerini temizle
         var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", String.Empty);
 
         return plainText.Length <= 120
@@ -313,8 +293,6 @@
             : plainText.Substring(0, 120) + "...";
     }
 
-
-    // Basit lokal metinler (detay sayfası)
     private Dictionary<string, Dictionary<string, string>> Translations = new()
     {
         ["tr"] = new()
@@ -324,17 +302,14 @@
             ["announcements"] = "Duyurular",
             ["events"] = "Etkinlikler",
             ["publications"] = "Yayınlar",
-
             ["selectService"] = "Hizmet konusu seçin",
             ["selectAnnouncement"] = "Diğer Duyurular",
             ["selectEvent"] = "Diğer Etkinlikler",
             ["selectPublication"] = "Diğer Yayınlar",
-
             ["noOtherServices"] = "Diğer hizmet bulunamadı.",
             ["noOtherContent"] = "Bu kategoride başka içerik bulunamadı.",
-
-            ["suggestedContent"] = "Önerilen İçerik", 
-            ["featuredPublications"] = "Öne Çıkan Yayınlar", 
+            ["suggestedContent"] = "Önerilen İçerik",
+            ["featuredPublications"] = "Öne Çıkan Yayınlar",
             ["noFeatured"] = "Öne çıkan yayın bulunamadı.",
             ["notFound"] = "İçerik bulunamadı.",
             ["relatedContent"] = "İlişkili İçerikler",
@@ -348,15 +323,12 @@
             ["announcements"] = "Announcements",
             ["events"] = "Events",
             ["publications"] = "Publications",
-
             ["selectService"] = "Select service",
             ["selectAnnouncement"] = "Other Announcements",
             ["selectEvent"] = "Other Events",
             ["selectPublication"] = "Other Publications",
-
             ["noOtherServices"] = "No other services found.",
             ["noOtherContent"] = "No other content found in this category.",
-
             ["suggestedContent"] = "Suggested Content",
             ["featuredPublications"] = "Featured Publications",
             ["noFeatured"] = "No featured publication found.",
@@ -372,15 +344,12 @@
             ["announcements"] = "الإعلانات",
             ["events"] = "الفعاليات",
             ["publications"] = "المنشورات",
-
             ["selectService"] = "اختر موضوع الخدمة",
             ["selectAnnouncement"] = "إعلانات أخرى",
             ["selectEvent"] = "فعاليات أخرى",
             ["selectPublication"] = "منشورات أخرى",
-
             ["noOtherServices"] = "لا توجد خدمات أخرى.",
             ["noOtherContent"] = "لا يوجد محتوى آخر في هذه الفئة.",
-
             ["suggestedContent"] = "محتوى مقترح",
             ["featuredPublications"] = "المنشورات المميزة",
             ["noFeatured"] = "لا توجد منشورات مميزة.",
@@ -415,7 +384,6 @@
                 <div class="hero-servicesTemplate-breadcrumb">
                     <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> /
 
-                    @* DİNAMİK KATEGORİ LİNKİ *@
                     @switch (PageType)
                     {
                         case "Services":
@@ -515,8 +483,9 @@
 
                         @if (featuredPost.Category != null)
                         {
+                            var categoryName = GetCategoryName(featuredPost.Category);
                             <a href="@GetFeaturedUrl()">
-                                <button class="content-tag-button">@GetCategoryName(featuredPost.Category)</button>
+                                <button class="content-tag-button" data-category="@categoryName">@categoryName</button>
                             </a>
                         }
 
@@ -532,12 +501,10 @@
         </div>
     </div>
 
-    @* İLİŞKİLİ İÇERİKLER *@
     <div class="row featured align-items-start mt-5">
 
         <div class="col-lg-9 col-md-12 mb-4">
 
-            @* KATEGORİ TABS (Yatay) *@
             <div class="row related-content-nav-row mb-3">
                 <div class="col-sm-12">
                     <h3 class="related-content-heading">@GetText("relatedContent")</h3>
@@ -568,7 +535,6 @@
                 </div>
             </div>
 
-            @* İÇERİK LİSTESİ *@
             <div class="row content-cards-row" id="contentContainer">
                 @if (!relatedPosts.Any())
                 {
@@ -583,6 +549,7 @@
                     @foreach (var p in GetDisplayedRelatedPosts())
                     {
                         var url = GetPostUrl(p);
+                        var categoryName = GetCategoryName(p.Category);
 
                         <div class="col-lg-4 mb-4 content-card-wrapper">
 
@@ -597,7 +564,7 @@
                                 @if (p.Category != null)
                                 {
                                     <a href="@url">
-                                        <button class="content-tag-button">@GetCategoryName(p.Category)</button>
+                                        <button class="content-tag-button" data-category="@categoryName">@categoryName</button>
                                     </a>
                                 }
 
@@ -607,7 +574,6 @@
                         </div>
                     }
 
-                    @* BOŞ FİLTRE MESAJI *@
                     @if (!GetDisplayedRelatedPosts().Any() && CurrentFilterCategory != 0)
                     {
                         <div class="col-12 text-center">
@@ -620,7 +586,6 @@
 
             </div>
 
-            @* TÜMÜNÜ GÖSTER BUTONU *@
             @if (GetDisplayedRelatedPosts().Count() < relatedPosts.Count() && !ShowingAll && relatedPosts.Any() && CurrentFilterCategory == 0)
             {
                 <div class="row mt-4 mb-5">

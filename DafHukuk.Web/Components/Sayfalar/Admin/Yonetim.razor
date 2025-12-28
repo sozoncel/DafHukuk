@@ -1,6 +1,7 @@
 ﻿@page "/admin/yonetim"
 @layout DafHukuk.Web.Components.Layout.AdminMainLayout
 @rendermode InteractiveServer
+@implements IAsyncDisposable
 
 @using DafHukuk.Core.Entities
 @using System.Net.Http.Json
@@ -59,7 +60,6 @@
                         @GetText("newContentTitle")
                     </h5>
 
-                    @* Kategori Seçimi *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-folder me-1"></i>
@@ -74,23 +74,55 @@
                         </select>
                     </div>
 
-                    @* Kapak Resmi URL *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-image me-1"></i>
                             @GetText("coverImage")
                         </label>
-                        <input class="form-control"
+
+                        <label for="@inputFileId"
+                               class="upload-drop-zone @(isDragging ? "drag-over" : "")"
+                               id="@dropZoneId"
+                               @ondragenter="HandleDragEnter"
+                               @ondragenter:preventDefault
+                               @ondragleave="HandleDragLeave"
+                               @ondragleave:preventDefault
+                               @ondragover:preventDefault
+                               @ondrop="HandlePostDrop"
+                               @ondrop:preventDefault
+                               style="cursor: pointer; display: block;">
+                            <i class="bi bi-cloud-upload fs-1 text-muted mb-2"></i>
+                            <p class="mb-1 fw-semibold">@GetText("dragDropImage")</p>
+                            <p class="text-muted small mb-0">@GetText("orClickToSelect")</p>
+                            <p class="text-muted small mt-1">@GetText("imageRequirements")</p>
+                        </label>
+
+                        <InputFile id="@inputFileId"
+                                   OnChange="HandlePostImageUpload"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   style="display: none;" />
+
+                        <input class="form-control mt-2"
                                @bind="newPost.CoverImageUrl"
-                               placeholder="https://..." />
+                               placeholder="@GetText("orEnterUrl")" />
+
                         <div class="mt-3 image-preview-wrapper">
                             <img src="@GetPreviewImage()"
                                  class="img-fluid rounded"
                                  alt="@GetText("preview")" />
                         </div>
+
+                        @if (isUploading)
+                        {
+                            <div class="text-center mt-2">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">@GetText("uploading")</span>
+                                </div>
+                                <span class="ms-2 text-muted small">@GetText("uploading")</span>
+                            </div>
+                        }
                     </div>
 
-                    @* Yayın Tarihi *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-calendar-event me-1"></i>
@@ -99,7 +131,6 @@
                         <InputDate class="form-control" @bind-Value="newPost.PublishedDate" />
                     </div>
 
-                    @* Aktif/Pasif Durumu *@
                     <div class="mb-4">
                         <label class="form-label d-block mb-2">
                             <i class="bi bi-activity me-1"></i>
@@ -113,7 +144,6 @@
                         </div>
                     </div>
 
-                    @* Kaydedilecek Diller *@
                     <div class="mb-4">
                         <label class="form-label d-block mb-2">
                             <i class="bi bi-translate me-1"></i>
@@ -135,7 +165,6 @@
                         </div>
                     </div>
 
-                    @* Kaydet Butonu *@
                     <button class="btn btn-primary btn-lg w-100"
                             @onclick="CreatePost"
                             disabled="@isSaving">
@@ -148,7 +177,6 @@
 
         <div class="col-lg-8">
             <div class="card admin-card">
-                @* Dil Sekmeleri *@
                 <div class="card-header bg-white border-bottom">
                     <ul class="nav nav-tabs card-header-tabs nav-fill border-0">
                         <li class="nav-item">
@@ -163,9 +191,7 @@
                     </ul>
                 </div>
 
-                @* Dil İçerikleri *@
                 <div class="card-body">
-                    @* Türkçe Alanlar *@
                     <div class='@GetLangClass("tr")'>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -188,7 +214,6 @@
                         </div>
                     </div>
 
-                    @* İngilizce Alanlar *@
                     <div class='@GetLangClass("en")'>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -211,7 +236,6 @@
                         </div>
                     </div>
 
-                    @* Arapça Alanlar *@
                     <div class='@GetLangClass("ar")' dir="rtl">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -239,14 +263,12 @@
         </div>
     </div>
 
-    @* İÇERİK LİSTESİ *@
     <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
         <h3 class="fw-bold mb-0">
             <i class="bi bi-list-columns-reverse me-2"></i>
             @GetText("contentList") (@posts.Count)
         </h3>
 
-        @* Filtreler ve Arama *@
         <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100 w-md-auto">
             <div class="input-group search-input-group">
                 <input type="text" class="form-control" @bind-value="searchTerm" @bind-value:event="oninput" placeholder="@GetText("searchPlaceholder")" />
@@ -298,19 +320,18 @@
                 <div class="col">
                     <div class="admin-content-card h-100 d-flex flex-column position-relative">
 
-                        @* KATEGORİ BADGE DÜZELTME *@
                         <div class="admin-category-badge"
                              style="background-color: @GetCategoryColor(categoryName);
-                                            position: absolute;
-                                            top: 10px;
-                                            left: 10px;
-                                            z-index: 10;
-                                            padding: 5px 10px;
-                                            border-radius: 5px;
-                                            color: white;
-                                            font-size: 0.8rem;
-                                            font-weight: bold;
-                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                           position: absolute;
+                                           top: 10px;
+                                           left: 10px;
+                                           z-index: 10;
+                                           padding: 5px 10px;
+                                           border-radius: 5px;
+                                           color: white;
+                                           font-size: 0.8rem;
+                                           font-weight: bold;
+                                           box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
                             @categoryName
                         </div>
 
@@ -329,20 +350,17 @@
 
                         <div class="card-footer bg-white pt-0 border-0">
                             <div class="d-flex gap-2 mt-auto">
-                                @* Görüntüle Butonu *@
                                 <a href="@url"
                                    class="btn btn-sm btn-outline-primary flex-grow-1" target="_blank">
                                     <i class="bi bi-eye me-1"></i> @GetTextForList("view")
                                 </a>
 
-                                @* DÜZENLEME BUTONU *@
                                 <a href="@($"/admin/duzenle/{p.Id}")"
                                    class="btn btn-sm btn-outline-secondary"
                                    title="@GetTextForList("edit")">
                                     <i class="bi bi-pencil me-1"></i> @GetTextForList("edit")
                                 </a>
 
-                                @* Silme Butonu *@
                                 <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletePost(p.Id, GetPostTitle(p))" title="@GetTextForList("delete")">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -365,6 +383,8 @@
     private string searchTerm = string.Empty;
     private bool isSaving = false;
     private bool isListLoading = true;
+    private bool isUploading = false;
+    private bool isDragging = false;
     private bool showSuccess = false;
     private bool showError = false;
     private string successMessage = string.Empty;
@@ -372,6 +392,9 @@
     private bool includeTr { get; set; } = true;
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
+
+    private string dropZoneId = $"dropzone-{Guid.NewGuid():N}";
+    private string inputFileId = $"inputfile-{Guid.NewGuid():N}";
 
     private Dictionary<string, Dictionary<string, string>> translations = new()
     {
@@ -382,11 +405,15 @@
             ["successTitle"] = "Başarılı!",
             ["errorTitle"] = "Hata!",
             ["newContentTitle"] = "Yeni İçerik Ekle",
-            ["generalInfo"] = "Genel Bilgiler",
             ["category"] = "Kategori",
             ["selectCategory"] = "Kategori Seçin",
-            ["coverImage"] = "Kapak Resmi URL",
+            ["coverImage"] = "Kapak Resmi",
+            ["dragDropImage"] = "Görseli buraya sürükleyin veya tıklayın",
+            ["orClickToSelect"] = "Dosya seçmek için tıklayın",
+            ["imageRequirements"] = "(Maks. 10MB - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "veya URL girin: https://...",
             ["preview"] = "Önizleme",
+            ["uploading"] = "Yükleniyor...",
             ["publishDate"] = "Yayın Tarihi",
             ["languagesToSave"] = "Diller",
             ["activeState"] = "Durum",
@@ -417,11 +444,15 @@
             ["successTitle"] = "Success!",
             ["errorTitle"] = "Error!",
             ["newContentTitle"] = "Add New Content",
-            ["generalInfo"] = "General Information",
             ["category"] = "Category",
             ["selectCategory"] = "Select Category",
-            ["coverImage"] = "Cover Image URL",
+            ["coverImage"] = "Cover Image",
+            ["dragDropImage"] = "Drag image here or click",
+            ["orClickToSelect"] = "Click to select file",
+            ["imageRequirements"] = "(Max. 10MB - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "or enter URL: https://...",
             ["preview"] = "Preview",
+            ["uploading"] = "Uploading...",
             ["publishDate"] = "Publish Date",
             ["languagesToSave"] = "Languages",
             ["activeState"] = "Status",
@@ -452,11 +483,15 @@
             ["successTitle"] = "نجاح!",
             ["errorTitle"] = "خطأ!",
             ["newContentTitle"] = "إضافة محتوى جديد",
-            ["generalInfo"] = "معلومات عامة",
             ["category"] = "الفئة",
             ["selectCategory"] = "اختر الفئة",
-            ["coverImage"] = "رابط صورة الغلاف",
+            ["coverImage"] = "صورة الغلاف",
+            ["dragDropImage"] = "اسحب الصورة هنا أو انقر",
+            ["orClickToSelect"] = "انقر لاختيار الملف",
+            ["imageRequirements"] = "(بحد أقصى 10 ميجابايت - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "أو أدخل الرابط: https://...",
             ["preview"] = "معاينة",
+            ["uploading"] = "جاري الرفع...",
             ["publishDate"] = "تاريخ النشر",
             ["languagesToSave"] = "اللغات",
             ["activeState"] = "الحالة",
@@ -481,6 +516,23 @@
             ["edit"] = "تعديل"
         }
     };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("blazorImageUpload.disposeDragDrop", dropZoneId);
+        }
+        catch { }
+    }
 
     private string GetText(string key)
     {
@@ -514,6 +566,131 @@
     private void SwitchLang(string lang)
     {
         activeLang = lang;
+    }
+
+    private void HandleDragEnter()
+    {
+        isDragging = true;
+    }
+
+    private void HandleDragLeave()
+    {
+        isDragging = false;
+    }
+
+    private void HandlePostDrop(Microsoft.AspNetCore.Components.Web.DragEventArgs e)
+    {
+        isDragging = false;
+    }
+
+    private async Task HandlePostImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            await ProcessImageFile(file);
+        }
+    }
+
+    private async Task ProcessImageFile(IBrowserFile file)
+    {
+        const long maxFileSize = 10 * 1024 * 1024;
+
+        if (file.Size > maxFileSize)
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => "File size must be less than 10MB!",
+                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
+                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
+            };
+            return;
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+
+        if (!allowedExtensions.Contains(extension))
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
+                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
+                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
+            };
+            return;
+        }
+
+        try
+        {
+            isUploading = true;
+            StateHasChanged();
+
+            using var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("/api/image/upload?entityType=posts", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
+                {
+                    newPost.CoverImageUrl = result.FilePath;
+
+                    showSuccess = true;
+                    successMessage = activeLang switch
+                    {
+                        "en" => "Image uploaded successfully!",
+                        "ar" => "تم رفع الصورة بنجاح!",
+                        _ => "Görsel başarıyla yüklendi!"
+                    };
+
+                    await Task.Delay(2000);
+                    showSuccess = false;
+                }
+                else
+                {
+                    showError = true;
+                    errorMessage = result?.Message ?? (activeLang switch
+                    {
+                        "en" => "Image could not be uploaded.",
+                        "ar" => "لم يتم رفع الصورة.",
+                        _ => "Görsel yüklenemedi."
+                    });
+                }
+            }
+            else
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                showError = true;
+                errorMessage = errorResult?.Message ?? (activeLang switch
+                {
+                    "en" => "Image upload failed.",
+                    "ar" => "فشل رفع الصورة.",
+                    _ => "Görsel yükleme başarısız oldu."
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => $"Upload error: {ex.Message}",
+                "ar" => $"خطأ في الرفع: {ex.Message}",
+                _ => $"Yükleme hatası: {ex.Message}"
+            };
+        }
+        finally
+        {
+            isUploading = false;
+            StateHasChanged();
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -803,5 +980,12 @@
             "yayınlar" or "yayinlar" or "publications" => "#dfb899",
             _ => "#3b82f6"
         };
+    }
+
+    private class ImageUploadResult
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+        public string? FilePath { get; set; }
     }
 }

@@ -1,0 +1,904 @@
+﻿@page "/admin/cozum-ortaklari"
+@layout DafHukuk.Web.Components.Layout.AdminMainLayout
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+
+@using DafHukuk.Core.Entities
+@using System.Net.Http.Json
+@inject ISolutionPartnerService PartnerService
+@inject IJSRuntime JS
+@inject HttpClient Http
+
+<div class="container-fluid px-4 py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">@GetText("pageTitle")</h2>
+            <p class="text-muted mb-0">@GetText("pageSubtitle")</p>
+        </div>
+    </div>
+
+    @if (showSuccess)
+    {
+        <div class="modern-alert modern-alert-success" role="alert">
+            <div class="modern-alert-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="modern-alert-content">
+                <strong>@GetText("successTitle")</strong>
+                <p>@successMessage</p>
+            </div>
+            <button class="modern-alert-close" @onclick="() => showSuccess = false">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    }
+
+    @if (showError)
+    {
+        <div class="modern-alert modern-alert-error" role="alert">
+            <div class="modern-alert-icon">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="modern-alert-content">
+                <strong>@GetText("errorTitle")</strong>
+                <p>@errorMessage</p>
+            </div>
+            <button class="modern-alert-close" @onclick="() => showError = false">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    }
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="card admin-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="bi @(isEditMode ? "bi-pencil-square" : "bi-plus-circle") me-2"></i>
+                        @(isEditMode? GetText("editPartner") : GetText("newPartner"))
+                    </h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-building me-1"></i>
+                            @GetText("name") *
+                        </label>
+                        <input class="form-control" @bind="newPartner.Name" placeholder="@GetText("namePlaceholder")" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-link-45deg me-1"></i>
+                            @GetText("website")
+                        </label>
+                        <input class="form-control" type="url" @bind="newPartner.WebsiteUrl" placeholder="https://..." />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-image me-1"></i>
+                            @GetText("logo")
+                        </label>
+
+                        <label for="@inputFileId"
+                               class="upload-drop-zone @(isDragging ? "drag-over" : "")"
+                               id="@dropZoneId"
+                               @ondragenter="HandleDragEnter"
+                               @ondragenter:preventDefault
+                               @ondragleave="HandleDragLeave"
+                               @ondragleave:preventDefault
+                               @ondragover:preventDefault
+                               @ondrop="HandleDrop"
+                               @ondrop:preventDefault
+                               style="cursor: pointer; display: block;">
+                            <i class="bi bi-cloud-upload fs-1 text-muted mb-2"></i>
+                            <p class="mb-1 fw-semibold">@GetText("dragDropLogo")</p>
+                            <p class="text-muted small mb-0">@GetText("orClickToSelect")</p>
+                            <p class="text-muted small mt-1">@GetText("logoRequirements")</p>
+                        </label>
+
+                        <InputFile id="@inputFileId"
+                                   OnChange="HandleImageUpload"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   style="display: none;" />
+
+                        <input class="form-control mt-2" @bind="newPartner.ImageUrl" placeholder="@GetText("orEnterUrl")" />
+
+                        <div class="mt-3 image-preview-wrapper">
+                            <img src="@GetPreviewImage()"
+                                 class="img-fluid rounded"
+                                 alt="@GetText("preview")" />
+                        </div>
+
+                        @if (isUploading)
+                        {
+                            <div class="text-center mt-2">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">@GetText("uploading")</span>
+                                </div>
+                                <span class="ms-2 text-muted small">@GetText("uploading")</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">
+                            <i class="bi bi-activity me-1"></i>
+                            @GetText("activeState")
+                        </label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isActiveSwitch" @bind="newPartner.IsActive">
+                            <label class="form-check-label" for="isActiveSwitch">
+                                @(newPartner.IsActive? GetText("active") : GetText("passive"))
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">
+                            <i class="bi bi-translate me-1"></i>
+                            @GetText("languagesToSave")
+                        </label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="langTr" @bind="includeTr" />
+                                <label class="form-check-label" for="langTr">🇹🇷 TR</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="langEn" @bind="includeEn" />
+                                <label class="form-check-label" for="langEn">🇬🇧 EN</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="langAr" @bind="includeAr" />
+                                <label class="form-check-label" for="langAr">🇸🇦 AR</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isEditMode)
+                    {
+                        <button class="btn btn-success btn-lg w-100 mb-2" @onclick="UpdatePartner" disabled="@isSaving">
+                            <i class="bi @(isSaving ? "bi-hourglass-split" : "bi-check-circle") me-2"></i>
+                            @(isSaving? GetText("updating") : GetText("updatePartner"))
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg w-100" @onclick="CancelEdit">
+                            <i class="bi bi-x-circle me-2"></i>
+                            @GetText("cancel")
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary btn-lg w-100" @onclick="CreatePartner" disabled="@isSaving">
+                            <i class="bi @(isSaving ? "bi-hourglass-split" : "bi-save") me-2"></i>
+                            @(isSaving? GetText("saving") : GetText("savePartner"))
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card admin-card">
+                <div class="card-header bg-white border-bottom">
+                    <ul class="nav nav-tabs card-header-tabs nav-fill border-0">
+                        <li class="nav-item">
+                            <button class='@GetTabClass("tr")' @onclick='() => SwitchLang("tr")' type="button">🇹🇷 Türkçe</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class='@GetTabClass("en")' @onclick='() => SwitchLang("en")' type="button">🇬🇧 English</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class='@GetTabClass("ar")' @onclick='() => SwitchLang("ar")' type="button">🇸🇦 العربية</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class='@GetLangClass("tr")'>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("description") *</label>
+                            <textarea class="form-control" rows="4" @bind="newPartner.Description_TR" placeholder="@GetText("descriptionPlaceholder")"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("slug") *</label>
+                            <input class="form-control" @bind="newPartner.Slug_TR" placeholder="@GetText("slugPlaceholder")" />
+                        </div>
+                    </div>
+
+                    <div class='@GetLangClass("en")'>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("description")</label>
+                            <textarea class="form-control" rows="4" @bind="newPartner.Description_EN" placeholder="@GetText("descriptionPlaceholder")"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("slug")</label>
+                            <input class="form-control" @bind="newPartner.Slug_EN" placeholder="@GetText("slugPlaceholder")" />
+                        </div>
+                    </div>
+
+                    <div class='@GetLangClass("ar")' dir="rtl">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("description")</label>
+                            <textarea class="form-control" rows="4" @bind="newPartner.Description_AR" placeholder="@GetText("descriptionPlaceholder")"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">@GetText("slug")</label>
+                            <input class="form-control" style="direction:ltr" @bind="newPartner.Slug_AR" placeholder="@GetText("slugPlaceholder")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-globe me-2"></i>
+            @GetText("partnerList") (@partners.Count)
+        </h3>
+
+        <div class="input-group search-input-group">
+            <input type="text" class="form-control" @bind-value="searchTerm" @bind-value:event="oninput" placeholder="@GetText("searchPlaceholder")" />
+            <button class="btn btn-outline-secondary" @onclick="SearchPartners">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </div>
+
+    @if (isListLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">@GetText("loadingList")</span>
+            </div>
+            <p class="text-muted mt-2">@GetText("loadingList")</p>
+        </div>
+    }
+    else if (partners.Count == 0)
+    {
+        <div class="text-center py-5 border rounded bg-light text-muted">
+            <i class="bi bi-inbox fs-1 mb-3"></i>
+            <p>@GetText("noPartners")</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var partner in partners)
+            {
+                <div class="col">
+                    <div class="admin-content-card h-100 d-flex flex-column">
+                        <div class="admin-card-image">
+                            <img src="@(string.IsNullOrWhiteSpace(partner.ImageUrl) ? "https://via.placeholder.com/400x300?text=Logo" : partner.ImageUrl)"
+                                 class="card-img-top" alt="@partner.Name" />
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-2 fw-bold">@partner.Name</h5>
+                            @if (!string.IsNullOrWhiteSpace(partner.WebsiteUrl))
+                            {
+                                <p class="card-text text-muted small mb-2">
+                                    <i class="bi bi-link-45deg me-1"></i>
+                                    <a href="@partner.WebsiteUrl" target="_blank" rel="noopener">@partner.WebsiteUrl</a>
+                                </p>
+                            }
+                            <p class="card-text flex-grow-1">@GetPartnerDescription(partner)</p>
+
+                            @if (!partner.IsActive)
+                            {
+                                <span class="badge bg-secondary mb-2">@GetText("passive")</span>
+                            }
+                        </div>
+
+                        <div class="card-footer bg-white pt-0 border-0">
+                            <div class="d-flex gap-2 mt-auto">
+                                <button class="btn btn-sm btn-outline-secondary flex-grow-1" @onclick="() => EditPartner(partner)" title="@GetText("edit")">
+                                    <i class="bi bi-pencil me-1"></i> @GetText("edit")
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletePartner(partner.Id, partner.Name)" title="@GetText("delete")">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private SolutionPartner newPartner = new SolutionPartner { IsActive = true };
+    private SolutionPartner? originalPartner;
+    private List<SolutionPartner> partners = new();
+    private string activeLang = "tr";
+    private string searchTerm = string.Empty;
+    private bool isSaving = false;
+    private bool isListLoading = true;
+    private bool isUploading = false;
+    private bool isDragging = false;
+    private bool showSuccess = false;
+    private bool showError = false;
+    private bool isEditMode = false;
+    private string successMessage = string.Empty;
+    private string errorMessage = string.Empty;
+    private bool includeTr { get; set; } = true;
+    private bool includeEn { get; set; } = false;
+    private bool includeAr { get; set; } = false;
+
+    private string dropZoneId = $"dropzone-{Guid.NewGuid():N}";
+    private string inputFileId = $"inputfile-{Guid.NewGuid():N}";
+
+    private Dictionary<string, Dictionary<string, string>> translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Çözüm Ortakları Yönetimi",
+            ["pageSubtitle"] = "İş ortaklarınızı ekleyin, düzenleyin ve yönetin",
+            ["successTitle"] = "Başarılı!",
+            ["errorTitle"] = "Hata!",
+            ["newPartner"] = "Yeni Ortak Ekle",
+            ["editPartner"] = "Ortak Düzenle",
+            ["name"] = "Şirket Adı",
+            ["namePlaceholder"] = "Örnek Teknoloji A.Ş.",
+            ["website"] = "Web Sitesi",
+            ["logo"] = "Logo",
+            ["dragDropLogo"] = "Logoyu buraya sürükleyin veya tıklayın",
+            ["orClickToSelect"] = "Dosya seçmek için tıklayın",
+            ["logoRequirements"] = "(Maks. 10MB - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "veya URL girin: https://...",
+            ["preview"] = "Önizleme",
+            ["uploading"] = "Yükleniyor...",
+            ["activeState"] = "Durum",
+            ["active"] = "Aktif",
+            ["passive"] = "Pasif",
+            ["languagesToSave"] = "Diller",
+            ["description"] = "Açıklama",
+            ["descriptionPlaceholder"] = "Ortaklık açıklaması...",
+            ["slug"] = "URL",
+            ["slugPlaceholder"] = "ornek-teknoloji",
+            ["saving"] = "Kaydediliyor...",
+            ["savePartner"] = "Ortağı Kaydet",
+            ["updating"] = "Güncelleniyor...",
+            ["updatePartner"] = "Ortağı Güncelle",
+            ["cancel"] = "İptal",
+            ["partnerList"] = "Ortak Listesi",
+            ["loadingList"] = "Ortaklar yükleniyor...",
+            ["noPartners"] = "Henüz ortak eklenmedi.",
+            ["searchPlaceholder"] = "Ortak ara...",
+            ["edit"] = "Düzenle",
+            ["delete"] = "Sil",
+            ["confirmDelete"] = "Bu ortağı silmek istediğinizden emin misiniz?"
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Solution Partners Management",
+            ["pageSubtitle"] = "Add, edit and manage your business partners",
+            ["successTitle"] = "Success!",
+            ["errorTitle"] = "Error!",
+            ["newPartner"] = "Add New Partner",
+            ["editPartner"] = "Edit Partner",
+            ["name"] = "Company Name",
+            ["namePlaceholder"] = "Example Tech Inc.",
+            ["website"] = "Website",
+            ["logo"] = "Logo",
+            ["dragDropLogo"] = "Drag logo here or click",
+            ["orClickToSelect"] = "Click to select file",
+            ["logoRequirements"] = "(Max. 10MB - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "or enter URL: https://...",
+            ["preview"] = "Preview",
+            ["uploading"] = "Uploading...",
+            ["activeState"] = "Status",
+            ["active"] = "Active",
+            ["passive"] = "Passive",
+            ["languagesToSave"] = "Languages",
+            ["description"] = "Description",
+            ["descriptionPlaceholder"] = "Partnership description...",
+            ["slug"] = "URL",
+            ["slugPlaceholder"] = "example-tech",
+            ["saving"] = "Saving...",
+            ["savePartner"] = "Save Partner",
+            ["updating"] = "Updating...",
+            ["updatePartner"] = "Update Partner",
+            ["cancel"] = "Cancel",
+            ["partnerList"] = "Partner List",
+            ["loadingList"] = "Loading partners...",
+            ["noPartners"] = "No partners added yet.",
+            ["searchPlaceholder"] = "Search partner...",
+            ["edit"] = "Edit",
+            ["delete"] = "Delete",
+            ["confirmDelete"] = "Are you sure you want to delete this partner?"
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "إدارة شركاء الحلول",
+            ["pageSubtitle"] = "إضافة وتحرير وإدارة شركاء الأعمال",
+            ["successTitle"] = "نجاح!",
+            ["errorTitle"] = "خطأ!",
+            ["newPartner"] = "إضافة شريك جديد",
+            ["editPartner"] = "تعديل الشريك",
+            ["name"] = "اسم الشركة",
+            ["namePlaceholder"] = "شركة التكنولوجيا",
+            ["website"] = "الموقع الإلكتروني",
+            ["logo"] = "الشعار",
+            ["dragDropLogo"] = "اسحب الشعار هنا أو انقر",
+            ["orClickToSelect"] = "انقر لاختيار الملف",
+            ["logoRequirements"] = "(بحد أقصى 10 ميجابايت - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "أو أدخل الرابط: https://...",
+            ["preview"] = "معاينة",
+            ["uploading"] = "جاري الرفع...",
+            ["activeState"] = "الحالة",
+            ["active"] = "نشط",
+            ["passive"] = "غير نشط",
+            ["languagesToSave"] = "اللغات",
+            ["description"] = "الوصف",
+            ["descriptionPlaceholder"] = "وصف الشراكة...",
+            ["slug"] = "الرابط",
+            ["slugPlaceholder"] = "example-tech",
+            ["saving"] = "جاري الحفظ...",
+            ["savePartner"] = "حفظ الشريك",
+            ["updating"] = "جاري التحديث...",
+            ["updatePartner"] = "تحديث الشريك",
+            ["cancel"] = "إلغاء",
+            ["partnerList"] = "قائمة الشركاء",
+            ["loadingList"] = "جاري تحميل الشركاء...",
+            ["noPartners"] = "لم يتم إضافة شركاء بعد.",
+            ["searchPlaceholder"] = "ابحث عن شريك...",
+            ["edit"] = "تعديل",
+            ["delete"] = "حذف",
+            ["confirmDelete"] = "هل أنت متأكد من حذف هذا الشريك؟"
+        }
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("blazorImageUpload.disposeDragDrop", dropZoneId);
+        }
+        catch { }
+    }
+
+    private string GetText(string key)
+    {
+        if (translations.ContainsKey(activeLang) && translations[activeLang].ContainsKey(key))
+            return translations[activeLang][key];
+        return key;
+    }
+
+    private string GetTabClass(string lang) => activeLang == lang ? "nav-link active" : "nav-link";
+    private string GetLangClass(string lang) => activeLang == lang ? "d-block" : "d-none";
+    private string GetPreviewImage() => string.IsNullOrWhiteSpace(newPartner.ImageUrl) ? "https://via.placeholder.com/400x300?text=Logo" : newPartner.ImageUrl;
+    private void SwitchLang(string lang) { activeLang = lang; }
+    private void HandleDragEnter() { isDragging = true; }
+    private void HandleDragLeave() { isDragging = false; }
+    private void HandleDrop(Microsoft.AspNetCore.Components.Web.DragEventArgs e) { isDragging = false; }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            await ProcessImageFile(file);
+        }
+    }
+
+    private async Task ProcessImageFile(IBrowserFile file)
+    {
+        const long maxFileSize = 10 * 1024 * 1024;
+
+        if (file.Size > maxFileSize)
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => "File size must be less than 10MB!",
+                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
+                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
+            };
+            return;
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+
+        if (!allowedExtensions.Contains(extension))
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
+                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
+                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
+            };
+            return;
+        }
+
+        try
+        {
+            isUploading = true;
+            StateHasChanged();
+
+            using var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("/api/image/upload?entityType=partners", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
+                {
+                    newPartner.ImageUrl = result.FilePath;
+
+                    showSuccess = true;
+                    successMessage = activeLang switch
+                    {
+                        "en" => "Logo uploaded successfully!",
+                        "ar" => "تم رفع الشعار بنجاح!",
+                        _ => "Logo başarıyla yüklendi!"
+                    };
+
+                    await Task.Delay(2000);
+                    showSuccess = false;
+                }
+                else
+                {
+                    showError = true;
+                    errorMessage = result?.Message ?? (activeLang switch
+                    {
+                        "en" => "Logo could not be uploaded.",
+                        "ar" => "لم يتم رفع الشعار.",
+                        _ => "Logo yüklenemedi."
+                    });
+                }
+            }
+            else
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                showError = true;
+                errorMessage = errorResult?.Message ?? (activeLang switch
+                {
+                    "en" => "Logo upload failed.",
+                    "ar" => "فشل رفع الشعار.",
+                    _ => "Logo yükleme başarısız oldu."
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => $"Upload error: {ex.Message}",
+                "ar" => $"خطأ في الرفع: {ex.Message}",
+                _ => $"Yükleme hatası: {ex.Message}"
+            };
+        }
+        finally
+        {
+            isUploading = false;
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPartners();
+    }
+
+    private async Task LoadPartners()
+    {
+        isListLoading = true;
+        try
+        {
+            partners = await PartnerService.GetAll() ?? new();
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Yükleme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isListLoading = false;
+        }
+    }
+
+    private async Task CreatePartner()
+    {
+        showError = false;
+        showSuccess = false;
+
+        if (string.IsNullOrWhiteSpace(newPartner.Name))
+        {
+            showError = true;
+            errorMessage = GetText("errorTitle") + ": Şirket adı zorunludur!";
+            return;
+        }
+
+        if (includeTr && string.IsNullOrWhiteSpace(newPartner.Description_TR))
+        {
+            showError = true;
+            errorMessage = GetText("errorTitle") + ": Türkçe açıklama zorunludur!";
+            return;
+        }
+
+        if (includeTr && string.IsNullOrWhiteSpace(newPartner.Slug_TR))
+        {
+            showError = true;
+            errorMessage = GetText("errorTitle") + ": Türkçe slug zorunludur!";
+            return;
+        }
+
+        try
+        {
+            isSaving = true;
+
+            if (!includeTr)
+            {
+                newPartner.Description_TR = null;
+                newPartner.Slug_TR = null;
+            }
+            if (!includeEn)
+            {
+                newPartner.Description_EN = null;
+                newPartner.Slug_EN = null;
+            }
+            if (!includeAr)
+            {
+                newPartner.Description_AR = null;
+                newPartner.Slug_AR = null;
+            }
+
+            var created = await PartnerService.Create(newPartner);
+
+            successMessage = activeLang switch
+            {
+                "en" => "Partner added successfully!",
+                "ar" => "تمت إضافة الشريك بنجاح!",
+                _ => "Ortak başarıyla eklendi!"
+            };
+
+            newPartner = new SolutionPartner { IsActive = true };
+            includeTr = true;
+            includeEn = false;
+            includeAr = false;
+            await LoadPartners();
+
+            showSuccess = true;
+            await Task.Delay(3000);
+            showSuccess = false;
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Kaydetme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void EditPartner(SolutionPartner partner)
+    {
+        originalPartner = new SolutionPartner
+        {
+            Id = partner.Id,
+            Name = partner.Name,
+            WebsiteUrl = partner.WebsiteUrl,
+            ImageUrl = partner.ImageUrl,
+            Description_TR = partner.Description_TR,
+            Slug_TR = partner.Slug_TR,
+            Description_EN = partner.Description_EN,
+            Slug_EN = partner.Slug_EN,
+            Description_AR = partner.Description_AR,
+            Slug_AR = partner.Slug_AR,
+            IsActive = partner.IsActive
+        };
+
+        newPartner = new SolutionPartner
+        {
+            Id = partner.Id,
+            Name = partner.Name,
+            WebsiteUrl = partner.WebsiteUrl,
+            ImageUrl = partner.ImageUrl,
+            Description_TR = partner.Description_TR,
+            Slug_TR = partner.Slug_TR,
+            Description_EN = partner.Description_EN,
+            Slug_EN = partner.Slug_EN,
+            Description_AR = partner.Description_AR,
+            Slug_AR = partner.Slug_AR,
+            IsActive = partner.IsActive
+        };
+
+        includeTr = !string.IsNullOrWhiteSpace(partner.Description_TR);
+        includeEn = !string.IsNullOrWhiteSpace(partner.Description_EN);
+        includeAr = !string.IsNullOrWhiteSpace(partner.Description_AR);
+
+        isEditMode = true;
+        JS.InvokeVoidAsync("window.scrollTo", 0, 0);
+    }
+
+    private async Task UpdatePartner()
+    {
+        if (originalPartner == null) return;
+
+        showError = false;
+        showSuccess = false;
+
+        if (string.IsNullOrWhiteSpace(newPartner.Name))
+        {
+            showError = true;
+            errorMessage = "Şirket adı zorunludur!";
+            return;
+        }
+
+        try
+        {
+            isSaving = true;
+
+            var updatePartner = new SolutionPartner
+            {
+                Id = newPartner.Id,
+                Name = newPartner.Name,
+                WebsiteUrl = newPartner.WebsiteUrl,
+                ImageUrl = newPartner.ImageUrl,
+                IsActive = newPartner.IsActive
+            };
+
+            if (includeTr)
+            {
+                updatePartner.Description_TR = newPartner.Description_TR;
+                updatePartner.Slug_TR = newPartner.Slug_TR;
+            }
+            else
+            {
+                updatePartner.Description_TR = originalPartner.Description_TR;
+                updatePartner.Slug_TR = originalPartner.Slug_TR;
+            }
+
+            if (includeEn)
+            {
+                updatePartner.Description_EN = newPartner.Description_EN;
+                updatePartner.Slug_EN = newPartner.Slug_EN;
+            }
+            else
+            {
+                updatePartner.Description_EN = originalPartner.Description_EN;
+                updatePartner.Slug_EN = originalPartner.Slug_EN;
+            }
+
+            if (includeAr)
+            {
+                updatePartner.Description_AR = newPartner.Description_AR;
+                updatePartner.Slug_AR = newPartner.Slug_AR;
+            }
+            else
+            {
+                updatePartner.Description_AR = originalPartner.Description_AR;
+                updatePartner.Slug_AR = originalPartner.Slug_AR;
+            }
+
+            var updated = await PartnerService.Update(newPartner.Id, updatePartner);
+
+            successMessage = "✓ Ortak başarıyla güncellendi!";
+            showSuccess = true;
+
+            await LoadPartners();
+            CancelEdit();
+
+            await Task.Delay(2000);
+            showSuccess = false;
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Güncelleme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        isEditMode = false;
+        newPartner = new SolutionPartner { IsActive = true };
+        originalPartner = null;
+        includeTr = true;
+        includeEn = false;
+        includeAr = false;
+    }
+
+    private async Task DeletePartner(int id, string name)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"{name} isimli ortağı silmek istediğinizden emin misiniz?"))
+        {
+            try
+            {
+                var result = await PartnerService.Delete(id);
+                if (result)
+                {
+                    successMessage = $"'{name}' başarıyla silindi.";
+                    showSuccess = true;
+                    await LoadPartners();
+
+                    if (isEditMode && newPartner.Id == id)
+                    {
+                        CancelEdit();
+                    }
+
+                    await Task.Delay(3000);
+                    showSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                showError = true;
+                errorMessage = $"Silme hatası: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task SearchPartners()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            await LoadPartners();
+            return;
+        }
+
+        isListLoading = true;
+        try
+        {
+            var allPartners = await PartnerService.GetAll();
+            partners = allPartners
+                .Where(p => p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           (p.Description_TR != null && p.Description_TR.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = $"Arama hatası: {ex.Message}";
+        }
+        finally
+        {
+            isListLoading = false;
+        }
+    }
+
+    private string GetPartnerDescription(SolutionPartner partner)
+    {
+        var desc = activeLang switch
+        {
+            "en" => partner.Description_EN ?? partner.Description_TR,
+            "ar" => partner.Description_AR ?? partner.Description_TR,
+            _ => partner.Description_TR ?? ""
+        };
+
+        if (string.IsNullOrWhiteSpace(desc)) return "";
+        return desc.Length > 100 ? desc.Substring(0, 100) + "..." : desc;
+    }
+
+    private class ImageUploadResult
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+        public string? FilePath { get; set; }
+    }
+}

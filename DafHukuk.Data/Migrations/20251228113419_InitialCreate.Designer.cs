@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DafHukuk.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251214143743_AddLawyersTable")]
-    partial class AddLawyersTable
+    [Migration("20251228113419_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,35 @@ namespace DafHukuk.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateTime(2025, 12, 28, 11, 34, 18, 668, DateTimeKind.Utc).AddTicks(136),
+                            IsActive = true,
+                            Name_AR = "فعاليات",
+                            Name_EN = "Events",
+                            Name_TR = "Etkinlikler"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateTime(2025, 12, 28, 11, 34, 18, 668, DateTimeKind.Utc).AddTicks(137),
+                            IsActive = true,
+                            Name_AR = "منشورات",
+                            Name_EN = "Publications",
+                            Name_TR = "Yayınlar"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedDate = new DateTime(2025, 12, 28, 11, 34, 18, 668, DateTimeKind.Utc).AddTicks(139),
+                            IsActive = true,
+                            Name_AR = "خدماتنا",
+                            Name_EN = "Our Services",
+                            Name_TR = "Hizmetlerimiz"
+                        });
                 });
 
             modelBuilder.Entity("DafHukuk.Core.Entities.Lawyer", b =>
@@ -258,6 +287,60 @@ namespace DafHukuk.Data.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("DafHukuk.Core.Entities.SolutionPartner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description_AR")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description_EN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description_TR")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Slug_AR")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug_EN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug_TR")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("WebsiteUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SolutionPartners");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

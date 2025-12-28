@@ -1,6 +1,4 @@
-﻿// AdminPostController.cs
-
-using DafHukuk.Core.Entities;
+﻿using DafHukuk.Core.Entities;
 using DafHukuk.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +7,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
+[Authorize(Roles = "Admin")]
 [Route("api/admin/[controller]")]
-[ApiController]
 public class AdminPostController : ControllerBase
 {
     private readonly IPostService _postService;
@@ -34,7 +32,6 @@ public class AdminPostController : ControllerBase
 
         try
         {
-            // --- 1. Zorunlu Alan Kontrolleri ---
             if (string.IsNullOrWhiteSpace(newPost.Title_TR))
             {
                 return BadRequest("Türkçe başlık (Title_TR) zorunludur.");
@@ -44,17 +41,15 @@ public class AdminPostController : ControllerBase
                 return BadRequest("Kategori seçimi (CategoryId) zorunludur.");
             }
 
-            // Yabancı Anahtar Kontrolü
             var existingCategory = await _categoryService.GetById(newPost.CategoryId);
             if (existingCategory == null)
             {
-                return BadRequest($"Geçersiz Kategori ID'si: {newPost.CategoryId}. Bu ID'ye sahip bir kategori bulunamadı.");
+                return BadRequest($"Geçersiz Kategori ID'si: {newPost.CategoryId}");
             }
 
-            // --- 2. Sunucu Tarafı Veri Temizliği ve NOT NULL Uyumu ---
-            newPost.CreatedDate = DateTime.Now;
+            newPost.CreatedDate = DateTime.UtcNow;
             newPost.IsActive = true;
-            newPost.PublishedDate = newPost.PublishedDate == default ? DateTime.Now : newPost.PublishedDate;
+            newPost.PublishedDate = newPost.PublishedDate == default ? DateTime.UtcNow : newPost.PublishedDate;
 
             newPost.CoverImageUrl = newPost.CoverImageUrl?.Trim() ?? string.Empty;
             newPost.Title_TR = newPost.Title_TR.Trim();
@@ -67,12 +62,11 @@ public class AdminPostController : ControllerBase
             newPost.Content_AR = newPost.Content_AR ?? string.Empty;
             newPost.Slug_AR = newPost.Slug_AR?.Trim() ?? string.Empty;
 
-            // --- 3. Kayıt İşlemi ---
             var savedPost = await _postService.Create(newPost);
 
             if (savedPost == null || savedPost.Id == 0)
             {
-                return StatusCode(500, "Kayıt işlemi veritabanına yansıtılamadı. Servis beklenmedik bir değer döndürdü.");
+                return StatusCode(500, "Kayıt işlemi başarısız.");
             }
 
             return Ok(savedPost);
@@ -80,13 +74,13 @@ public class AdminPostController : ControllerBase
         catch (DbUpdateException dbEx)
         {
             var inner = dbEx.InnerException?.InnerException?.Message ?? dbEx.InnerException?.Message ?? dbEx.Message;
-            _logger.LogError(dbEx, "DbUpdateException KRİTİK HATA: {InnerMessage}", inner);
-            return StatusCode(500, $"Veritabanı Kısıtlama Hatası: Detay: {inner}");
+            _logger.LogError(dbEx, "DbUpdateException: {InnerMessage}", inner);
+            return StatusCode(500, $"Veritabanı hatası: {inner}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Beklenmeyen Hata: {Message}", ex.Message);
-            return StatusCode(500, $"Beklenmeyen bir hata oluştu: {ex.Message}");
+            _logger.LogError(ex, "Beklenmeyen hata: {Message}", ex.Message);
+            return StatusCode(500, $"Beklenmeyen hata: {ex.Message}");
         }
     }
 }

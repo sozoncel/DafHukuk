@@ -3,6 +3,24 @@
 /* =========================================================
     SIDEBAR - MODERN NAVMENU
 ========================================================= */
+
+.bi {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    width: auto !important;
+    height: auto !important;
+    margin-right: 0 !important;
+    top: 0 !important;
+}
+
+.nav-link-icon .bi,
+.stat-card-icon .bi,
+.quick-action-icon .bi {
+    margin-right: 0 !important;
+}
+
+
 .admin-sidebar {
     width: 280px;
     height: 100vh;
@@ -1739,4 +1757,507 @@
         .admin-mobile-menu-btn span {
             width: 22px;
         }
+}
+
+
+/* =========================================================
+    GÖRSEL YÜKLEME ALANI (DRAG & DROP)
+========================================================= */
+.upload-drop-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+    .upload-drop-zone::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .upload-drop-zone:hover {
+        border-color: #3b82f6;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+        .upload-drop-zone:hover::before {
+            opacity: 1;
+        }
+
+    .upload-drop-zone.drag-over {
+        border-color: #2563eb;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        transform: scale(1.02);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    }
+
+        .upload-drop-zone.drag-over::before {
+            opacity: 1;
+        }
+
+    .upload-drop-zone i {
+        display: block;
+        margin: 0 auto;
+        transition: transform 0.3s ease;
+    }
+
+    .upload-drop-zone:hover i {
+        transform: scale(1.1) translateY(-5px);
+        color: #3b82f6;
+    }
+
+    .upload-drop-zone p {
+        position: relative;
+        z-index: 1;
+    }
+
+/* IMAGE PREVIEW WRAPPER (Güncellenmiþ) */
+.image-preview-wrapper {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8fafc;
+    min-height: 200px;
+    max-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+    .image-preview-wrapper:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .image-preview-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .image-preview-wrapper:hover img {
+        transform: scale(1.05);
+    }
+
+/* UPLOAD LOADING SPINNER */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* RESPONSIVE UPLOAD ZONE */
+@media (max-width: 767px) {
+    .upload-drop-zone {
+        padding: 30px 15px;
+    }
+
+        .upload-drop-zone i {
+            font-size: 2.5rem !important;
+        }
+
+        .upload-drop-zone p {
+            font-size: 0.85rem;
+        }
+
+    .image-preview-wrapper {
+        min-height: 180px;
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 575px) {
+    .upload-drop-zone {
+        padding: 25px 10px;
+    }
+
+        .upload-drop-zone i {
+            font-size: 2rem !important;
+        }
+
+        .upload-drop-zone p {
+            font-size: 0.8rem;
+        }
+
+    .image-preview-wrapper {
+        min-height: 160px;
+        max-height: 220px;
+    }
+}
+
+/* =========================================================
+    ÇÖZÜM ORTAKLARI YÖNETÝMÝ - EK STÝLLER
+========================================================= */
+
+/* Ortak kartlarý için özel düzenlemeler */
+.admin-content-card .card-body a {
+    color: #3b82f6;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+    .admin-content-card .card-body a:hover {
+        text-decoration: underline;
+    }
+
+/* Logo preview için özel düzenleme */
+.partner-logo-preview {
+    max-height: 200px;
+    object-fit: contain;
+    background: #f8fafc;
+    padding: 20px;
+}
+
+/* Ortak kartý hover efekti iyileþtirmesi */
+.admin-content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    border-color: #3b82f6;
+}
+
+/* Drag & Drop zone için ek stiller (tüm sayfalar için geçerli) */
+.upload-drop-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+    .upload-drop-zone::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .upload-drop-zone:hover {
+        border-color: #3b82f6;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+        .upload-drop-zone:hover::before {
+            opacity: 1;
+        }
+
+    .upload-drop-zone.drag-over {
+        border-color: #2563eb;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        transform: scale(1.02);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    }
+
+        .upload-drop-zone.drag-over::before {
+            opacity: 1;
+        }
+
+    .upload-drop-zone i {
+        display: block;
+        margin: 0 auto;
+        transition: transform 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .upload-drop-zone:hover i {
+        transform: scale(1.1) translateY(-5px);
+        color: #3b82f6;
+    }
+
+    .upload-drop-zone p {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+    }
+
+/* Image preview wrapper iyileþtirmeleri */
+.image-preview-wrapper {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8fafc;
+    min-height: 200px;
+    max-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+    .image-preview-wrapper:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .image-preview-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .image-preview-wrapper:hover img {
+        transform: scale(1.05);
+    }
+
+/* Responsive düzenlemeler - Ortak yönetimi için */
+@media (max-width: 767px) {
+    .upload-drop-zone {
+        padding: 30px 15px;
+    }
+
+        .upload-drop-zone i {
+            font-size: 2.5rem !important;
+        }
+
+        .upload-drop-zone p {
+            font-size: 0.85rem;
+        }
+
+    .image-preview-wrapper {
+        min-height: 180px;
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 575px) {
+    .upload-drop-zone {
+        padding: 25px 10px;
+    }
+
+        .upload-drop-zone i {
+            font-size: 2rem !important;
+        }
+
+        .upload-drop-zone p {
+            font-size: 0.8rem;
+        }
+
+    .image-preview-wrapper {
+        min-height: 160px;
+        max-height: 220px;
+    }
+}
+
+/* =========================================================
+    YÜKLENÝYOR SPINNER STÝLÝ (Genel kullaným)
+========================================================= */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Modern alert düzenlemeleri - Tüm admin sayfalarý için */
+.modern-alert {
+    animation: slideInDown 0.4s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Admin card hover animation iyileþtirmesi */
+.admin-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .admin-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+/* Form kontrolleri için focus iyileþtirmesi */
+.form-control:focus,
+.form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+/* Checkbox ve switch'ler için iyileþtirmeler */
+.form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.form-check-input:focus {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+
+/* Buton disable durumu iyileþtirmesi */
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* List group item hover efekti */
+.list-group-item:hover {
+    background-color: #f1f5f9;
+}
+
+/* Nav tabs aktif durum iyileþtirmesi */
+.nav-tabs .nav-link.active {
+    background-color: transparent;
+    border-bottom: 3px solid #3b82f6;
+    color: #3b82f6;
+}
+
+/* Badge stili iyileþtirmesi */
+.badge {
+    font-weight: 600;
+    padding: 0.35em 0.75em;
+    border-radius: 0.375rem;
+}
+
+/* Card footer düzenlemesi */
+.card-footer {
+    background-color: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Scrollbar stili - Tüm admin sayfalarý için */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+/* Loading state için pulse animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Empty state için stil */
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #94a3b8;
+}
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.5;
+    }
+
+    .empty-state p {
+        font-size: 1.125rem;
+        margin: 0;
+    }
+
+/* Success ve error mesajlarý için icon animasyonu */
+.modern-alert-icon i {
+    animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+/* =========================================================
+    ACCESSIBILITY ÝYÝLEÞTÝRMELERÝ
+========================================================= */
+
+/* Focus görünürlüðü artýrma */
+*:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Butonlar için focus durumu */
+.btn:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.5);
+}
+
+/* Link'ler için focus durumu */
+a:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+@media print {
+    .admin-sidebar,
+    .admin-mobile-menu-btn,
+    .admin-mobile-overlay,
+    .modern-alert,
+    .btn {
+        display: none !important;
+    }
+
+    .admin-card {
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    main {
+        margin-left: 0 !important;
+    }
 }

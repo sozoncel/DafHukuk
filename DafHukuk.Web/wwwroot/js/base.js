@@ -12,38 +12,43 @@
         }
     });
 
-    /* KATEGORİ RENKLENDİRME (Case-Insensitive olarak optimize edildi) */
+    /* KATEGORİ RENKLENDİRME (Case-Insensitive + MutationObserver) */
     function colorizeCategoryButtons() {
         document.querySelectorAll(".content-tag-button").forEach(btn => {
             let text = btn.innerText.trim().toLowerCase();
 
-            let bgColor = "#dfb899"; 
+            let bgColor = "#dfb899";
             let txtColor = "white";
 
             switch (text) {
                 case "hizmetlerimiz":
                 case "services":
+                case "our services":
+                case "خدماتنا":
                 case "خدمات":
                     bgColor = "#366C80";
                     break;
                 case "duyurular":
                 case "announcements":
+                case "الإعلانات":
                 case "إعلانات":
                     bgColor = "#5c7341";
                     break;
                 case "etkinlikler":
                 case "events":
+                case "الفعاليات":
                 case "فعاليات":
                     bgColor = "#78514A";
                     break;
                 case "yayınlar":
                 case "yayinlar":
                 case "publications":
+                case "المنشورات":
                 case "منشورات":
                     bgColor = "#dfb899";
                     break;
                 default:
-                    bgColor = "#3b82f6"; 
+                    bgColor = "#3b82f6";
                     break;
             }
 
@@ -52,6 +57,22 @@
         });
     }
 
+    /* MutationObserver - DOM değişikliklerini izle */
+    const observer = new MutationObserver(() => {
+        colorizeCategoryButtons();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    /* İlk yükleme + gecikme ile tekrar kontrol */
+    colorizeCategoryButtons();
+    setTimeout(colorizeCategoryButtons, 200);
+    setTimeout(colorizeCategoryButtons, 500);
+    setTimeout(colorizeCategoryButtons, 1000);
+
 
     /* SAYICI ANİMASYONU (Counter Animation) */
     function startCounter(target) {
@@ -59,7 +80,7 @@
         const hasPlus = target.innerText.trim().endsWith('+');
 
         let count = 0;
-        const duration = 2000; 
+        const duration = 2000;
         const stepTime = 10;
         const step = dataTarget / (duration / stepTime);
 
@@ -68,7 +89,7 @@
 
             if (count >= dataTarget) {
                 clearInterval(counter);
-                count = dataTarget; 
+                count = dataTarget;
                 target.innerText = count + (hasPlus ? '+' : '');
             } else {
                 target.innerText = Math.floor(count);
@@ -91,10 +112,6 @@
     document.querySelectorAll(".counter-number").forEach(counter => {
         counterObserver.observe(counter);
     });
-
-    const observer = new MutationObserver(() => colorizeCategoryButtons());
-    observer.observe(document.body, { childList: true, subtree: true });
-    setTimeout(colorizeCategoryButtons, 200);
 
     /* MOBİL MENÜ */
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
@@ -156,9 +173,8 @@
     function performSearch(query) {
         if (!query || query.trim().length < 2) return;
 
-        // Mevcut dile göre arama URL'i oluştur
         const path = window.location.pathname.toLowerCase();
-        let searchUrl = '/arama'; 
+        let searchUrl = '/arama';
 
         if (path.startsWith('/en/') || path === '/en') {
             searchUrl = '/en/search';
@@ -260,6 +276,9 @@
             .find(x => x.getAttribute("onclick") === `filterCategory(${categoryId})`);
 
         activeTab?.classList.add("active");
+
+        /* Kategori değişikliğinde renklendirmeyi tetikle */
+        setTimeout(colorizeCategoryButtons, 100);
     };
 
     window.showAll = function () {
@@ -278,6 +297,9 @@
         });
 
         document.getElementById("showAllButton").style.display = "none";
+
+        /* Tümünü göster'de renklendirmeyi tetikle */
+        setTimeout(colorizeCategoryButtons, 100);
     };
 
     setTimeout(() => window.filterCategory?.(0), 250);
@@ -307,7 +329,6 @@
     ADMİN MOBİL MENÜ
 ========================================================= */
 
-// Admin Mobil Menü Kontrolü
 document.addEventListener('DOMContentLoaded', function () {
     const adminMobileMenuBtn = document.getElementById("admin-mobile-menu-btn");
     const adminSidebar = document.getElementById("admin-sidebar");
@@ -367,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 (function () {
     const path = window.location.pathname.toLowerCase();
-    let detectedLang = null; 
+    let detectedLang = null;
 
     if (path.startsWith('/en/') || path === '/en') {
         detectedLang = 'en';
@@ -395,4 +416,82 @@ window.goToTurkish = function () {
     document.cookie = 'user_language=tr; path=/; max-age=31536000; SameSite=Lax';
 
     window.location.href = currentPath;
+};
+
+/* =========================================================
+   BLAZOR IMAGE UPLOAD - DRAG & DROP
+========================================================= */
+
+window.blazorImageUpload = {
+    dropZoneHandlers: {},
+
+    initDragDrop: function (dropZoneId, inputFileId) {
+        const dropZone = document.getElementById(dropZoneId);
+        const inputFile = document.getElementById(inputFileId);
+
+        if (!dropZone || !inputFile) {
+            console.warn('Drop zone veya input file bulunamadı:', dropZoneId, inputFileId);
+            return;
+        }
+
+        const handlers = {
+            dragenter: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('drag-over');
+            },
+            dragover: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            },
+            dragleave: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.target === dropZone) {
+                    dropZone.classList.remove('drag-over');
+                }
+            },
+            drop: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('drag-over');
+
+                const files = e.dataTransfer?.files;
+                if (files && files.length > 0) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(files[0]);
+                    inputFile.files = dataTransfer.files;
+
+                    const event = new Event('change', { bubbles: true });
+                    inputFile.dispatchEvent(event);
+                }
+            },
+            click: () => {
+                inputFile.click();
+            }
+        };
+
+        dropZone.addEventListener('dragenter', handlers.dragenter);
+        dropZone.addEventListener('dragover', handlers.dragover);
+        dropZone.addEventListener('dragleave', handlers.dragleave);
+        dropZone.addEventListener('drop', handlers.drop);
+        dropZone.addEventListener('click', handlers.click);
+
+        this.dropZoneHandlers[dropZoneId] = { dropZone, handlers };
+    },
+
+    disposeDragDrop: function (dropZoneId) {
+        const data = this.dropZoneHandlers[dropZoneId];
+        if (!data) return;
+
+        const { dropZone, handlers } = data;
+
+        dropZone.removeEventListener('dragenter', handlers.dragenter);
+        dropZone.removeEventListener('dragover', handlers.dragover);
+        dropZone.removeEventListener('dragleave', handlers.dragleave);
+        dropZone.removeEventListener('drop', handlers.drop);
+        dropZone.removeEventListener('click', handlers.click);
+
+        delete this.dropZoneHandlers[dropZoneId];
+    }
 };

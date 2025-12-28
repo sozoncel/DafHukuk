@@ -3,9 +3,7 @@
 @inject IJSRuntime JS
 @implements IDisposable
 
-<!--Üst Menü Başlangıcı-->
 <header class="header" id="site-header">
-
     <div class="nav-inner">
         <a href="@GetLocalizedUrl("")" class="logo-link"><div class="logo">@GetText("siteName")</div></a>
         <nav class="menu">
@@ -13,7 +11,7 @@
                 <a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a>
                 <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
                 <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
-                <a href="@GetLocalizedUrl("duyurular")">@GetText("announcements")</a>
+                <a href="@GetLocalizedPartners()">@GetText("partners")</a>
                 <a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
                 <a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a>
                 <a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a>
@@ -22,7 +20,6 @@
         </nav>
 
         <div class="right-actions">
-            <!--Dil Seçim Kısmı-->
             <div class="language-Selection">
                 <a href="@GetLanguageChangeUrl("en")"
                    class="navbar-lang-link @(CurrentLang == "en" ? "active" : "")"
@@ -45,13 +42,11 @@
                     <span>TR</span>
                 </a>
             </div>
-            <!--Arama Kısmı-->
             <button type="button" class="search-trigger" id="search-trigger">
                 <i class="fa fa-search"></i>
             </button>
         </div>
 
-        <!--Mobile Menu Button-->
         <div class="mobile-menu-btn" id="mobile-menu-btn">
             <span></span>
             <span></span>
@@ -59,7 +54,6 @@
         </div>
     </div>
 
-    <!--Desktop Search Bar-->
     <div class="desktop-search-bar" id="desktop-search-bar">
         <div class="search-bar-inner">
             <input type="text"
@@ -75,7 +69,6 @@
         </div>
     </div>
 
-    <!--Mobile Menu-->
     <div id="mobile-menu">
         <div class="mobile-menu-close" id="mobile-menu-close">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -84,7 +77,6 @@
             </svg>
         </div>
 
-        <!--Mobile Search Trigger-->
         <div class="mobile-search-trigger" id="mobile-search-trigger">
             <i class="fa fa-search"></i>
             <span>@GetText("search")</span>
@@ -94,7 +86,7 @@
         <a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a>
         <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
         <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
-        <a href="@GetLocalizedUrl("duyurular")">@GetText("announcements")</a>
+        <a href="@GetLocalizedPartners()">@GetText("partners")</a>
         <a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
         <a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a>
         <a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a>
@@ -125,7 +117,6 @@
     <div class="mobile-overlay" id="mobile-overlay"></div>
 </header>
 
-<!--Mobile Search Overlay-->
 <div class="mobile-search-overlay" id="mobile-search-overlay">
     <div class="mobile-search-close" id="mobile-search-close">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -146,7 +137,6 @@
 
     protected override void OnInitialized()
     {
-        // URL değişikliğinde navbar'ı güncelle
         Navigation.LocationChanged += OnLocationChanged;
     }
 
@@ -157,7 +147,6 @@
 
     public void Dispose()
     {
-        // Memory leak önlemek için event'i temizle
         Navigation.LocationChanged -= OnLocationChanged;
     }
 
@@ -169,7 +158,7 @@
             ["about"] = "Hakkımızda",
             ["services"] = "Hizmetlerimiz",
             ["team"] = "Ekibimiz",
-            ["announcements"] = "Duyurular",
+            ["partners"] = "Çözüm Ortakları",
             ["publications"] = "Yayınlar",
             ["events"] = "Etkinlikler",
             ["career"] = "Kariyer",
@@ -184,7 +173,7 @@
             ["about"] = "About Us",
             ["services"] = "Services",
             ["team"] = "Our Team",
-            ["announcements"] = "Announcements",
+            ["partners"] = "Partners",
             ["publications"] = "Publications",
             ["events"] = "Events",
             ["career"] = "Careers",
@@ -199,7 +188,7 @@
             ["about"] = "من نحن",
             ["services"] = "خدماتنا",
             ["team"] = "فريقنا",
-            ["announcements"] = "إعلانات",
+            ["partners"] = "الشركاء",
             ["publications"] = "منشورات",
             ["events"] = "فعاليات",
             ["career"] = "وظائف",
@@ -221,6 +210,18 @@
     {
         return LanguageService.GetLocalizedUrl(path);
     }
+
+    // ✅ DÜZELTME: Çözüm Ortakları için özel routing
+    private string GetLocalizedPartners()
+    {
+        return CurrentLang switch
+        {
+            "en" => "/en/partners",
+            "ar" => "/ar/partners",
+            _ => "/cozum-ortaklari"
+        };
+    }
+
     private string GetLanguageChangeUrl(string newLang)
     {
         var uri = new Uri(Navigation.Uri);

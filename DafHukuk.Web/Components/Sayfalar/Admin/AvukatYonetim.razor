@@ -3,8 +3,10 @@
 @rendermode InteractiveServer
 
 @using DafHukuk.Core.Entities
+@using System.Net.Http.Json
 @inject ILawyerService LawyerService
 @inject IJSRuntime JS
+@inject HttpClient Http
 
 <div class="container-fluid px-4 py-4">
 
@@ -56,7 +58,6 @@
                         @(isEditMode? GetText("editLawyer") : GetText("newLawyer"))
                     </h5>
 
-                    @* Temel Bilgiler *@
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-person me-1"></i>
@@ -97,19 +98,55 @@
                         </label>
                         <input class="form-control" @bind="newLawyer.Location" placeholder="@GetText("locationPlaceholder")" />
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label fw-semibold">@GetText("slug") *</label>
                         <input class="form-control" @bind="newLawyer.Slug_TR" placeholder="@GetText("slugPlaceholder")" />
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">
                             <i class="bi bi-image me-1"></i>
                             @GetText("photoUrl")
                         </label>
-                        <input class="form-control" @bind="newLawyer.ImageUrl" placeholder="https://..." />
-                        <div class="mt-3 image-preview-wrapper">
-                            <img src="@GetPreviewImage()" class="img-fluid rounded" alt="@GetText("preview")" />
+
+                        <div class="upload-drop-zone @(isDragging ? "drag-over" : "")"
+                             @ondragenter="HandleDragEnter"
+                             @ondragenter:preventDefault
+                             @ondragleave="HandleDragLeave"
+                             @ondragleave:preventDefault
+                             @ondragover:preventDefault
+                             @ondrop="HandleLawyerDrop"
+                             @ondrop:preventDefault
+                             @onclick="OpenLawyerFileDialog">
+                            <i class="bi bi-cloud-upload fs-1 text-muted mb-2"></i>
+                            <p class="mb-1 fw-semibold">@GetText("dragDropPhoto")</p>
+                            <p class="text-muted small mb-0">@GetText("orClickToSelect")</p>
+                            <p class="text-muted small mt-1">@GetText("photoRequirements")</p>
                         </div>
+
+                        <InputFile @ref="lawyerImageInput"
+                                   OnChange="HandleLawyerImageUpload"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   style="display: none;" />
+
+                        <input class="form-control mt-2" @bind="newLawyer.ImageUrl" placeholder="@GetText("orEnterUrl")" />
+
+                        <div class="mt-3 image-preview-wrapper">
+                            <img src="@GetPreviewImage()"
+                                 class="img-fluid rounded"
+                                 alt="@GetText("preview")" />
+                        </div>
+
+                        @if (isUploading)
+                        {
+                            <div class="text-center mt-2">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">@GetText("uploading")</span>
+                                </div>
+                                <span class="ms-2 text-muted small">@GetText("uploading")</span>
+                            </div>
+                        }
                     </div>
 
                     <div class="mb-4">
@@ -185,7 +222,6 @@
                 </div>
 
                 <div class="card-body">
-                    @* Türkçe *@
                     <div class='@GetLangClass("tr")'>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title") *</label>
@@ -197,7 +233,6 @@
                         </div>
                     </div>
 
-                    @* İngilizce *@
                     <div class='@GetLangClass("en")'>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -213,7 +248,6 @@
                         </div>
                     </div>
 
-                    @* Arapça *@
                     <div class='@GetLangClass("ar")' dir="rtl">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("title")</label>
@@ -233,7 +267,6 @@
         </div>
     </div>
 
-    @* Avukat Listesi *@
     <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
         <h3 class="fw-bold mb-0">
             <i class="bi bi-people me-2"></i>
@@ -313,12 +346,14 @@
 
 @code {
     private Lawyer newLawyer = new Lawyer { IsActive = true };
-    private Lawyer? originalLawyer; // Edit için original data
+    private Lawyer? originalLawyer;
     private List<Lawyer> lawyers = new();
     private string activeLang = "tr";
     private string searchTerm = string.Empty;
     private bool isSaving = false;
     private bool isListLoading = true;
+    private bool isUploading = false;
+    private bool isDragging = false;
     private bool showSuccess = false;
     private bool showError = false;
     private bool isEditMode = false;
@@ -327,6 +362,8 @@
     private bool includeTr { get; set; } = true;
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
+
+    private InputFile? lawyerImageInput;
 
     private Dictionary<string, Dictionary<string, string>> translations = new()
     {
@@ -345,8 +382,13 @@
             ["officePhone"] = "Ofis Tel",
             ["location"] = "Konum",
             ["locationPlaceholder"] = "Ankara / Türkiye",
-            ["photoUrl"] = "Fotoğraf URL",
+            ["photoUrl"] = "Fotoğraf",
+            ["dragDropPhoto"] = "Fotoğrafı buraya sürükleyin veya tıklayın",
+            ["orClickToSelect"] = "Dosya seçmek için tıklayın",
+            ["photoRequirements"] = "(Maks. 10MB - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "veya URL girin: https://...",
             ["preview"] = "Önizleme",
+            ["uploading"] = "Yükleniyor...",
             ["activeState"] = "Durum",
             ["active"] = "Aktif",
             ["passive"] = "Pasif",
@@ -385,8 +427,13 @@
             ["officePhone"] = "Office",
             ["location"] = "Location",
             ["locationPlaceholder"] = "Istanbul / Turkey",
-            ["photoUrl"] = "Photo URL",
+            ["photoUrl"] = "Photo",
+            ["dragDropPhoto"] = "Drag photo here or click",
+            ["orClickToSelect"] = "Click to select file",
+            ["photoRequirements"] = "(Max. 10MB - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "or enter URL: https://...",
             ["preview"] = "Preview",
+            ["uploading"] = "Uploading...",
             ["activeState"] = "Status",
             ["active"] = "Active",
             ["passive"] = "Passive",
@@ -425,8 +472,13 @@
             ["officePhone"] = "المكتب",
             ["location"] = "الموقع",
             ["locationPlaceholder"] = "أنقرة / تركيا",
-            ["photoUrl"] = "رابط الصورة",
+            ["photoUrl"] = "الصورة",
+            ["dragDropPhoto"] = "اسحب الصورة هنا أو انقر",
+            ["orClickToSelect"] = "انقر لاختيار الملف",
+            ["photoRequirements"] = "(بحد أقصى 10 ميجابايت - JPG, PNG, WebP)",
+            ["orEnterUrl"] = "أو أدخل الرابط: https://...",
             ["preview"] = "معاينة",
+            ["uploading"] = "جاري الرفع...",
             ["activeState"] = "الحالة",
             ["active"] = "نشط",
             ["passive"] = "غير نشط",
@@ -463,6 +515,144 @@
     private string GetLangClass(string lang) => activeLang == lang ? "d-block" : "d-none";
     private string GetPreviewImage() => string.IsNullOrWhiteSpace(newLawyer.ImageUrl) ? "https://via.placeholder.com/400x400?text=Avatar" : newLawyer.ImageUrl;
     private void SwitchLang(string lang) { activeLang = lang; }
+
+    private void HandleDragEnter()
+    {
+        isDragging = true;
+    }
+
+    private void HandleDragLeave()
+    {
+        isDragging = false;
+    }
+
+    private async Task HandleLawyerDrop(Microsoft.AspNetCore.Components.Web.DragEventArgs e)
+    {
+        isDragging = false;
+        if (lawyerImageInput?.Element != null)
+        {
+            await lawyerImageInput.Element.Value.FocusAsync();
+        }
+    }
+
+    private async Task OpenLawyerFileDialog()
+    {
+        if (lawyerImageInput?.Element != null)
+        {
+            await lawyerImageInput.Element.Value.FocusAsync();
+            await JS.InvokeVoidAsync("eval", "arguments[0].click()", lawyerImageInput.Element);
+        }
+    }
+
+    private async Task HandleLawyerImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            await ProcessImageFile(file);
+        }
+    }
+
+    private async Task ProcessImageFile(IBrowserFile file)
+    {
+        const long maxFileSize = 10 * 1024 * 1024;
+
+        if (file.Size > maxFileSize)
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => "File size must be less than 10MB!",
+                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
+                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
+            };
+            return;
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+
+        if (!allowedExtensions.Contains(extension))
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
+                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
+                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
+            };
+            return;
+        }
+
+        try
+        {
+            isUploading = true;
+            StateHasChanged();
+
+            using var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("/api/image/upload?entityType=lawyers", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
+                {
+                    newLawyer.ImageUrl = result.FilePath;
+
+                    showSuccess = true;
+                    successMessage = activeLang switch
+                    {
+                        "en" => "Photo uploaded successfully!",
+                        "ar" => "تم رفع الصورة بنجاح!",
+                        _ => "Fotoğraf başarıyla yüklendi!"
+                    };
+
+                    await Task.Delay(2000);
+                    showSuccess = false;
+                }
+                else
+                {
+                    showError = true;
+                    errorMessage = result?.Message ?? (activeLang switch
+                    {
+                        "en" => "Photo could not be uploaded.",
+                        "ar" => "لم يتم رفع الصورة.",
+                        _ => "Fotoğraf yüklenemedi."
+                    });
+                }
+            }
+            else
+            {
+                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                showError = true;
+                errorMessage = errorResult?.Message ?? (activeLang switch
+                {
+                    "en" => "Photo upload failed.",
+                    "ar" => "فشل رفع الصورة.",
+                    _ => "Fotoğraf yükleme başarısız oldu."
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            showError = true;
+            errorMessage = activeLang switch
+            {
+                "en" => $"Upload error: {ex.Message}",
+                "ar" => $"خطأ في الرفع: {ex.Message}",
+                _ => $"Yükleme hatası: {ex.Message}"
+            };
+        }
+        finally
+        {
+            isUploading = false;
+            StateHasChanged();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -615,7 +805,6 @@
         includeAr = !string.IsNullOrWhiteSpace(lawyer.Title_AR);
 
         isEditMode = true;
-
         JS.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
 
@@ -787,5 +976,12 @@
             "ar" => lawyer.Title_AR ?? lawyer.Title_TR ?? "",
             _ => lawyer.Title_TR ?? ""
         };
+    }
+
+    private class ImageUploadResult
+    {
+        public bool Success { get; set; }
+        public string? Message { get; set; }
+        public string? FilePath { get; set; }
     }
 }

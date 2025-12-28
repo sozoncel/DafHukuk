@@ -35,7 +35,6 @@ namespace DafHukuk.Service
 
         public async Task<Post?> GetById(int id)
         {
-
             return await _context.Posts
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -43,6 +42,12 @@ namespace DafHukuk.Service
 
         public async Task<Post> Create(Post post)
         {
+            post.CreatedDate = DateTime.UtcNow;
+            if (post.PublishedDate == default)
+            {
+                post.PublishedDate = DateTime.UtcNow;
+            }
+
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
@@ -53,7 +58,6 @@ namespace DafHukuk.Service
 
         public async Task<Post?> Update(int id, Post post)
         {
-            // Veritabanından mevcut kaydı al
             var existing = await _context.Posts.FindAsync(id);
             if (existing == null)
                 return null;
@@ -103,18 +107,20 @@ namespace DafHukuk.Service
             var results = await _context.Posts
                 .Include(p => p.Category)
                 .Where(p => p.IsActive &&
-                    (p.Title_TR.ToLower().Contains(lowerQuery) ||
-                     p.Content_TR.ToLower().Contains(lowerQuery) ||
-                     p.Slug_TR.ToLower().Contains(lowerQuery) ||
-                     p.Title_EN.ToLower().Contains(lowerQuery) ||
-                     p.Content_EN.ToLower().Contains(lowerQuery) ||
-                     p.Slug_EN.ToLower().Contains(lowerQuery) ||
-                     p.Title_AR.ToLower().Contains(lowerQuery) ||
-                     p.Content_AR.ToLower().Contains(lowerQuery) ||
-                     p.Slug_AR.ToLower().Contains(lowerQuery) ||
-                     (p.Category != null && p.Category.Name_TR.ToLower().Contains(lowerQuery)) ||
-                     (p.Category != null && p.Category.Name_EN.ToLower().Contains(lowerQuery)) ||
-                     (p.Category != null && p.Category.Name_AR.ToLower().Contains(lowerQuery)))
+                    (
+                        (p.Title_TR != null && p.Title_TR.ToLower().Contains(lowerQuery)) ||
+                        (p.Content_TR != null && p.Content_TR.ToLower().Contains(lowerQuery)) ||
+                        (p.Slug_TR != null && p.Slug_TR.ToLower().Contains(lowerQuery)) ||
+                        (p.Title_EN != null && p.Title_EN.ToLower().Contains(lowerQuery)) ||
+                        (p.Content_EN != null && p.Content_EN.ToLower().Contains(lowerQuery)) ||
+                        (p.Slug_EN != null && p.Slug_EN.ToLower().Contains(lowerQuery)) ||
+                        (p.Title_AR != null && p.Title_AR.ToLower().Contains(lowerQuery)) ||
+                        (p.Content_AR != null && p.Content_AR.ToLower().Contains(lowerQuery)) ||
+                        (p.Slug_AR != null && p.Slug_AR.ToLower().Contains(lowerQuery)) ||
+                        (p.Category != null && p.Category.Name_TR != null && p.Category.Name_TR.ToLower().Contains(lowerQuery)) ||
+                        (p.Category != null && p.Category.Name_EN != null && p.Category.Name_EN.ToLower().Contains(lowerQuery)) ||
+                        (p.Category != null && p.Category.Name_AR != null && p.Category.Name_AR.ToLower().Contains(lowerQuery))
+                    )
                 )
                 .OrderByDescending(p => p.PublishedDate)
                 .ToListAsync();
