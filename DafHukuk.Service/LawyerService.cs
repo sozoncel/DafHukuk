@@ -22,18 +22,21 @@ namespace DafHukuk.Service
             return await _context.Lawyers
                 .Where(l => l.IsActive)
                 .OrderBy(l => l.Name)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<Lawyer?> GetById(int id)
         {
-            return await _context.Lawyers.FirstOrDefaultAsync(l => l.Id == id);
+            return await _context.Lawyers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(l => l.Id == id);
         }
 
         public async Task<Lawyer?> GetBySlug(string slug, string language)
         {
             var lowerSlug = slug.ToLower();
-            var query = _context.Lawyers.AsQueryable();
+            var query = _context.Lawyers.AsNoTracking().AsQueryable();
 
             return await (language.ToLower() switch
             {
@@ -45,8 +48,8 @@ namespace DafHukuk.Service
 
         public async Task<Lawyer> Create(Lawyer lawyer)
         {
-            // ✅ UTC kullanımı
             lawyer.CreatedDate = DateTime.UtcNow;
+            lawyer.UpdatedDate = DateTime.UtcNow;
 
             _context.Lawyers.Add(lawyer);
             await _context.SaveChangesAsync();
@@ -59,6 +62,7 @@ namespace DafHukuk.Service
             if (existing == null)
                 return null;
 
+            // Temel alanları güncelle
             existing.Name = lawyer.Name;
             existing.Email = lawyer.Email;
             existing.MobilePhone = lawyer.MobilePhone;
@@ -66,9 +70,9 @@ namespace DafHukuk.Service
             existing.Location = lawyer.Location;
             existing.ImageUrl = lawyer.ImageUrl;
             existing.IsActive = lawyer.IsActive;
-
             existing.UpdatedDate = DateTime.UtcNow;
 
+            // Dil bazlı alanları güncelle
             existing.Title_TR = lawyer.Title_TR;
             existing.Title_EN = lawyer.Title_EN;
             existing.Title_AR = lawyer.Title_AR;

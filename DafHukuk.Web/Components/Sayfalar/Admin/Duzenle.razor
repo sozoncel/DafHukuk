@@ -6,11 +6,12 @@
 
 @using DafHukuk.Core.Entities
 @using System.Net.Http.Json
+@using System.Text.RegularExpressions
 @inject ICategoryService CategoryService
 @inject IPostService PostService
+@inject IImageService ImageService
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
-@inject HttpClient Http
 
 <div class="container-fluid px-4 py-4">
 
@@ -145,13 +146,20 @@
                                     <i class="bi bi-folder me-1"></i>
                                     @GetText("category")
                                 </label>
-                                <select class="form-select" @bind="post.CategoryId">
+                                <select class="form-select" @bind="post.CategoryId" @bind:after="OnCategoryChanged">
                                     <option value="0">-- @GetText("selectCategory") --</option>
                                     @foreach (var c in categories)
                                     {
                                         <option value="@c.Id">@GetCategoryName(c)</option>
                                     }
                                 </select>
+                                @if (categoryChanged)
+                                {
+                                    <div class="alert alert-warning mt-2 small">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        Kategori değişti! Slug (URL) yollarını kontrol ediniz.
+                                    </div>
+                                }
                             </div>
 
                             <div class="mb-3">
@@ -284,6 +292,7 @@
                                     <label class="form-label fw-semibold">@GetText("title")</label>
                                     <input class="form-control form-control-lg"
                                            @bind="post.Title_TR"
+                                           @bind:after="UpdateSlugTR"
                                            placeholder="@GetText("titlePlaceholder")" />
                                 </div>
                                 <div class="mb-3">
@@ -291,6 +300,13 @@
                                     <input class="form-control"
                                            @bind="post.Slug_TR"
                                            placeholder="@GetText("slugPlaceholder")" />
+                                    @if (categoryChanged && !string.IsNullOrEmpty(suggestedSlugTR))
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary mt-2" @onclick="ApplySuggestedSlugTR">
+                                            <i class="bi bi-magic me-1"></i>
+                                            Önerilen: @suggestedSlugTR
+                                        </button>
+                                    }
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">@GetText("content")</label>
@@ -306,6 +322,7 @@
                                     <label class="form-label fw-semibold">@GetText("title")</label>
                                     <input class="form-control form-control-lg"
                                            @bind="post.Title_EN"
+                                           @bind:after="UpdateSlugEN"
                                            placeholder="@GetText("titlePlaceholder")" />
                                 </div>
                                 <div class="mb-3">
@@ -313,6 +330,13 @@
                                     <input class="form-control"
                                            @bind="post.Slug_EN"
                                            placeholder="@GetText("slugPlaceholder")" />
+                                    @if (categoryChanged && !string.IsNullOrEmpty(suggestedSlugEN))
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary mt-2" @onclick="ApplySuggestedSlugEN">
+                                            <i class="bi bi-magic me-1"></i>
+                                            Suggested: @suggestedSlugEN
+                                        </button>
+                                    }
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">@GetText("content")</label>
@@ -328,6 +352,7 @@
                                     <label class="form-label fw-semibold">@GetText("title")</label>
                                     <input class="form-control form-control-lg"
                                            @bind="post.Title_AR"
+                                           @bind:after="UpdateSlugAR"
                                            placeholder="@GetText("titlePlaceholder")" />
                                 </div>
                                 <div class="mb-3">
@@ -336,6 +361,13 @@
                                            style="direction:ltr"
                                            @bind="post.Slug_AR"
                                            placeholder="@GetText("slugPlaceholder")" />
+                                    @if (categoryChanged && !string.IsNullOrEmpty(suggestedSlugAR))
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary mt-2" @onclick="ApplySuggestedSlugAR">
+                                            <i class="bi bi-magic me-1"></i>
+                                            مقترح: @suggestedSlugAR
+                                        </button>
+                                    }
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">@GetText("content")</label>
@@ -375,6 +407,13 @@
     private bool includeTr { get; set; } = true;
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
+
+    // ✅ Kategori değişim kontrolü
+    private bool categoryChanged = false;
+    private int originalCategoryId = 0;
+    private string suggestedSlugTR = string.Empty;
+    private string suggestedSlugEN = string.Empty;
+    private string suggestedSlugAR = string.Empty;
 
     private string dropZoneId = $"dropzone-{Guid.NewGuid():N}";
     private string inputFileId = $"inputfile-{Guid.NewGuid():N}";
@@ -495,7 +534,94 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            try
+            {
+                await Task.Delay(100);
+                await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Drag-drop init error: {ex.Message}");
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+
+        if (PostId > 0)
+        {
+            await LoadPost();
+        }
+        else
+        {
+            await LoadAllPosts();
+        }
+    }
+
+    private async Task LoadPost()
+    {
+        isLoading = true;
+        try
+        {
+            post = await PostService.GetById(PostId);
+
+            if (post == null)
+            {
+                errorMessage = "İçerik bulunamadı.";
+                return;
+            }
+
+            // Kategori kontrolü için orijinal ID sakla
+            originalCategoryId = post.CategoryId;
+
+            originalPost = new Post
+            {
+                Id = post.Id,
+                Title_TR = post.Title_TR,
+                Content_TR = post.Content_TR,
+                Slug_TR = post.Slug_TR,
+                Title_EN = post.Title_EN,
+                Content_EN = post.Content_EN,
+                Slug_EN = post.Slug_EN,
+                Title_AR = post.Title_AR,
+                Content_AR = post.Content_AR,
+                Slug_AR = post.Slug_AR,
+                CategoryId = post.CategoryId,
+                CoverImageUrl = post.CoverImageUrl,
+                PublishedDate = post.PublishedDate,
+                IsActive = post.IsActive
+            };
+
+            includeTr = !string.IsNullOrWhiteSpace(post.Title_TR);
+            includeEn = !string.IsNullOrWhiteSpace(post.Title_EN);
+            includeAr = !string.IsNullOrWhiteSpace(post.Title_AR);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Yükleme hatası: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadAllPosts()
+    {
+        isLoading = true;
+        try
+        {
+            allPosts = await PostService.GetAll();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"İçerikler yüklenirken hata: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 
@@ -534,87 +660,31 @@
 
     private async Task ProcessImageFile(IBrowserFile file)
     {
-        const long maxFileSize = 10 * 1024 * 1024;
-
-        if (file.Size > maxFileSize)
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "File size must be less than 10MB!",
-                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
-                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
-            };
-            return;
-        }
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-
-        if (!allowedExtensions.Contains(extension))
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
-                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
-                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
-            };
-            return;
-        }
-
         try
         {
             isUploading = true;
             StateHasChanged();
 
-            using var content = new MultipartFormDataContent();
-            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-            content.Add(fileContent, "file", file.Name);
-
-            var response = await Http.PostAsync("/api/image/upload?entityType=posts", content);
-
-            if (response.IsSuccessStatusCode)
+            var formFile = new BrowserFileFormFile(file);
+            var result = await ImageService.UploadImageAsync(formFile, "posts", maxWidth: 1200, maxHeight: 800);
+            if (!result.Success)
             {
-                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
-                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
-                {
-                    post.CoverImageUrl = result.FilePath;
-
-                    showSuccess = true;
-                    successMessage = activeLang switch
-                    {
-                        "en" => "Image uploaded successfully!",
-                        "ar" => "تم رفع الصورة بنجاح!",
-                        _ => "Görsel başarıyla yüklendi!"
-                    };
-
-                    await Task.Delay(2000);
-                    showSuccess = false;
-                }
-                else
-                {
-                    showError = true;
-                    errorMessage = result?.Message ?? (activeLang switch
-                    {
-                        "en" => "Image could not be uploaded.",
-                        "ar" => "لم يتم رفع الصورة.",
-                        _ => "Görsel yüklenemedi."
-                    });
-                }
-            }
-            else
-            {
-                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
                 showError = true;
-                errorMessage = errorResult?.Message ?? (activeLang switch
-                {
-                    "en" => "Image upload failed.",
-                    "ar" => "فشل رفع الصورة.",
-                    _ => "Görsel yükleme başarısız oldu."
-                });
+                errorMessage = result.Message;
+                return;
             }
+
+            post.CoverImageUrl = result.FilePath;
+            showSuccess = true;
+            successMessage = activeLang switch
+            {
+                "en" => "Image uploaded successfully!",
+                "ar" => "تم رفع الصورة بنجاح!",
+                _ => "Görsel başarıyla yüklendi!"
+            };
+
+            await Task.Delay(2000);
+            showSuccess = false;
         }
         catch (Exception ex)
         {
@@ -625,77 +695,12 @@
                 "ar" => $"خطأ في الرفع: {ex.Message}",
                 _ => $"Yükleme hatası: {ex.Message}"
             };
+            Console.WriteLine($"Exception: {ex}");
         }
         finally
         {
             isUploading = false;
             StateHasChanged();
-        }
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        isLoading = true;
-        errorMessage = string.Empty;
-        showError = false;
-        showSuccess = false;
-
-        try
-        {
-            await LoadCategories();
-
-            if (PostId == 0)
-            {
-                allPosts = await PostService.GetAll();
-                isLoading = false;
-                return;
-            }
-
-            post = await PostService.GetById(PostId);
-
-            if (post == null)
-            {
-                errorMessage = activeLang == "tr" ? "İçerik bulunamadı!" : "Content not found!";
-                showError = true;
-                await Task.Delay(2000);
-                Navigation.NavigateTo("/admin/yonetim");
-                return;
-            }
-
-            originalPost = new Post
-            {
-                Id = post.Id,
-                Title_TR = post.Title_TR,
-                Content_TR = post.Content_TR,
-                Slug_TR = post.Slug_TR,
-                Title_EN = post.Title_EN,
-                Content_EN = post.Content_EN,
-                Slug_EN = post.Slug_EN,
-                Title_AR = post.Title_AR,
-                Content_AR = post.Content_AR,
-                Slug_AR = post.Slug_AR,
-                CategoryId = post.CategoryId,
-                CoverImageUrl = post.CoverImageUrl,
-                PublishedDate = post.PublishedDate,
-                IsActive = post.IsActive
-            };
-
-            includeTr = !string.IsNullOrWhiteSpace(post.Title_TR);
-            includeEn = !string.IsNullOrWhiteSpace(post.Title_EN);
-            includeAr = !string.IsNullOrWhiteSpace(post.Title_AR);
-
-            if (includeTr) activeLang = "tr";
-            else if (includeEn) activeLang = "en";
-            else if (includeAr) activeLang = "ar";
-        }
-        catch (Exception ex)
-        {
-            showError = true;
-            errorMessage = $"Hata: {ex.Message}";
-        }
-        finally
-        {
-            isLoading = false;
         }
     }
 
@@ -711,10 +716,108 @@
         }
     }
 
+    // ✅ Kategori değişim tespiti
+    private void OnCategoryChanged()
+    {
+        if (post != null && originalCategoryId != post.CategoryId)
+        {
+            categoryChanged = true;
+            GenerateSuggestedSlugs();
+        }
+        else
+        {
+            categoryChanged = false;
+        }
+    }
+
+    // ✅ Slug güncelleme ve öneri metodları
+    private void UpdateSlugTR()
+    {
+        if (post == null) return;
+        // Eğer slug boşsa veya kategori değiştiyse otomatik öneri/güncelleme yap
+        if (string.IsNullOrWhiteSpace(post.Slug_TR) || categoryChanged)
+        {
+            var slug = GenerateSlug(post.Title_TR);
+            // Eğer kategori değişimi yoksa direkt uygula, varsa sadece öneride kullan
+            if (!categoryChanged) post.Slug_TR = slug;
+            suggestedSlugTR = slug;
+        }
+    }
+
+    private void UpdateSlugEN()
+    {
+        if (post == null) return;
+        if (string.IsNullOrWhiteSpace(post.Slug_EN) || categoryChanged)
+        {
+            var slug = GenerateSlug(post.Title_EN);
+            if (!categoryChanged) post.Slug_EN = slug;
+            suggestedSlugEN = slug;
+        }
+    }
+
+    private void UpdateSlugAR()
+    {
+        if (post == null) return;
+        if (string.IsNullOrWhiteSpace(post.Slug_AR) || categoryChanged)
+        {
+            var slug = GenerateSlug(post.Title_AR);
+            if (!categoryChanged) post.Slug_AR = slug;
+            suggestedSlugAR = slug;
+        }
+    }
+
+    private void ApplySuggestedSlugTR()
+    {
+        if (post != null) post.Slug_TR = suggestedSlugTR;
+    }
+
+    private void ApplySuggestedSlugEN()
+    {
+        if (post != null) post.Slug_EN = suggestedSlugEN;
+    }
+
+    private void ApplySuggestedSlugAR()
+    {
+        if (post != null) post.Slug_AR = suggestedSlugAR;
+    }
+
+    private void GenerateSuggestedSlugs()
+    {
+        if (post == null) return;
+
+        if (!string.IsNullOrEmpty(post.Title_TR)) suggestedSlugTR = GenerateSlug(post.Title_TR);
+        if (!string.IsNullOrEmpty(post.Title_EN)) suggestedSlugEN = GenerateSlug(post.Title_EN);
+        if (!string.IsNullOrEmpty(post.Title_AR)) suggestedSlugAR = GenerateSlug(post.Title_AR);
+    }
+
+    private string GenerateSlug(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return string.Empty;
+
+        var slug = text.ToLowerInvariant();
+
+        // Türkçe karakterleri değiştir
+        slug = slug.Replace("ı", "i")
+                   .Replace("ğ", "g")
+                   .Replace("ü", "u")
+                   .Replace("ş", "s")
+                   .Replace("ö", "o")
+                   .Replace("ç", "c")
+                   .Replace(" ", "-");
+
+        // Geçersiz karakterleri temizle (Regex)
+        slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+
+        // Birden fazla tireyi tek tireye indir
+        slug = Regex.Replace(slug, @"\s+", " ").Trim();
+        slug = Regex.Replace(slug, @"-+", "-");
+
+        return slug;
+    }
+
     private async Task UpdatePost()
     {
         if (post == null || originalPost == null) return;
-
         showError = false;
         showSuccess = false;
 
@@ -735,7 +838,7 @@
         try
         {
             isSaving = true;
-
+            // Entity oluştur
             var updatePost = new Post
             {
                 Id = PostId,
@@ -745,49 +848,20 @@
                 CoverImageUrl = post.CoverImageUrl
             };
 
-            if (includeTr)
-            {
-                updatePost.Title_TR = post.Title_TR;
-                updatePost.Content_TR = post.Content_TR;
-                updatePost.Slug_TR = post.Slug_TR;
-            }
-            else
-            {
-                updatePost.Title_TR = originalPost.Title_TR;
-                updatePost.Content_TR = originalPost.Content_TR;
-                updatePost.Slug_TR = originalPost.Slug_TR;
-            }
+            // Dil seçimlerini eşle
+            updatePost.Title_TR = includeTr ? post.Title_TR : originalPost.Title_TR;
+            updatePost.Content_TR = includeTr ? post.Content_TR : originalPost.Content_TR;
+            updatePost.Slug_TR = includeTr ? post.Slug_TR : originalPost.Slug_TR;
 
-            if (includeEn)
-            {
-                updatePost.Title_EN = post.Title_EN;
-                updatePost.Content_EN = post.Content_EN;
-                updatePost.Slug_EN = post.Slug_EN;
-            }
-            else
-            {
-                updatePost.Title_EN = originalPost.Title_EN;
-                updatePost.Content_EN = originalPost.Content_EN;
-                updatePost.Slug_EN = originalPost.Slug_EN;
-            }
+            updatePost.Title_EN = includeEn ? post.Title_EN : originalPost.Title_EN;
+            updatePost.Content_EN = includeEn ? post.Content_EN : originalPost.Content_EN;
+            updatePost.Slug_EN = includeEn ? post.Slug_EN : originalPost.Slug_EN;
 
-            if (includeAr)
-            {
-                updatePost.Title_AR = post.Title_AR;
-                updatePost.Content_AR = post.Content_AR;
-                updatePost.Slug_AR = post.Slug_AR;
-            }
-            else
-            {
-                updatePost.Title_AR = originalPost.Title_AR;
-                updatePost.Content_AR = originalPost.Content_AR;
-                updatePost.Slug_AR = originalPost.Slug_AR;
-            }
-
-            updatePost.Category = null;
+            updatePost.Title_AR = includeAr ? post.Title_AR : originalPost.Title_AR;
+            updatePost.Content_AR = includeAr ? post.Content_AR : originalPost.Content_AR;
+            updatePost.Slug_AR = includeAr ? post.Slug_AR : originalPost.Slug_AR;
 
             var updatedPost = await PostService.Update(PostId, updatePost);
-
             if (updatedPost == null)
             {
                 throw new Exception("Güncelleme başarısız oldu!");
@@ -798,6 +872,10 @@
 
             await Task.Delay(1000);
             post = updatedPost;
+
+            // Orijinali güncelle ve kategori değişim bayrağını sıfırla
+            originalCategoryId = post.CategoryId;
+            categoryChanged = false;
 
             originalPost = new Post
             {
@@ -828,6 +906,7 @@
         {
             showError = true;
             errorMessage = $"❌ Hata: {ex.Message}";
+            Console.WriteLine($"Update error: {ex}");
         }
         finally
         {
@@ -838,13 +917,11 @@
     private async Task DeletePost()
     {
         if (post == null) return;
-
         if (await JS.InvokeAsync<bool>("confirm", GetText("confirmDelete")))
         {
             try
             {
                 isSaving = true;
-
                 var result = await PostService.Delete(PostId);
 
                 if (result)
@@ -877,6 +954,30 @@
             {
                 isSaving = false;
             }
+        }
+    }
+
+    private class BrowserFileFormFile : IFormFile
+    {
+        private readonly IBrowserFile _file;
+        public BrowserFileFormFile(IBrowserFile file)
+        {
+            _file = file;
+        }
+
+        public string ContentType => _file.ContentType;
+        public string ContentDisposition => $"form-data; name=\"file\"; filename=\"{_file.Name}\"";
+        public IHeaderDictionary Headers => new HeaderDictionary();
+        public long Length => _file.Size;
+        public string Name => "file";
+        public string FileName => _file.Name;
+
+        public Stream OpenReadStream() => _file.OpenReadStream(_file.Size);
+        public void CopyTo(Stream target) => OpenReadStream().CopyTo(target);
+        public async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+        {
+            await using var stream = OpenReadStream();
+            await stream.CopyToAsync(target, cancellationToken);
         }
     }
 

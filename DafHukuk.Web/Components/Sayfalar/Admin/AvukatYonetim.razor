@@ -1,12 +1,13 @@
 ﻿@page "/admin/avukatlar"
 @layout DafHukuk.Web.Components.Layout.AdminMainLayout
 @rendermode InteractiveServer
+@implements IAsyncDisposable
 
 @using DafHukuk.Core.Entities
 @using System.Net.Http.Json
 @inject ILawyerService LawyerService
+@inject IImageService ImageService
 @inject IJSRuntime JS
-@inject HttpClient Http
 
 <div class="container-fluid px-4 py-4">
 
@@ -110,23 +111,25 @@
                             @GetText("photoUrl")
                         </label>
 
-                        <div class="upload-drop-zone @(isDragging ? "drag-over" : "")"
-                             @ondragenter="HandleDragEnter"
-                             @ondragenter:preventDefault
-                             @ondragleave="HandleDragLeave"
-                             @ondragleave:preventDefault
-                             @ondragover:preventDefault
-                             @ondrop="HandleLawyerDrop"
-                             @ondrop:preventDefault
-                             @onclick="OpenLawyerFileDialog">
+                        <label for="@inputFileId"
+                               class="upload-drop-zone @(isDragging ? "drag-over" : "")"
+                               id="@dropZoneId"
+                               @ondragenter="HandleDragEnter"
+                               @ondragenter:preventDefault
+                               @ondragleave="HandleDragLeave"
+                               @ondragleave:preventDefault
+                               @ondragover:preventDefault
+                               @ondrop="HandleDrop"
+                               @ondrop:preventDefault
+                               style="cursor: pointer; display: block;">
                             <i class="bi bi-cloud-upload fs-1 text-muted mb-2"></i>
                             <p class="mb-1 fw-semibold">@GetText("dragDropPhoto")</p>
                             <p class="text-muted small mb-0">@GetText("orClickToSelect")</p>
                             <p class="text-muted small mt-1">@GetText("photoRequirements")</p>
-                        </div>
+                        </label>
 
-                        <InputFile @ref="lawyerImageInput"
-                                   OnChange="HandleLawyerImageUpload"
+                        <InputFile id="@inputFileId"
+                                   OnChange="HandleImageUpload"
                                    accept="image/jpeg,image/png,image/webp"
                                    style="display: none;" />
 
@@ -363,7 +366,8 @@
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
 
-    private InputFile? lawyerImageInput;
+    private string dropZoneId = $"dropzone-{Guid.NewGuid():N}";
+    private string inputFileId = $"inputfile-{Guid.NewGuid():N}";
 
     private Dictionary<string, Dictionary<string, string>> translations = new()
     {
@@ -504,6 +508,31 @@
         }
     };
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                await Task.Delay(100);
+                await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Drag-drop init error: {ex.Message}");
+            }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("blazorImageUpload.disposeDragDrop", dropZoneId);
+        }
+        catch { }
+    }
+
     private string GetText(string key)
     {
         if (translations.ContainsKey(activeLang) && translations[activeLang].ContainsKey(key))
@@ -516,35 +545,11 @@
     private string GetPreviewImage() => string.IsNullOrWhiteSpace(newLawyer.ImageUrl) ? "https://via.placeholder.com/400x400?text=Avatar" : newLawyer.ImageUrl;
     private void SwitchLang(string lang) { activeLang = lang; }
 
-    private void HandleDragEnter()
-    {
-        isDragging = true;
-    }
+    private void HandleDragEnter() { isDragging = true; }
+    private void HandleDragLeave() { isDragging = false; }
+    private void HandleDrop(Microsoft.AspNetCore.Components.Web.DragEventArgs e) { isDragging = false; }
 
-    private void HandleDragLeave()
-    {
-        isDragging = false;
-    }
-
-    private async Task HandleLawyerDrop(Microsoft.AspNetCore.Components.Web.DragEventArgs e)
-    {
-        isDragging = false;
-        if (lawyerImageInput?.Element != null)
-        {
-            await lawyerImageInput.Element.Value.FocusAsync();
-        }
-    }
-
-    private async Task OpenLawyerFileDialog()
-    {
-        if (lawyerImageInput?.Element != null)
-        {
-            await lawyerImageInput.Element.Value.FocusAsync();
-            await JS.InvokeVoidAsync("eval", "arguments[0].click()", lawyerImageInput.Element);
-        }
-    }
-
-    private async Task HandleLawyerImageUpload(InputFileChangeEventArgs e)
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
     {
         var file = e.File;
         if (file != null)
@@ -555,87 +560,39 @@
 
     private async Task ProcessImageFile(IBrowserFile file)
     {
-        const long maxFileSize = 10 * 1024 * 1024;
-
-        if (file.Size > maxFileSize)
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "File size must be less than 10MB!",
-                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
-                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
-            };
-            return;
-        }
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-
-        if (!allowedExtensions.Contains(extension))
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
-                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
-                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
-            };
-            return;
-        }
-
         try
         {
             isUploading = true;
             StateHasChanged();
 
-            using var content = new MultipartFormDataContent();
-            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-            content.Add(fileContent, "file", file.Name);
+            // ✅ FIX: IImageService direkt kullanımı (authentication sorun yok!)
+            // IBrowserFile'ı IFormFile'a dönüştürmeden kullanabiliriz
+            var browserFile = file;
 
-            var response = await Http.PostAsync("/api/image/upload?entityType=lawyers", content);
+            // Stream'i IFormFile wrapper'a dönüştür
+            var formFile = new BrowserFileFormFile(browserFile);
 
-            if (response.IsSuccessStatusCode)
+            var result = await ImageService.UploadImageAsync(formFile, "lawyers", maxWidth: 800, maxHeight: 1000);
+
+            if (!result.Success)
             {
-                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
-                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
-                {
-                    newLawyer.ImageUrl = result.FilePath;
-
-                    showSuccess = true;
-                    successMessage = activeLang switch
-                    {
-                        "en" => "Photo uploaded successfully!",
-                        "ar" => "تم رفع الصورة بنجاح!",
-                        _ => "Fotoğraf başarıyla yüklendi!"
-                    };
-
-                    await Task.Delay(2000);
-                    showSuccess = false;
-                }
-                else
-                {
-                    showError = true;
-                    errorMessage = result?.Message ?? (activeLang switch
-                    {
-                        "en" => "Photo could not be uploaded.",
-                        "ar" => "لم يتم رفع الصورة.",
-                        _ => "Fotoğraf yüklenemedi."
-                    });
-                }
-            }
-            else
-            {
-                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
                 showError = true;
-                errorMessage = errorResult?.Message ?? (activeLang switch
-                {
-                    "en" => "Photo upload failed.",
-                    "ar" => "فشل رفع الصورة.",
-                    _ => "Fotoğraf yükleme başarısız oldu."
-                });
+                errorMessage = result.Message;
+                return;
             }
+
+            newLawyer.ImageUrl = result.FilePath;
+
+            showSuccess = true;
+            successMessage = activeLang switch
+            {
+                "en" => "Photo uploaded successfully!",
+                "ar" => "تم رفع الصورة بنجاح!",
+                _ => "Fotoğraf başarıyla yüklendi!"
+            };
+
+            await Task.Delay(2000);
+            showSuccess = false;
         }
         catch (Exception ex)
         {
@@ -646,6 +603,7 @@
                 "ar" => $"خطأ في الرفع: {ex.Message}",
                 _ => $"Yükleme hatası: {ex.Message}"
             };
+            Console.WriteLine($"Exception: {ex}");
         }
         finally
         {
@@ -826,6 +784,7 @@
         {
             isSaving = true;
 
+            // ✅ DÜZELTİLDİ: Yeni bir entity oluşturuyoruz
             var updateLawyer = new Lawyer
             {
                 Id = newLawyer.Id,
@@ -838,46 +797,25 @@
                 IsActive = newLawyer.IsActive
             };
 
-            if (includeTr)
-            {
-                updateLawyer.Title_TR = newLawyer.Title_TR;
-                updateLawyer.Slug_TR = newLawyer.Slug_TR;
-                updateLawyer.Biography_TR = newLawyer.Biography_TR;
-            }
-            else
-            {
-                updateLawyer.Title_TR = originalLawyer.Title_TR;
-                updateLawyer.Slug_TR = originalLawyer.Slug_TR;
-                updateLawyer.Biography_TR = originalLawyer.Biography_TR;
-            }
+            // Dil seçimine göre alanları ayarla
+            updateLawyer.Title_TR = includeTr ? newLawyer.Title_TR : originalLawyer.Title_TR;
+            updateLawyer.Slug_TR = includeTr ? newLawyer.Slug_TR : originalLawyer.Slug_TR;
+            updateLawyer.Biography_TR = includeTr ? newLawyer.Biography_TR : originalLawyer.Biography_TR;
 
-            if (includeEn)
-            {
-                updateLawyer.Title_EN = newLawyer.Title_EN;
-                updateLawyer.Slug_EN = newLawyer.Slug_EN;
-                updateLawyer.Biography_EN = newLawyer.Biography_EN;
-            }
-            else
-            {
-                updateLawyer.Title_EN = originalLawyer.Title_EN;
-                updateLawyer.Slug_EN = originalLawyer.Slug_EN;
-                updateLawyer.Biography_EN = originalLawyer.Biography_EN;
-            }
+            updateLawyer.Title_EN = includeEn ? newLawyer.Title_EN : originalLawyer.Title_EN;
+            updateLawyer.Slug_EN = includeEn ? newLawyer.Slug_EN : originalLawyer.Slug_EN;
+            updateLawyer.Biography_EN = includeEn ? newLawyer.Biography_EN : originalLawyer.Biography_EN;
 
-            if (includeAr)
-            {
-                updateLawyer.Title_AR = newLawyer.Title_AR;
-                updateLawyer.Slug_AR = newLawyer.Slug_AR;
-                updateLawyer.Biography_AR = newLawyer.Biography_AR;
-            }
-            else
-            {
-                updateLawyer.Title_AR = originalLawyer.Title_AR;
-                updateLawyer.Slug_AR = originalLawyer.Slug_AR;
-                updateLawyer.Biography_AR = originalLawyer.Biography_AR;
-            }
+            updateLawyer.Title_AR = includeAr ? newLawyer.Title_AR : originalLawyer.Title_AR;
+            updateLawyer.Slug_AR = includeAr ? newLawyer.Slug_AR : originalLawyer.Slug_AR;
+            updateLawyer.Biography_AR = includeAr ? newLawyer.Biography_AR : originalLawyer.Biography_AR;
 
             var updated = await LawyerService.Update(newLawyer.Id, updateLawyer);
+
+            if (updated == null)
+            {
+                throw new Exception("Güncelleme başarısız oldu!");
+            }
 
             successMessage = "✓ Avukat başarıyla güncellendi!";
             showSuccess = true;
@@ -892,6 +830,7 @@
         {
             showError = true;
             errorMessage = $"Güncelleme hatası: {ex.Message}";
+            Console.WriteLine($"Update error: {ex}");
         }
         finally
         {
@@ -978,10 +917,31 @@
         };
     }
 
-    private class ImageUploadResult
+    // ✅ IBrowserFile → IFormFile Wrapper
+    private class BrowserFileFormFile : IFormFile
     {
-        public bool Success { get; set; }
-        public string? Message { get; set; }
-        public string? FilePath { get; set; }
+        private readonly IBrowserFile _file;
+
+        public BrowserFileFormFile(IBrowserFile file)
+        {
+            _file = file;
+        }
+
+        public string ContentType => _file.ContentType;
+        public string ContentDisposition => $"form-data; name=\"file\"; filename=\"{_file.Name}\"";
+        public IHeaderDictionary Headers => new HeaderDictionary();
+        public long Length => _file.Size;
+        public string Name => "file";
+        public string FileName => _file.Name;
+
+        public Stream OpenReadStream() => _file.OpenReadStream(_file.Size);
+
+        public void CopyTo(Stream target) => OpenReadStream().CopyTo(target);
+
+        public async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+        {
+            await using var stream = OpenReadStream();
+            await stream.CopyToAsync(target, cancellationToken);
+        }
     }
 }

@@ -14,67 +14,70 @@
 
 <PageTitle>@GetText("pageTitle")</PageTitle>
 
-<section class="partner-hero">
-    <div class="partner-hero-bg"></div>
-    <div class="partner-hero-overlay"></div>
+<section class="modern-partners-hero">
+    <div class="hero-animated-background"></div>
+    <div class="hero-gradient-overlay"></div>
 
-    <div class="partner-hero-container">
-        <div class="partner-hero-content">
-            <h2 class="partner-hero-label">@GetText("pageTitleUpper")</h2>
-            <h1 class="partner-hero-title">İş <strong>Birliği</strong> Yaptığımız Kurumlar</h1>
-
-            <div class="partner-hero-breadcrumb">
-                <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("breadcrumbHome")</a>
-                /
-                <span>@GetText("breadcrumbPartners")</span>
+    <div class="hero-partners-container">
+        <div class="hero-partners-inner">
+            <span class="partners-badge-modern">@GetText("pageTitleUpper")</span>
+            <h1 class="partners-main-title">
+                <span class="title-gradient">@GetText("mainTitle")</span>
+            </h1>
+            <div class="partners-breadcrumb">
+                <a href="@LanguageService.GetLocalizedUrl("/")" class="breadcrumb-link">@GetText("breadcrumbHome")</a>
+                <span class="breadcrumb-sep">/</span>
+                <span class="breadcrumb-active">@GetText("breadcrumbPartners")</span>
             </div>
         </div>
     </div>
 </section>
 
-<section class="partner-content">
-    <div class="partner-page-content">
+<section class="partners-main-section">
+    <div class="partners-content-wrapper">
 
-        <div class="row partner-info-row">
-            <div class="col-12">
-                <p class="partner-info-text">@GetText("partnersInfoText")</p>
+        <div class="partners-intro-section">
+            <div class="intro-content-box">
+                <h2 class="intro-subtitle">@GetText("partnershipTitle")</h2>
+                <p class="intro-description">@GetText("partnersInfoText")</p>
             </div>
         </div>
 
         @if (Partners == null)
         {
-            <div class="row">
-                <div class="col-12 text-center">
-                    <em>@GetText("loading")</em>
-                </div>
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">@GetText("loading")</p>
             </div>
         }
         else if (Partners.Count == 0)
         {
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p>@GetText("noPartners")</p>
-                </div>
+            <div class="empty-container">
+                <i class="bi bi-building"></i>
+                <p class="empty-text">@GetText("noPartners")</p>
             </div>
         }
         else
         {
-            <div class="partner-grid">
+            <div class="partners-grid">
                 @foreach (var partner in Partners)
                 {
-                    <a href="@GetLocalizedPartnerUrl(partner)" class="partner-card-link">
-                        <div class="partner-card">
-                            <div class="partner-logo-wrapper">
+                    <a href="@GetLocalizedPartnerUrl(partner)" class="partner-card-modern">
+                        <div class="partner-card-inner">
+                            <div class="partner-logo-section">
+                                <div class="logo-background-pattern"></div>
                                 <img src="@(string.IsNullOrEmpty(partner.ImageUrl) ? "/img/placeholder.jpg" : partner.ImageUrl)"
                                      alt="@partner.Name"
-                                     class="partner-card-logo" />
+                                     class="partner-logo-img" />
                             </div>
 
-                            <div class="partner-card-content">
-                                <h3 class="partner-card-name">@partner.Name</h3>
-                                <span class="partner-card-description">
-                                    @GetPartnerDescription(partner)
-                                </span>
+                            <div class="partner-info-section">
+                                <h3 class="partner-name">@partner.Name</h3>
+                                <p class="partner-desc">@GetPartnerDescription(partner)</p>
+                                <div class="partner-link-arrow">
+                                    <span>@GetText("viewDetails")</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -117,9 +120,11 @@
             ["mainTitle"] = "İş Birliği Yaptığımız Kurumlar",
             ["breadcrumbHome"] = "Ana Sayfa",
             ["breadcrumbPartners"] = "Çözüm Ortaklarımız",
-            ["partnersInfoText"] = "Müvekkillerimize en iyi hizmeti sunmak için güvenilir çözüm ortaklarımızla birlikte çalışıyoruz.",
-            ["loading"] = "Ortaklar yükleniyor...",
-            ["noPartners"] = "Henüz ortak eklenmedi."
+            ["partnershipTitle"] = "Güvenilir İş Ortaklıkları",
+            ["partnersInfoText"] = "Müvekkillerimize en iyi hizmeti sunmak için güvenilir çözüm ortaklarımızla stratejik iş birlikleri geliştiriyoruz.",
+            ["loading"] = "Yükleniyor...",
+            ["noPartners"] = "Henüz ortak eklenmedi.",
+            ["viewDetails"] = "Detayları Görüntüle"
         },
         ["en"] = new()
         {
@@ -128,9 +133,11 @@
             ["mainTitle"] = "Trusted Business Partners",
             ["breadcrumbHome"] = "Home",
             ["breadcrumbPartners"] = "Our Partners",
-            ["partnersInfoText"] = "We work with trusted solution partners to provide the best service to our clients.",
-            ["loading"] = "Loading partners...",
-            ["noPartners"] = "No partners added yet."
+            ["partnershipTitle"] = "Trusted Partnerships",
+            ["partnersInfoText"] = "We develop strategic partnerships with trusted solution partners to provide the best service to our clients.",
+            ["loading"] = "Loading...",
+            ["noPartners"] = "No partners added yet.",
+            ["viewDetails"] = "View Details"
         },
         ["ar"] = new()
         {
@@ -139,9 +146,11 @@
             ["mainTitle"] = "شركاء الأعمال الموثوقون",
             ["breadcrumbHome"] = "الرئيسية",
             ["breadcrumbPartners"] = "شركاؤنا",
-            ["partnersInfoText"] = "نعمل مع شركاء حلول موثوقين لتقديم أفضل خدمة لعملائنا.",
-            ["loading"] = "جارٍ تحميل الشركاء...",
-            ["noPartners"] = "لا يوجد شركاء بعد."
+            ["partnershipTitle"] = "شراكات موثوقة",
+            ["partnersInfoText"] = "نقوم بتطوير شراكات استراتيجية مع شركاء حلول موثوقين لتقديم أفضل خدمة لعملائنا.",
+            ["loading"] = "جارٍ التحميل...",
+            ["noPartners"] = "لا يوجد شركاء بعد.",
+            ["viewDetails"] = "عرض التفاصيل"
         }
     };
 

@@ -46,10 +46,13 @@ namespace DafHukuk.Web.Controllers
             return View(model);
         }
 
+
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Auth");
         }
+
     }
 }

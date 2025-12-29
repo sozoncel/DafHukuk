@@ -7,8 +7,8 @@
 @using System.Net.Http.Json
 @inject ICategoryService CategoryService
 @inject IPostService PostService
+@inject IImageService ImageService
 @inject IJSRuntime JS
-@inject HttpClient Http
 
 <div class="container-fluid px-4 py-4">
 
@@ -521,7 +521,15 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            try
+            {
+                await Task.Delay(100);
+                await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Drag-drop init error: {ex.Message}");
+            }
         }
     }
 
@@ -594,87 +602,34 @@
 
     private async Task ProcessImageFile(IBrowserFile file)
     {
-        const long maxFileSize = 10 * 1024 * 1024;
-
-        if (file.Size > maxFileSize)
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "File size must be less than 10MB!",
-                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
-                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
-            };
-            return;
-        }
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-
-        if (!allowedExtensions.Contains(extension))
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
-                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
-                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
-            };
-            return;
-        }
-
         try
         {
             isUploading = true;
             StateHasChanged();
 
-            using var content = new MultipartFormDataContent();
-            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-            content.Add(fileContent, "file", file.Name);
+            // ✅ IImageService direkt kullanımı
+            var formFile = new BrowserFileFormFile(file);
+            var result = await ImageService.UploadImageAsync(formFile, "posts", maxWidth: 1200, maxHeight: 800);
 
-            var response = await Http.PostAsync("/api/image/upload?entityType=posts", content);
-
-            if (response.IsSuccessStatusCode)
+            if (!result.Success)
             {
-                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
-                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
-                {
-                    newPost.CoverImageUrl = result.FilePath;
-
-                    showSuccess = true;
-                    successMessage = activeLang switch
-                    {
-                        "en" => "Image uploaded successfully!",
-                        "ar" => "تم رفع الصورة بنجاح!",
-                        _ => "Görsel başarıyla yüklendi!"
-                    };
-
-                    await Task.Delay(2000);
-                    showSuccess = false;
-                }
-                else
-                {
-                    showError = true;
-                    errorMessage = result?.Message ?? (activeLang switch
-                    {
-                        "en" => "Image could not be uploaded.",
-                        "ar" => "لم يتم رفع الصورة.",
-                        _ => "Görsel yüklenemedi."
-                    });
-                }
-            }
-            else
-            {
-                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
                 showError = true;
-                errorMessage = errorResult?.Message ?? (activeLang switch
-                {
-                    "en" => "Image upload failed.",
-                    "ar" => "فشل رفع الصورة.",
-                    _ => "Görsel yükleme başarısız oldu."
-                });
+                errorMessage = result.Message;
+                return;
             }
+
+            newPost.CoverImageUrl = result.FilePath;
+
+            showSuccess = true;
+            successMessage = activeLang switch
+            {
+                "en" => "Image uploaded successfully!",
+                "ar" => "تم رفع الصورة بنجاح!",
+                _ => "Görsel başarıyla yüklendi!"
+            };
+
+            await Task.Delay(2000);
+            showSuccess = false;
         }
         catch (Exception ex)
         {
@@ -685,6 +640,7 @@
                 "ar" => $"خطأ في الرفع: {ex.Message}",
                 _ => $"Yükleme hatası: {ex.Message}"
             };
+            Console.WriteLine($"Exception: {ex}");
         }
         finally
         {
@@ -734,6 +690,33 @@
         finally
         {
             isListLoading = false;
+        }
+    }
+
+    private class BrowserFileFormFile : IFormFile
+    {
+        private readonly IBrowserFile _file;
+
+        public BrowserFileFormFile(IBrowserFile file)
+        {
+            _file = file;
+        }
+
+        public string ContentType => _file.ContentType;
+        public string ContentDisposition => $"form-data; name=\"file\"; filename=\"{_file.Name}\"";
+        public IHeaderDictionary Headers => new HeaderDictionary();
+        public long Length => _file.Size;
+        public string Name => "file";
+        public string FileName => _file.Name;
+
+        public Stream OpenReadStream() => _file.OpenReadStream(_file.Size);
+
+        public void CopyTo(Stream target) => OpenReadStream().CopyTo(target);
+
+        public async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+        {
+            await using var stream = OpenReadStream();
+            await stream.CopyToAsync(target, cancellationToken);
         }
     }
 

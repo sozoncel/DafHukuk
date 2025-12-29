@@ -14,44 +14,47 @@
 
 <PageTitle>@GetText("pageTitle")</PageTitle>
 
-<section class="hero-ourteam-section">
-    <div class="hero-ourteam-bg"></div>
-    <div class="hero-ourteam-overlay"></div>
+<section class="modern-team-hero">
+    <div class="hero-particles"></div>
+    <div class="hero-gradient-overlay"></div>
 
-    <div class="hero-ourteam-container">
-        <div class="hero-ourteam-title-content">
-            <h2 class="ourteam-hero-title-upper">@GetText("pageTitleUpper")</h2>
-            <h1 class="hero-ourteam-title">@GetText("mainTitle")</h1>
-
-            <div class="hero-iletisim-breadcrumb">
-                <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("breadcrumbHome")</a>
-                /
-                <span>@GetText("breadcrumbTeam")</span>
+    <div class="hero-content-wrapper">
+        <div class="hero-content-inner">
+            <span class="hero-badge">@GetText("pageTitleUpper")</span>
+            <h1 class="hero-main-title">
+                <span class="title-line">@GetText("mainTitle")</span>
+            </h1>
+            <div class="hero-breadcrumb-modern">
+                <a href="@LanguageService.GetLocalizedUrl("/")" class="breadcrumb-link">@GetText("breadcrumbHome")</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">@GetText("breadcrumbTeam")</span>
             </div>
         </div>
     </div>
 </section>
 
-<section class="ourteam-content">
-    <div class="ourteam-page-content">
+<section class="modern-team-section">
+    <div class="team-container">
 
-        <div class="row info-row">
-            <div class="col-12">
-                <p class="team-info-text">@GetText("teamInfoText")</p>
+        <div class="team-intro-wrapper">
+            <div class="intro-content">
+                <h2 class="section-subtitle">@GetText("teamInfoTitle")</h2>
+                <p class="team-description">@GetText("teamInfoText")</p>
             </div>
         </div>
 
-        <div class="row team-cards-row">
-
+        <div class="team-grid-modern">
             @if (Lawyers == null)
             {
-                <div class="col-12 text-center">
-                    <em>@GetText("loading")</em>
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>@GetText("loading")</p>
                 </div>
             }
             else if (Lawyers.Count == 0)
             {
-                <div class="col-12 text-center">
+                <div class="empty-state">
+                    <i class="bi bi-people"></i>
                     <p>@GetText("noMembers")</p>
                 </div>
             }
@@ -59,31 +62,28 @@
             {
                 @foreach (var lawyer in Lawyers)
                 {
-                    <div class="col-lg-4 col-md-6 team-card-col">
-                        <a href="@GetLocalizedMemberUrl(lawyer)"
-                           class="lawyer-card-link-wrapper">
-
-                            <div class="lawyer-card-v2">
-
-                                <div class="lawyer-img-wrapper">
-                                    <img src="@(string.IsNullOrEmpty(lawyer.ImageUrl) ? "/img/placeholder.jpg" : lawyer.ImageUrl)"
-                                         alt="@lawyer.Name"
-                                         class="lawyer-card-img" />
+                    <a href="@GetLocalizedMemberUrl(lawyer)" class="lawyer-card-modern">
+                        <div class="lawyer-card-inner">
+                            <div class="lawyer-image-container">
+                                <div class="image-overlay"></div>
+                                <img src="@(string.IsNullOrEmpty(lawyer.ImageUrl) ? "/img/placeholder.jpg" : lawyer.ImageUrl)"
+                                     alt="@lawyer.Name"
+                                     class="lawyer-image" />
+                                <div class="lawyer-hover-info">
+                                    <span class="view-profile-text">@GetText("viewProfile")</span>
+                                    <i class="bi bi-arrow-right"></i>
                                 </div>
-
-                                <div class="lawyer-card-content">
-                                    <h3 class="lawyer-card-name">@lawyer.Name</h3>
-                                    <span class="lawyer-card-title">
-                                        @GetLawyerTitle(lawyer)
-                                    </span>
-                                </div>
-
                             </div>
-                        </a>
-                    </div>
+
+                            <div class="lawyer-info-content">
+                                <h3 class="lawyer-name-modern">@lawyer.Name</h3>
+                                <p class="lawyer-title-modern">@GetLawyerTitle(lawyer)</p>
+                                <div class="lawyer-card-divider"></div>
+                            </div>
+                        </div>
+                    </a>
                 }
             }
-
         </div>
     </div>
 </section>
@@ -118,34 +118,40 @@
         {
             ["pageTitle"] = "Ekibimiz - DAF Hukuk ve Danışmanlık",
             ["pageTitleUpper"] = "Ekibimiz",
-            ["mainTitle"] = "DAF Ekibiyle Tanışın",
+            ["mainTitle"] = "Uzman Kadromuzla Tanışın",
             ["breadcrumbHome"] = "Ana Sayfa",
             ["breadcrumbTeam"] = "Ekibimiz",
-            ["teamInfoText"] = "120'nin üzerinde avukat ve uzman kadromuzla müvekkillerimize yüksek standartlarda hizmet sunuyoruz.",
-            ["loading"] = "Ekip üyeleri yükleniyor...",
-            ["noMembers"] = "Ekip üyesi bulunamadı."
+            ["teamInfoTitle"] = "Profesyonel Ekibimiz",
+            ["teamInfoText"] = "120'nin üzerinde deneyimli avukat ve hukuk uzmanından oluşan ekibimizle, müvekkillerimize en yüksek standartlarda hukuki hizmet sunmaktan gurur duyuyoruz.",
+            ["loading"] = "Yükleniyor...",
+            ["noMembers"] = "Ekip üyesi bulunamadı.",
+            ["viewProfile"] = "Profili Görüntüle"
         },
         ["en"] = new()
         {
             ["pageTitle"] = "Our Team - DAF Law",
             ["pageTitleUpper"] = "Our Team",
-            ["mainTitle"] = "Meet the DAF Team",
+            ["mainTitle"] = "Meet Our Expert Team",
             ["breadcrumbHome"] = "Home",
             ["breadcrumbTeam"] = "Our Team",
-            ["teamInfoText"] = "With over 120 lawyers and professionals, we deliver high-standard legal services.",
-            ["loading"] = "Loading team members...",
-            ["noMembers"] = "No team members found."
+            ["teamInfoTitle"] = "Our Professional Team",
+            ["teamInfoText"] = "With over 120 experienced lawyers and legal professionals, we take pride in delivering the highest standard of legal services to our clients.",
+            ["loading"] = "Loading...",
+            ["noMembers"] = "No team members found.",
+            ["viewProfile"] = "View Profile"
         },
         ["ar"] = new()
         {
             ["pageTitle"] = "فريقنا - داف",
             ["pageTitleUpper"] = "فريقنا",
-            ["mainTitle"] = "تعرف على فريق داف",
+            ["mainTitle"] = "تعرف على فريق الخبراء لدينا",
             ["breadcrumbHome"] = "الرئيسية",
             ["breadcrumbTeam"] = "فريقنا",
-            ["teamInfoText"] = "يضم فريق داف أكثر من 120 محاميًا ومتخصصًا.",
-            ["loading"] = "جارٍ تحميل أعضاء الفريق...",
-            ["noMembers"] = "لا يوجد أعضاء."
+            ["teamInfoTitle"] = "فريقنا المحترف",
+            ["teamInfoText"] = "مع أكثر من 120 محاميًا ومتخصصًا قانونيًا ذوي خبرة، نفخر بتقديم أعلى معايير الخدمات القانونية لعملائنا.",
+            ["loading"] = "جارٍ التحميل...",
+            ["noMembers"] = "لا يوجد أعضاء.",
+            ["viewProfile"] = "عرض الملف الشخصي"
         }
     };
 

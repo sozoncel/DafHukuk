@@ -495,3 +495,49 @@ window.blazorImageUpload = {
         delete this.dropZoneHandlers[dropZoneId];
     }
 };
+function colorizeCategoryNavLinks() {
+    const navLinks = document.querySelectorAll('#categoryTabs .nav-link');
+
+    navLinks.forEach(link => {
+        const text = link.innerText.trim().toLowerCase();
+
+        // reset
+        link.style.color = '';
+        link.style.borderBottomColor = '';
+
+        if (link.classList.contains('active')) {
+            if (
+                text.includes('hizmet') ||
+                text.includes('service') ||
+                text.includes('خدمات')
+            ) {
+                link.style.color = '#366C80';
+                link.style.borderBottom = '2px solid #366C80';
+            }
+            else if (
+                text.includes('duyuru') ||
+                text.includes('announcement') ||
+                text.includes('إعلان')
+            ) {
+                link.style.color = '#5c7341';
+                link.style.borderBottom = '2px solid #5c7341';
+            }
+            else if (
+                text.includes('etkinlik') ||
+                text.includes('event') ||
+                text.includes('فعالية')
+            ) {
+                link.style.color = '#78514A';
+                link.style.borderBottom = '2px solid #78514A';
+            }
+            else if (
+                text.includes('yayın') ||
+                text.includes('publication') ||
+                text.includes('منشور')
+            ) {
+                link.style.color = '#dfb899';
+                link.style.borderBottom = '2px solid #dfb899';
+            }
+        }
+    });
+}

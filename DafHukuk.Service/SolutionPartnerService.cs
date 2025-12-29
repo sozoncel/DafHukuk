@@ -19,12 +19,15 @@ namespace DafHukuk.Service
             return await _context.SolutionPartners
                 .Where(p => p.IsActive)
                 .OrderBy(p => p.Name)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<SolutionPartner?> GetById(int id)
         {
-            return await _context.SolutionPartners.FindAsync(id);
+            return await _context.SolutionPartners
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<SolutionPartner> Create(SolutionPartner partner)
@@ -36,6 +39,7 @@ namespace DafHukuk.Service
 
         public async Task<SolutionPartner?> Update(int id, SolutionPartner partner)
         {
+            // ✅ Tracked entity'yi bul
             var existing = await _context.SolutionPartners.FindAsync(id);
             if (existing == null) return null;
 
@@ -44,16 +48,25 @@ namespace DafHukuk.Service
             existing.WebsiteUrl = partner.WebsiteUrl;
             existing.IsActive = partner.IsActive;
 
-            existing.Description_TR = partner.Description_TR;
+            existing.Description_TR = partner.Description_TR ?? existing.Description_TR;
             existing.Description_EN = partner.Description_EN;
             existing.Description_AR = partner.Description_AR;
 
-            existing.Slug_TR = partner.Slug_TR;
+            existing.Slug_TR = partner.Slug_TR ?? existing.Slug_TR;
             existing.Slug_EN = partner.Slug_EN;
             existing.Slug_AR = partner.Slug_AR;
 
-            await _context.SaveChangesAsync();
-            return existing;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return existing;
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"DbUpdateException: {ex.Message}");
+                Console.WriteLine($"Inner: {ex.InnerException?.Message}");
+                throw;
+            }
         }
 
         public async Task<bool> Delete(int id)

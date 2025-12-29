@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
-/* SIFIRLAMA & GENEL STÝLLER */
+ï»¿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+/* SIFIRLAMA & GENEL STÄ°LLER */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -15,7 +15,7 @@ a {
     text-decoration: none;
 }
 
-/* NAVÝGASYON ÇUBUÐU STÝLLERÝ */
+/* NAVÄ°GASYON Ã‡UBUÄžU STÄ°LLERÄ° */
 .header {
     position: fixed;
     top: 0;
@@ -185,7 +185,7 @@ a {
         color: #dfb887;
     }
 
-/* MASAÜSTÜ ARAMA ÇUBUÐU */
+/* MASAÃœSTÃœ ARAMA Ã‡UBUÄžU */
 .desktop-search-bar {
     position: absolute;
     top: 100%;
@@ -249,7 +249,7 @@ a {
         transform: rotate(90deg);
     }
 
-/* MOBÝL ARAMA */
+/* MOBÄ°L ARAMA */
 .mobile-search-trigger {
     display: flex;
     align-items: center;
@@ -343,7 +343,7 @@ a {
         background: rgba(255, 255, 255, 0.15);
     }
 
-/* MOBÝL MENÜ */
+/* MOBÄ°L MENÃœ */
 .mobile-menu-btn {
     display: none;
     flex-direction: column;
@@ -482,7 +482,7 @@ a {
         visibility: visible;
     }
 
-/* ALT BÝLGÝ STÝLLERÝ */
+/* ALT BÄ°LGÄ° STÄ°LLERÄ° */
 .footer {
     background-color: #f0f0f0;
     padding: 4rem 0 0;
@@ -658,7 +658,7 @@ a {
     color: #68676a;
 }
 
-/* KATEGORÝ RENKLERÝ */
+/* KATEGORÄ° RENKLERÄ° */
 
 .content-tag-button {
     display: inline-block;
@@ -682,7 +682,9 @@ a {
         opacity: 0.9;
     }
 
-/* MODERN AÇILIR LÝSTE */
+
+
+/* MODERN AÃ‡ILIR LÄ°STE */
 
 .modern-dropdown-toggle {
     background-color: #ffffff;
@@ -737,7 +739,7 @@ a {
         padding-left: 22px;
     }
 
-/* RESPONSIVE - NAVÝGASYON & ALT BÝLGÝ */
+/* RESPONSIVE - NAVÄ°GASYON & ALT BÄ°LGÄ° */
 
 @media (max-width: 1200px) {
     .header {
@@ -991,7 +993,7 @@ a {
 }
 
 /* =========================================================
-    CUSTOM TABS  STÝLLERÝ 
+    CUSTOM TABS  STÄ°LLERÄ° 
 ========================================================= */
 .custom-tabs {
     border-bottom: 1px solid #ddd;
@@ -1020,7 +1022,7 @@ a {
         }
 
 /* =========================================================
-    Sayfa Bulunamadý 
+    Sayfa BulunamadÄ± 
 ========================================================= */
 
 .notfound-container {

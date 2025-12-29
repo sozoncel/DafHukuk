@@ -16,64 +16,93 @@
 @if (Lawyer == null)
 {
     <PageTitle>@GetText("loadingTitle")</PageTitle>
-    <section class="page-content container">
-        <div class="row mt-5">
-            <div class="col-12 text-center">
-                <h2>@GetText("loading")</h2>
-            </div>
-        </div>
+    <section class="loading-page">
+        <div class="loading-spinner-large"></div>
+        <h2>@GetText("loading")</h2>
     </section>
 }
 else
 {
     <PageTitle>@Lawyer.Name - @GetText("pageTitle")</PageTitle>
 
-    <section class="daf-lawyer-hero">
-        <div class="daf-hero-container">
-            <div class="daf-hero-image">
-                <img src="@(string.IsNullOrEmpty(Lawyer.ImageUrl) ? "/img/placeholder.jpg" : Lawyer.ImageUrl)"
-                     alt="@Lawyer.Name" />
-            </div>
-
-            <div class="daf-hero-content">
-                <div class="daf-name-wrapper">
-                    <h1 class="daf-lawyer-name">@Lawyer.Name</h1>
-                    <div class="daf-divider"></div>
+    <section class="lawyer-detail-hero-modern">
+        <div class="hero-background-pattern"></div>
+        <div class="lawyer-hero-container">
+            <div class="lawyer-hero-image-side">
+                <div class="image-frame">
+                    <div class="image-decoration"></div>
+                    <img src="@(string.IsNullOrEmpty(Lawyer.ImageUrl) ? "/img/placeholder.jpg" : Lawyer.ImageUrl)"
+                         alt="@Lawyer.Name"
+                         class="lawyer-hero-image" />
                 </div>
-                <p class="daf-lawyer-title">@GetLawyerTitle(Lawyer)</p>
+            </div>
+
+            <div class="lawyer-hero-info-side">
+                <div class="info-content-wrapper">
+                    <div class="lawyer-badge">@GetText("expertLawyer")</div>
+                    <h1 class="lawyer-name-hero">@Lawyer.Name</h1>
+                    <div class="hero-divider-gold"></div>
+                    <p class="lawyer-title-hero">@GetLawyerTitle(Lawyer)</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="modern-contact-bar">
-        <div class="contact-bar-inner">
-            <div class="contact-item">
-                <span class="contact-label">@GetText("email")</span>
-                <a href="mailto:@Lawyer.Email" class="contact-value">@Lawyer.Email</a>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">@GetText("mobilePhone")</span>
-                <p class="contact-value">@Lawyer.MobilePhone</p>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">@GetText("officePhone")</span>
-                <p class="contact-value">@Lawyer.OfficePhone</p>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">@GetText("location")</span>
-                <p class="contact-value">@Lawyer.Location</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="modern-biography-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 offset-lg-1">
-                    <h2 class="modern-section-title">@GetText("biographyHeading")</h2>
-                    <div class="modern-biography-text">
-                        @((MarkupString)GetLawyerBiography(Lawyer))
+    <section class="lawyer-contact-bar-modern">
+        <div class="contact-bar-container">
+            <div class="contact-grid-modern">
+                <div class="contact-item-modern">
+                    <div class="contact-icon">
+                        <i class="bi bi-envelope"></i>
                     </div>
+                    <div class="contact-details">
+                        <span class="contact-label-modern">@GetText("email")</span>
+                        <a href="mailto:@Lawyer.Email" class="contact-value-modern">@Lawyer.Email</a>
+                    </div>
+                </div>
+
+                <div class="contact-item-modern">
+                    <div class="contact-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <div class="contact-details">
+                        <span class="contact-label-modern">@GetText("mobilePhone")</span>
+                        <p class="contact-value-modern">@Lawyer.MobilePhone</p>
+                    </div>
+                </div>
+
+                <div class="contact-item-modern">
+                    <div class="contact-icon">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+                    <div class="contact-details">
+                        <span class="contact-label-modern">@GetText("officePhone")</span>
+                        <p class="contact-value-modern">@Lawyer.OfficePhone</p>
+                    </div>
+                </div>
+
+                <div class="contact-item-modern">
+                    <div class="contact-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <span class="contact-label-modern">@GetText("location")</span>
+                        <p class="contact-value-modern">@Lawyer.Location</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="biography-section-modern">
+        <div class="biography-container">
+            <div class="biography-content-wrapper">
+                <div class="section-header-modern">
+                    <span class="section-badge">@GetText("aboutLawyer")</span>
+                    <h2 class="section-title-modern">@GetText("biographyHeading")</h2>
+                </div>
+                <div class="biography-text-modern">
+                    @((MarkupString)GetLawyerBiography(Lawyer))
                 </div>
             </div>
         </div>
@@ -81,57 +110,42 @@ else
 
     @if (relatedPosts.Any() || servicePosts.Any())
     {
-        <section class="services-section" style="background: white;">
-            <div class="services-container">
-                <h2 class="services-title">@GetText("relatedContentHeading")</h2>
-
-                <div class="row mt-4 mb-4">
-                    <div class="col-12">
-                        <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
-                            @* 1. TÜMÜNÜ GÖSTER *@
-                            <li class="nav-item">
-                                <a class="@(CurrentFilterCategory == 0 ? "nav-link active" : "nav-link")"
-                                   href="javascript:void(0)"
-                                   @onclick="() => FilterCategory(0)"
-                                   @onclick:preventDefault="true">
-                                    @GetText("showAll")
-                                </a>
-                            </li>
-
-                            @* 2. HİZMETLERİMİZ (Özel Tab) *@
-                            @if (servicePosts.Any())
-                            {
-                                <li class="nav-item">
-                                    <a class="@(CurrentFilterCategory == -1 ? "nav-link active" : "nav-link")"
-                                       href="javascript:void(0)"
-                                       @onclick="() => FilterCategory(-1)"
-                                       @onclick:preventDefault="true">
-                                        @GetText("servicesHeading")
-                                    </a>
-                                </li>
-                            }
-
-                            @* 3. DİĞER KATEGORİLER *@
-                            @foreach (var cat in distinctCategories)
-                            {
-                                <li class="nav-item">
-                                    <a class="@(CurrentFilterCategory == cat.Id ? "nav-link active" : "nav-link")"
-                                       href="javascript:void(0)"
-                                       @onclick="() => FilterCategory(cat.Id)"
-                                       @onclick:preventDefault="true">
-                                        @GetCategoryName(cat)
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+        <section class="related-content-section-modern">
+            <div class="related-content-container">
+                <div class="section-header-center">
+                    <span class="section-badge">@GetText("contentBadge")</span>
+                    <h2 class="section-title-center">@GetText("relatedContentHeading")</h2>
                 </div>
 
-                <div class="services-grid">
+                <div class="category-tabs-modern">
+                    <button class="@(CurrentFilterCategory == 0 ? "tab-button-modern active" : "tab-button-modern")"
+                            @onclick="() => FilterCategory(0)">
+                        <span>@GetText("showAll")</span>
+                    </button>
+
+                    @if (servicePosts.Any())
+                    {
+                        <button class="@(CurrentFilterCategory == -1 ? "tab-button-modern active" : "tab-button-modern")"
+                                @onclick="() => FilterCategory(-1)">
+                            <span>@GetText("servicesHeading")</span>
+                        </button>
+                    }
+
+                    @foreach (var cat in distinctCategories)
+                    {
+                        <button class="@(CurrentFilterCategory == cat.Id ? "tab-button-modern active" : "tab-button-modern")"
+                                @onclick="() => FilterCategory(cat.Id)">
+                            <span>@GetCategoryName(cat)</span>
+                        </button>
+                    }
+                </div>
+
+                <div class="content-grid-modern">
                     @if (!GetDisplayedRelatedPosts().Any())
                     {
-                        <div class="col-12 text-center py-5">
-                            <p class="text-muted fs-5">@GetText("noContentMessage")</p>
+                        <div class="empty-content-state">
+                            <i class="bi bi-folder2-open"></i>
+                            <p>@GetText("noContentMessage")</p>
                         </div>
                     }
                     else
@@ -141,17 +155,20 @@ else
                             var url = GetPostUrl(p);
                             var categoryName = GetCategoryName(p.Category);
 
-                            <a href="@LanguageService.GetLocalizedUrl(url)" class="service-card">
-                                <img src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.jpg" : p.CoverImageUrl)"
-                                     alt="@GetPostTitle(p)"
-                                     class="service-card-image" />
-                                <div class="service-card-content">
-                                    <span class="modern-card-date">
-                                        <i class="bi bi-calendar3 me-1"></i>
+                            <a href="@LanguageService.GetLocalizedUrl(url)" class="content-card-modern">
+                                <div class="card-image-wrapper">
+                                    <img src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.jpg" : p.CoverImageUrl)"
+                                         alt="@GetPostTitle(p)"
+                                         class="card-image-modern" />
+                                    <div class="card-overlay-modern"></div>
+                                </div>
+                                <div class="card-content-modern">
+                                    <span class="card-date-modern">
+                                        <i class="bi bi-calendar3"></i>
                                         @p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())
                                     </span>
-                                    <h3 class="service-card-title">@GetPostTitle(p)</h3>
-                                    <button class="content-tag-button" data-category="@categoryName">@categoryName</button>
+                                    <h3 class="card-title-modern">@GetPostTitle(p)</h3>
+                                    <span class="content-tag-modern" data-category="@categoryName">@categoryName</span>
                                 </div>
                             </a>
                         }
@@ -160,13 +177,11 @@ else
 
                 @if (GetDisplayedRelatedPosts().Count() < FilteredPosts.Count() && !ShowingAll && FilteredPosts.Any())
                 {
-                    <div class="row mt-5">
-                        <div class="col-lg-12 text-center">
-                            <button class="show-all-button" @onclick="ShowAll">
-                                <i class="bi bi-grid-3x3-gap me-2"></i>
-                                @GetText("showAll")
-                            </button>
-                        </div>
+                    <div class="show-more-section">
+                        <button class="show-more-button-modern" @onclick="ShowAll">
+                            <span>@GetText("showAll")</span>
+                            <i class="bi bi-arrow-down"></i>
+                        </button>
                     </div>
                 }
             </div>
@@ -200,8 +215,11 @@ else
             ["mobilePhone"] = "Mobil Telefon",
             ["officePhone"] = "Ofis Telefon",
             ["location"] = "Konum",
+            ["expertLawyer"] = "Uzman Avukat",
+            ["aboutLawyer"] = "Hakkında",
             ["biographyHeading"] = "Biyografi",
             ["servicesHeading"] = "Hizmetlerimiz",
+            ["contentBadge"] = "İçerikler",
             ["relatedContentHeading"] = "İlişkili İçerikler",
             ["showAll"] = "Tümünü Göster",
             ["noContentMessage"] = "Bu kategoride içerik bulunmamaktadır."
@@ -215,8 +233,11 @@ else
             ["mobilePhone"] = "Mobile Phone",
             ["officePhone"] = "Office Phone",
             ["location"] = "Location",
+            ["expertLawyer"] = "Expert Lawyer",
+            ["aboutLawyer"] = "About",
             ["biographyHeading"] = "Biography",
             ["servicesHeading"] = "Our Services",
+            ["contentBadge"] = "Content",
             ["relatedContentHeading"] = "Related Content",
             ["showAll"] = "Show All",
             ["noContentMessage"] = "No content found in this category."
@@ -230,8 +251,11 @@ else
             ["mobilePhone"] = "الهاتف المحمول",
             ["officePhone"] = "هاتف المكتب",
             ["location"] = "الموقع",
+            ["expertLawyer"] = "محامي خبير",
+            ["aboutLawyer"] = "حول",
             ["biographyHeading"] = "السيرة الذاتية",
             ["servicesHeading"] = "خدماتنا",
+            ["contentBadge"] = "المحتوى",
             ["relatedContentHeading"] = "المحتوى ذو الصلة",
             ["showAll"] = "عرض الكل",
             ["noContentMessage"] = "لم يتم العثور على محتوى في هذه الفئة."

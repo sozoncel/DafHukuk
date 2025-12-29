@@ -121,7 +121,7 @@ namespace DafHukuk.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2025, 12, 28, 11, 34, 18, 668, DateTimeKind.Utc).AddTicks(136),
+                            CreatedDate = new DateTime(2025, 12, 29, 13, 42, 27, 458, DateTimeKind.Utc).AddTicks(2986),
                             IsActive = true,
                             Name_AR = "فعاليات",
                             Name_EN = "Events",
@@ -130,7 +130,7 @@ namespace DafHukuk.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2025, 12, 28, 11, 34, 18, 668, DateTimeKind.Utc).AddTicks(137),
+                            CreatedDate = new DateTime(2025, 12, 29, 13, 42, 27, 458, DateTimeKind.Utc).AddTicks(2988),
                             IsActive = true,
                             Name_AR = "منشورات",
                             Name_EN = "Publications",
@@ -139,7 +139,7 @@ namespace DafHukuk.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2025, 12, 28, 11, 34, 18, 668, DateTimeKind.Utc).AddTicks(139),
+                            CreatedDate = new DateTime(2025, 12, 29, 13, 42, 27, 458, DateTimeKind.Utc).AddTicks(2990),
                             IsActive = true,
                             Name_AR = "خدماتنا",
                             Name_EN = "Our Services",
@@ -305,8 +305,7 @@ namespace DafHukuk.Data.Migrations
 
                     b.Property<string>("Description_TR")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(255)
@@ -321,10 +320,12 @@ namespace DafHukuk.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Slug_AR")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Slug_EN")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Slug_TR")
                         .IsRequired()

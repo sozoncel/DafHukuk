@@ -6,8 +6,8 @@
 @using DafHukuk.Core.Entities
 @using System.Net.Http.Json
 @inject ISolutionPartnerService PartnerService
+@inject IImageService ImageService
 @inject IJSRuntime JS
-@inject HttpClient Http
 
 <div class="container-fluid px-4 py-4">
 
@@ -455,7 +455,15 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            try
+            {
+                await Task.Delay(100);
+                await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Drag-drop init error: {ex.Message}");
+            }
         }
     }
 
@@ -494,87 +502,33 @@
 
     private async Task ProcessImageFile(IBrowserFile file)
     {
-        const long maxFileSize = 10 * 1024 * 1024;
-
-        if (file.Size > maxFileSize)
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => "File size must be less than 10MB!",
-                "ar" => "يجب أن يكون حجم الملف أقل من 10 ميجابايت!",
-                _ => "Dosya boyutu 10MB'dan küçük olmalıdır!"
-            };
-            return;
-        }
-
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-        var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-
-        if (!allowedExtensions.Contains(extension))
-        {
-            showError = true;
-            errorMessage = activeLang switch
-            {
-                "en" => $"Invalid file format. Allowed: {string.Join(", ", allowedExtensions)}",
-                "ar" => $"تنسيق ملف غير صالح. المسموح: {string.Join(", ", allowedExtensions)}",
-                _ => $"Geçersiz dosya formatı. İzin verilen: {string.Join(", ", allowedExtensions)}"
-            };
-            return;
-        }
-
         try
         {
             isUploading = true;
             StateHasChanged();
 
-            using var content = new MultipartFormDataContent();
-            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-            content.Add(fileContent, "file", file.Name);
+            var formFile = new BrowserFileFormFile(file);
+            var result = await ImageService.UploadImageAsync(formFile, "partners", maxWidth: 800, maxHeight: 1000);
 
-            var response = await Http.PostAsync("/api/image/upload?entityType=partners", content);
-
-            if (response.IsSuccessStatusCode)
+            if (!result.Success)
             {
-                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
-                if (result?.Success == true && !string.IsNullOrWhiteSpace(result.FilePath))
-                {
-                    newPartner.ImageUrl = result.FilePath;
-
-                    showSuccess = true;
-                    successMessage = activeLang switch
-                    {
-                        "en" => "Logo uploaded successfully!",
-                        "ar" => "تم رفع الشعار بنجاح!",
-                        _ => "Logo başarıyla yüklendi!"
-                    };
-
-                    await Task.Delay(2000);
-                    showSuccess = false;
-                }
-                else
-                {
-                    showError = true;
-                    errorMessage = result?.Message ?? (activeLang switch
-                    {
-                        "en" => "Logo could not be uploaded.",
-                        "ar" => "لم يتم رفع الشعار.",
-                        _ => "Logo yüklenemedi."
-                    });
-                }
-            }
-            else
-            {
-                var errorResult = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
                 showError = true;
-                errorMessage = errorResult?.Message ?? (activeLang switch
-                {
-                    "en" => "Logo upload failed.",
-                    "ar" => "فشل رفع الشعار.",
-                    _ => "Logo yükleme başarısız oldu."
-                });
+                errorMessage = result.Message;
+                return;
             }
+
+            newPartner.ImageUrl = result.FilePath;
+
+            showSuccess = true;
+            successMessage = activeLang switch
+            {
+                "en" => "Logo uploaded successfully!",
+                "ar" => "تم رفع الشعار بنجاح!",
+                _ => "Logo başarıyla yüklendi!"
+            };
+
+            await Task.Delay(2000);
+            showSuccess = false;
         }
         catch (Exception ex)
         {
@@ -585,6 +539,7 @@
                 "ar" => $"خطأ في الرفع: {ex.Message}",
                 _ => $"Yükleme hatası: {ex.Message}"
             };
+            Console.WriteLine($"Exception: {ex}");
         }
         finally
         {
@@ -685,6 +640,7 @@
         {
             showError = true;
             errorMessage = $"Kaydetme hatası: {ex.Message}";
+            Console.WriteLine($"Create error: {ex}");
         }
         finally
         {
@@ -694,6 +650,7 @@
 
     private void EditPartner(SolutionPartner partner)
     {
+        // Orijinal veriyi deep copy ile sakla
         originalPartner = new SolutionPartner
         {
             Id = partner.Id,
@@ -709,6 +666,7 @@
             IsActive = partner.IsActive
         };
 
+        // Düzenleme için yeni kopya oluştur
         newPartner = new SolutionPartner
         {
             Id = partner.Id,
@@ -724,6 +682,7 @@
             IsActive = partner.IsActive
         };
 
+        // Dil seçimlerini ayarla
         includeTr = !string.IsNullOrWhiteSpace(partner.Description_TR);
         includeEn = !string.IsNullOrWhiteSpace(partner.Description_EN);
         includeAr = !string.IsNullOrWhiteSpace(partner.Description_AR);
@@ -746,58 +705,74 @@
             return;
         }
 
+        // ✅ TR alanları kontrol et (Required olduğu için)
+        if (string.IsNullOrWhiteSpace(newPartner.Description_TR) ||
+            string.IsNullOrWhiteSpace(newPartner.Slug_TR))
+        {
+            showError = true;
+            errorMessage = "Türkçe açıklama ve slug zorunludur!";
+            return;
+        }
+
         try
         {
             isSaving = true;
 
-            var updatePartner = new SolutionPartner
+            // ✅ Basit yaklaşım: newPartner'ı direkt kullan
+            // Seçilmeyen diller için orijinal değerleri koru
+            if (!includeTr)
             {
-                Id = newPartner.Id,
-                Name = newPartner.Name,
-                WebsiteUrl = newPartner.WebsiteUrl,
-                ImageUrl = newPartner.ImageUrl,
-                IsActive = newPartner.IsActive
-            };
-
-            if (includeTr)
-            {
-                updatePartner.Description_TR = newPartner.Description_TR;
-                updatePartner.Slug_TR = newPartner.Slug_TR;
+                newPartner.Description_TR = originalPartner.Description_TR;
+                newPartner.Slug_TR = originalPartner.Slug_TR;
             }
             else
             {
-                updatePartner.Description_TR = originalPartner.Description_TR;
-                updatePartner.Slug_TR = originalPartner.Slug_TR;
+                newPartner.Description_TR = newPartner.Description_TR?.Trim();
+                newPartner.Slug_TR = newPartner.Slug_TR?.Trim();
             }
 
-            if (includeEn)
+            if (!includeEn)
             {
-                updatePartner.Description_EN = newPartner.Description_EN;
-                updatePartner.Slug_EN = newPartner.Slug_EN;
+                newPartner.Description_EN = originalPartner.Description_EN;
+                newPartner.Slug_EN = originalPartner.Slug_EN;
             }
             else
             {
-                updatePartner.Description_EN = originalPartner.Description_EN;
-                updatePartner.Slug_EN = originalPartner.Slug_EN;
+                newPartner.Description_EN = newPartner.Description_EN?.Trim();
+                newPartner.Slug_EN = newPartner.Slug_EN?.Trim();
             }
 
-            if (includeAr)
+            if (!includeAr)
             {
-                updatePartner.Description_AR = newPartner.Description_AR;
-                updatePartner.Slug_AR = newPartner.Slug_AR;
+                newPartner.Description_AR = originalPartner.Description_AR;
+                newPartner.Slug_AR = originalPartner.Slug_AR;
             }
             else
             {
-                updatePartner.Description_AR = originalPartner.Description_AR;
-                updatePartner.Slug_AR = originalPartner.Slug_AR;
+                newPartner.Description_AR = newPartner.Description_AR?.Trim();
+                newPartner.Slug_AR = newPartner.Slug_AR?.Trim();
             }
 
-            var updated = await PartnerService.Update(newPartner.Id, updatePartner);
+            // ✅ Temel alanları temizle
+            newPartner.Name = newPartner.Name?.Trim();
+            newPartner.WebsiteUrl = newPartner.WebsiteUrl?.Trim();
+            newPartner.ImageUrl = newPartner.ImageUrl?.Trim();
+
+            // Service'e gönder
+            var updated = await PartnerService.Update(newPartner.Id, newPartner);
+
+            if (updated == null)
+            {
+                throw new Exception("Güncelleme başarısız oldu!");
+            }
 
             successMessage = "✓ Ortak başarıyla güncellendi!";
             showSuccess = true;
 
+            // Listeyi yenile
             await LoadPartners();
+
+            // Edit modunu kapat
             CancelEdit();
 
             await Task.Delay(2000);
@@ -807,6 +782,13 @@
         {
             showError = true;
             errorMessage = $"Güncelleme hatası: {ex.Message}";
+
+            Console.WriteLine($"Update error: {ex}");
+            if (ex.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                errorMessage += $" | İç Hata: {ex.InnerException.Message}";
+            }
         }
         finally
         {
@@ -895,10 +877,30 @@
         return desc.Length > 100 ? desc.Substring(0, 100) + "..." : desc;
     }
 
-    private class ImageUploadResult
+    private class BrowserFileFormFile : IFormFile
     {
-        public bool Success { get; set; }
-        public string? Message { get; set; }
-        public string? FilePath { get; set; }
+        private readonly IBrowserFile _file;
+
+        public BrowserFileFormFile(IBrowserFile file)
+        {
+            _file = file;
+        }
+
+        public string ContentType => _file.ContentType;
+        public string ContentDisposition => $"form-data; name=\"file\"; filename=\"{_file.Name}\"";
+        public IHeaderDictionary Headers => new HeaderDictionary();
+        public long Length => _file.Size;
+        public string Name => "file";
+        public string FileName => _file.Name;
+
+        public Stream OpenReadStream() => _file.OpenReadStream(_file.Size);
+
+        public void CopyTo(Stream target) => OpenReadStream().CopyTo(target);
+
+        public async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+        {
+            await using var stream = OpenReadStream();
+            await stream.CopyToAsync(target, cancellationToken);
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace DafHukuk.Service
             var query = _context.Posts
                 .Include(p => p.Category)
                 .Where(p => p.IsActive)
+                .AsNoTracking()
                 .AsQueryable();
 
             if (categoryId.HasValue && categoryId.Value > 0)
@@ -37,6 +38,7 @@ namespace DafHukuk.Service
         {
             return await _context.Posts
                 .Include(p => p.Category)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -51,9 +53,8 @@ namespace DafHukuk.Service
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            post.Category = null;
-
-            return post;
+            // Category'yi tekrar yükle
+            return await GetById(post.Id) ?? post;
         }
 
         public async Task<Post?> Update(int id, Post post)
@@ -62,11 +63,13 @@ namespace DafHukuk.Service
             if (existing == null)
                 return null;
 
+            // Temel alanları güncelle
             existing.CategoryId = post.CategoryId;
             existing.IsActive = post.IsActive;
             existing.PublishedDate = post.PublishedDate;
             existing.CoverImageUrl = post.CoverImageUrl;
 
+            // Dil bazlı alanları güncelle
             existing.Title_TR = post.Title_TR;
             existing.Content_TR = post.Content_TR;
             existing.Slug_TR = post.Slug_TR;
@@ -81,9 +84,8 @@ namespace DafHukuk.Service
 
             await _context.SaveChangesAsync();
 
-            return await _context.Posts
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            // Category'yi dahil et
+            return await GetById(id);
         }
 
         public async Task<bool> Delete(int id)
@@ -122,6 +124,7 @@ namespace DafHukuk.Service
                         (p.Category != null && p.Category.Name_AR != null && p.Category.Name_AR.ToLower().Contains(lowerQuery))
                     )
                 )
+                .AsNoTracking()
                 .OrderByDescending(p => p.PublishedDate)
                 .ToListAsync();
 

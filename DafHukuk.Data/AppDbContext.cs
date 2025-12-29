@@ -25,15 +25,6 @@ namespace DafHukuk.Data
                 .HasForeignKey(p => p.CategoryId);
 
             modelbuilder.Entity<Category>().HasData(
-                //new Category
-                //{
-                //    Id = 1,
-                //    Name_TR = "Duyurular",
-                //    Name_EN = "Announcements",
-                //    Name_AR = "إعلانات",
-                //    IsActive = true,
-                //    CreatedDate = DateTime.UtcNow
-                //},
                 new Category
                 {
                     Id = 1,
@@ -62,6 +53,7 @@ namespace DafHukuk.Data
                     CreatedDate = DateTime.UtcNow
                 }
             );
+
         }
     }
 }
