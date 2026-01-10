@@ -237,7 +237,9 @@ else
         if (serviceCategory != null)
         {
             servicePosts = allPosts
-                .Where(p => p.CategoryId == serviceCategory.Id && p.IsActive)
+                .Where(p => p.CategoryId == serviceCategory.Id &&
+                           p.IsActive &&
+                           HasContentInCurrentLanguage(p)) 
                 .OrderBy(p => GetPostTitle(p))
                 .ToList();
         }
@@ -245,7 +247,8 @@ else
         relatedPosts = allPosts
             .Where(p => p.Category != null
                 && !p.Category.Name_TR.Equals("Hizmetlerimiz", StringComparison.OrdinalIgnoreCase)
-                && p.IsActive)
+                && p.IsActive
+                && HasContentInCurrentLanguage(p)) 
             .OrderByDescending(p => p.PublishedDate)
             .ToList();
 
@@ -256,6 +259,17 @@ else
             .ToList();
 
         FilteredPosts = relatedPosts.Concat(servicePosts).ToList();
+    }
+
+    
+    private bool HasContentInCurrentLanguage(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => !string.IsNullOrWhiteSpace(post.Title_EN) && !string.IsNullOrWhiteSpace(post.Content_EN),
+            "ar" => !string.IsNullOrWhiteSpace(post.Title_AR) && !string.IsNullOrWhiteSpace(post.Content_AR),
+            _ => !string.IsNullOrWhiteSpace(post.Title_TR) && !string.IsNullOrWhiteSpace(post.Content_TR)
+        };
     }
 
     private async Task<SolutionPartner?> GetPartnerBySlug(string? slug, string lang)

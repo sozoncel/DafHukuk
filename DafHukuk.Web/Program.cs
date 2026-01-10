@@ -64,7 +64,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ILawyerService, LawyerService>();
 builder.Services.AddScoped<ISolutionPartnerService, SolutionPartnerService>();
 builder.Services.AddScoped<IImageService, ImageService>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IHtmlSanitizerService, HtmlSanitizerService>();
 
 builder.Services.AddRateLimiter(options =>

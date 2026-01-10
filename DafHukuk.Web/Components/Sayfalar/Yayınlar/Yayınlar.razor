@@ -22,14 +22,26 @@
     {
         var allPosts = await PostService.GetAll();
 
+        // ✅ DİL FİLTRELEMESİ: Sadece ilgili dilde içeriği olan postları al
         currentCategoryPosts = allPosts
-            .Where(p => p.CategoryId == PageCategoryId && p.IsActive)
+            .Where(p => p.CategoryId == PageCategoryId && p.IsActive && HasContentInCurrentLanguage(p))
             .OrderByDescending(p => p.PublishedDate)
             .ToList();
 
         currentCategory = allPosts.FirstOrDefault(p => p.CategoryId == PageCategoryId)?.Category;
         otherPostsInSameCategory = currentCategoryPosts.ToList();
         filteredPosts = currentCategoryPosts.ToList();
+    }
+
+    // ✅ Mevcut dilde içerik var mı kontrol et
+    private bool HasContentInCurrentLanguage(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => !string.IsNullOrWhiteSpace(post.Title_EN) && !string.IsNullOrWhiteSpace(post.Content_EN),
+            "ar" => !string.IsNullOrWhiteSpace(post.Title_AR) && !string.IsNullOrWhiteSpace(post.Content_AR),
+            _ => !string.IsNullOrWhiteSpace(post.Title_TR) && !string.IsNullOrWhiteSpace(post.Content_TR)
+        };
     }
 
     private void PerformSearch()

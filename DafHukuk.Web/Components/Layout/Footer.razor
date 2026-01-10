@@ -35,24 +35,17 @@
                     <li><a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a></li>
                 </ul>
             </div>
-
-            <div class="footer-column">
-                <h4 class="footer-column-title">@GetText("followUs")</h4>
-                <div class="footer-social">
-                    <a href="#" class="social-link" aria-label="LinkedIn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
         </div>
 
         <div class="footer-bottom">
-            <span class="footer-info">
-                “Ziyaret ettiğiniz bu internet sitesi 1136 sayılı Avukatlık Kanunu ve Yönetmeliği ile Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu Yönetmeliği’nde yer alan reklâm yasağı hükümleri çerçevesinde sadece bilgi verme amacı ile tasarlanmıştır. Bu sitede yer alan bilgiler tavsiye niteliğinde değildir. Ayrıca bu sitedeki bilgilere dayanılarak yapılacak iş ve eylemlerden sorumlu olmadığımızı ilan ederiz.”
-                © DAF Hukuk ve Danışmanlık 2025. Tüm hakları saklıdır.
-            </span>
+            <div class="footer-legal-wrapper">
+                <p class="footer-legal-text">
+                    @GetText("legalDisclaimer")
+                </p>
+                <p class="footer-copyright">
+                    @GetText("copyright")
+                </p>
+            </div>
         </div>
     </div>
 </footer>
@@ -79,7 +72,7 @@
     {
         ["tr"] = new()
         {
-            ["newsletterTitle"] = "GÜNCEL HUKUK KONULARI İÇİN KAYDOLUN",
+            ["newsletterTitle"] = "Güncel hukuk konular için kaydolun",
             ["newsletterDesc"] = "Hukuk dünyasındaki son gelişmelerden ve uzman görüşlerimizden haberdar olun.",
             ["newsletterButton"] = "KAYIT OLUN",
             ["getToKnowUs"] = "Bizi Tanıyın",
@@ -92,14 +85,12 @@
             ["siteName"] = "DAF Hukuk & Danışmanlık",
             ["newsAndPublications"] = "Duyurular & Yayınlar",
             ["publications"] = "Yayınlar",
-            ["followUs"] = "Takip et",
-            ["cookiePreferences"] = "Çerez Tercihleri",
-            ["termsAndConditions"] = "Hüküm ve Koşullar",
-            ["copyright"] = "© DAF Hukuk & Danışmanlık 2025. Tüm hakları saklıdır."
+            ["legalDisclaimer"] = "Ziyaret ettiğiniz bu internet sitesi 1136 sayılı Avukatlık Kanunu ve Yönetmeliği ile Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu Yönetmeliği'nde yer alan reklâm yasağı hükümleri çerçevesinde sadece bilgi verme amacı ile tasarlanmıştır. Bu sitede yer alan bilgiler tavsiye niteliğinde değildir. Ayrıca bu sitedeki bilgilere dayanılarak yapılacak iş ve eylemlerden sorumlu olmadığımızı ilan ederiz.",
+            ["copyright"] = "© DAF Hukuk ve Danışmanlık 2025. Tüm hakları saklıdır."
         },
         ["en"] = new()
         {
-            ["newsletterTitle"] = "SUBSCRIBE FOR LEGAL UPDATES",
+            ["newsletterTitle"] = "Subscribe for legal updates",
             ["newsletterDesc"] = "Stay informed about the latest legal developments and expert insights.",
             ["newsletterButton"] = "SIGN UP",
             ["getToKnowUs"] = "Get to Know Us",
@@ -109,13 +100,11 @@
             ["partners"] = "Partners",
             ["career"] = "Careers",
             ["contact"] = "Contact",
-            ["siteName"] = "DAF LAW FIRM",
+            ["siteName"] = "DAF Law & Consultancy",
             ["newsAndPublications"] = "News & Publications",
             ["publications"] = "Publications",
-            ["followUs"] = "Follow Us",
-            ["cookiePreferences"] = "Cookie Preferences",
-            ["termsAndConditions"] = "Terms and Conditions",
-            ["copyright"] = "© DAF Hukuk ve Danışmanlık 2025. All rights reserved."
+            ["legalDisclaimer"] = "This website has been designed solely for informational purposes within the framework of the advertising prohibition provisions set forth in the Attorney Law No. 1136 and its Regulation, as well as the Mediation in Legal Disputes Law Regulation. The information on this site is not advisory in nature. We hereby declare that we are not responsible for any actions or transactions based on the information contained on this website.",
+            ["copyright"] = "© DAF Law & Consultancy 2025. All rights reserved."
         },
         ["ar"] = new()
         {
@@ -129,13 +118,11 @@
             ["partners"] = "الشركاء",
             ["career"] = "وظائف",
             ["contact"] = "اتصل بنا",
-            ["siteName"] = "داف للمحاماة",
+            ["siteName"] = "داف للمحاماة والاستشارات",
             ["newsAndPublications"] = "الأخبار والمنشورات",
             ["publications"] = "منشورات",
-            ["followUs"] = "تابعنا",
-            ["cookiePreferences"] = "تفضيلات ملفات تعريف الارتباط",
-            ["termsAndConditions"] = "الشروط والأحكام",
-            ["copyright"] = "© DAF Hukuk ve Danışmanlık 2025. جميع الحقوق محفوظة."
+            ["legalDisclaimer"] = "تم تصميم هذا الموقع الإلكتروني لأغراض إعلامية فقط في إطار أحكام حظر الإعلان المنصوص عليها في قانون المحاماة رقم 1136 ولائحته التنفيذية، بالإضافة إلى لائحة قانون الوساطة في المنازعات القانونية. المعلومات الواردة في هذا الموقع ليست ذات طابع استشاري. نعلن بموجب هذا أننا غير مسؤولين عن أي إجراءات أو معاملات تستند إلى المعلومات الواردة في هذا الموقع.",
+            ["copyright"] = "© داف للمحاماة والاستشارات 2025. جميع الحقوق محفوظة."
         }
     };
 
@@ -151,7 +138,6 @@
         return LanguageService.GetLocalizedUrl(path);
     }
 
-    // ✅ DÜZELTME: Çözüm Ortakları için özel routing
     private string GetLocalizedPartners()
     {
         return CurrentLang switch

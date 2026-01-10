@@ -595,14 +595,6 @@ a {
         transform: translateY(-2px);
     }
 
-.footer-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2rem 0;
-    font-size: 0.875rem;
-    color: #68676a;
-}
 
 .footer-info {
     display: flex;
@@ -1608,3 +1600,528 @@ a {
             font-size: 2.5rem;
         }
 }
+
+
+/* =========================================================
+   MOBİL TAŞMA DÜZELTME - TÜM SAYFALARA EKLENMELİ
+========================================================= */
+
+/* Global overflow düzeltmesi */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Container'lar için maksimum genişlik */
+.container,
+.container-fluid,
+.hero-kariyer-container,
+.hero-iletisim-container,
+.hero-search-container,
+.iletisim-icerik,
+.kariyer-icerik {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* Row yapıları için düzeltme */
+.row {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+/* Hero Section'lar için overflow düzeltmesi */
+.hero-kariyer-section,
+.hero-iletisim-section,
+.hero-search-section {
+    overflow: hidden !important;
+    width: 100%;
+    max-width: 100vw;
+}
+
+/* =========================================================
+   İLETİŞİM SAYFASI DÜZELTMELER
+========================================================= */
+
+/* Hero section düzeltmesi */
+.hero-iletisim-section {
+    overflow: hidden !important; /* visible yerine hidden */
+}
+
+/* Row-card yapısı düzeltmesi */
+.row-card {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Google Map düzeltmesi */
+.row-google-map {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.mapouter {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* İletişim içerik düzeltmesi */
+.iletisim-icerik {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+    .iletisim-icerik .row {
+        margin: 0;
+        padding: 0 15px;
+    }
+
+/* Mobil düzeltmeler */
+@media (max-width: 992px) {
+    .hero-iletisim-container {
+        padding: 100px 20px 24px 20px; /* 24px yerine 20px */
+    }
+
+    .iletisim-card-inner {
+        padding: 20px;
+    }
+
+    .contact-form {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-iletisim-container {
+        padding: 100px 15px 20px 15px;
+    }
+
+    .iletisim-icerik .row {
+        padding: 0 10px;
+    }
+
+    .row-card {
+        padding: 0;
+    }
+
+    .foto-col,
+    .meta-col {
+        padding: 0;
+    }
+}
+
+/* =========================================================
+   KARİYER SAYFASI DÜZELTMELER
+========================================================= */
+
+/* Kariyer içerik düzeltmesi */
+.kariyer-icerik {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding: 40px 20px;
+}
+
+    .kariyer-icerik .row {
+        margin: 0;
+        width: 100%;
+    }
+
+/* Tab content düzeltmesi */
+.tab-content {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Değerler satırları düzeltmesi */
+.values-row-1,
+.values-row-2 {
+    margin: 0;
+    width: 100%;
+}
+
+/* Value box düzeltmesi */
+.value-box {
+    padding: 15px;
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .hero-kariyer-container {
+        padding: 100px 20px 40px 20px;
+    }
+
+    .kariyer-sub-nav-container {
+        padding: 12px 20px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-content {
+        padding: 40px 20px;
+    }
+
+    .kariyer-icerik {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-kariyer-container {
+        padding: 100px 15px 30px 15px;
+    }
+
+    .kariyer-icerik {
+        padding: 20px 10px;
+    }
+
+    .value-box {
+        padding: 10px 5px;
+    }
+
+    .positions-row {
+        margin: 0;
+    }
+
+        .positions-row [class*="col-"] {
+            padding: 0 10px;
+        }
+}
+
+
+.arama-sayfasi {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.icerikBolumu {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.container-custom {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 20px;
+}
+
+.content-cards-row {
+    margin: 0;
+    width: 100%;
+}
+
+.related-content-nav-row {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.custom-tabs {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 991px) {
+    .container-custom {
+        padding: 0 15px;
+    }
+
+    .custom-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding-bottom: 5px;
+    }
+
+    .hero-search-section {
+        min-height: 180px;
+    }
+
+    .hero-search-container {
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .icerikBolumu {
+        padding: 30px 0;
+    }
+
+    .container-custom {
+        padding: 0 10px;
+    }
+
+    .content-card {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-search-container {
+        padding: 20px 10px;
+    }
+
+    .container-custom {
+        padding: 0 10px;
+    }
+
+    .custom-tabs .nav-link {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+}
+
+/* =========================================================
+   COL YAPILARI İÇİN GENEL DÜZELTME
+========================================================= */
+
+@media (max-width: 992px) {
+    [class*="col-"] {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    [class*="col-"] {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+/* =========================================================
+   FORM ELEMANLARI DÜZELTME
+========================================================= */
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select,
+.form-control {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.form-row {
+    width: 100%;
+    max-width: 100%;
+}
+
+    .form-row input,
+    .form-row textarea {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+/* =========================================================
+   IMAGE DÜZELTMELER
+========================================================= */
+
+/* Tüm görsellerin taşmaması için */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.ofis-img,
+.value-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+/* =========================================================
+   GOOGLE MAP DÜZELTME
+========================================================= */
+
+.gmap_iframe {
+    width: 100% !important;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .mapouter {
+        height: 300px;
+    }
+
+    .row-google-map {
+        margin: 20px 0 0 0;
+        padding: 0;
+    }
+
+        .row-google-map .col-lg-12 {
+            padding: 0;
+        }
+}
+
+/* =========================================================
+   BUTON DÜZELTMELER
+========================================================= */
+
+.apply-btn,
+.btn-send,
+.show-all-button {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+    .apply-btn,
+    .btn-send {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* =========================================================
+   TAB CONTENT VE NAVIGATION DÜZELTME
+========================================================= */
+
+.kariyer-sub-nav-bar {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.kariyer-sub-nav-container {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+    .kariyer-sub-nav-container .button {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+.hero-kariyer-breadcrumb,
+.hero-iletisim-breadcrumb {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+    .hero-kariyer-breadcrumb,
+    .hero-iletisim-breadcrumb {
+        font-size: 12px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .footer {
+        overflow-x: hidden;
+    }
+
+    .footer-container {
+        max-width: 100%;
+        padding: 0 15px;
+    }
+
+    .footer-info {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+
+/* =========================================================
+   FOOTER YASAL BİLGİLENDİRME - MODERN & PROFESYONEL
+========================================================= */
+
+.footer-bottom {
+    padding: 3rem 0 2rem;
+}
+
+.footer-legal-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.footer-legal-text {
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    color: #666;
+    text-align: justify;
+    margin: 0;
+}
+
+.footer-copyright {
+    font-size: 0.875rem;
+    color: #68676a;
+    text-align: center;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Modern ikon efekti (opsiyonel) */
+.footer-legal-text::before {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-bottom {
+        padding: 2.5rem 0 1.5rem;
+    }
+
+    .footer-legal-wrapper {
+        gap: 1.25rem;
+    }
+
+    .footer-legal-text {
+        font-size: 0.75rem;
+        line-height: 1.6;
+        padding: 1rem;
+        text-align: left;
+    }
+
+    .footer-copyright {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-bottom {
+        padding: 2rem 0 1rem;
+    }
+
+    .footer-legal-text {
+        font-size: 0.6875rem;
+        padding: 0.875rem;
+        border-left-width: 2px;
+    }
+
+    .footer-copyright {
+        font-size: 0.75rem;
+        padding: 0 0.5rem;
+    }
+
+    .footer-legal-text::before {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Arapça RTL desteği */
+[dir="rtl"] .footer-legal-text {
+    border-left: none;
+    border-right: 3px solid #1F3363;
+    text-align: right;
+}
+
+    [dir="rtl"] .footer-legal-text::before {
+        margin-right: 0;
+        margin-left: 0.5rem;
+    }

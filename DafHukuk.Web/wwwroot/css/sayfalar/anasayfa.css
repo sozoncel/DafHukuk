@@ -231,3 +231,68 @@
             display: none;
         }
 }
+
+/* ANASAYFA HABER SLIDER ANIMASYONLARI */
+
+.haber-icerik-kutusu {
+    transition: all 0.5s ease;
+    position: relative;
+}
+
+    /* Slide Out - Sola Kayma */
+    .haber-icerik-kutusu.slide-out {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    /* Slide In - Sağdan Gelme */
+    .haber-icerik-kutusu.slide-in {
+        transform: translateX(100%);
+        opacity: 0;
+        animation: slideInFromRight 0.5s ease forwards;
+    }
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Hover'da animasyonu durdur */
+.haber-araci:hover .haber-icerik-kutusu {
+    animation-play-state: paused;
+}
+
+/* Görsel ve bilgi smooth geçiş */
+.haber-gorsel-kapsayici,
+.haber-bilgi {
+    transition: opacity 0.3s ease;
+}
+
+.slide-out .haber-gorsel-kapsayici,
+.slide-out .haber-bilgi {
+    opacity: 0;
+}
+
+.slide-in .haber-gorsel-kapsayici,
+.slide-in .haber-bilgi {
+    opacity: 0;
+}
+
+/* Normal durum */
+.haber-icerik-kutusu:not(.slide-out):not(.slide-in) .haber-gorsel-kapsayici,
+.haber-icerik-kutusu:not(.slide-out):not(.slide-in) .haber-bilgi {
+    opacity: 1;
+}
+
+/* Responsive için overflow hidden */
+.haber-araci {
+    overflow: hidden;
+    position: relative;
+}

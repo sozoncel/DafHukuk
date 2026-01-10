@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="hero-about-breadcrumb">
-                    <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> / <span>@GetText("mainTitle")</span>
+                    <a href="@GetLocalizedUrl("")">@GetText("home")</a> / <span>@GetText("mainTitle")</span>
                 </div>
             </div>
         </div>
@@ -49,71 +49,110 @@
                 <div class="col-lg-6">
                     <h3>@GetText("sectionIntroTitle")</h3>
                     <p>@GetText("sectionIntroText")</p>
-                    <a href="#" class="pageMove">@GetText("practiceAnchor")</a>
+                    <p class="intro-secondary">@GetText("sectionIntroSecondary")</p>
                 </div>
 
                 <div class="col-lg-6">
-                    <img src="/img/sayfalar/hizmetlerimiz/daf-hizmetlerimiz.png" alt="Modern Ofis Koridoru">
+                    <img src="/img/Ofis Genel/10.jpg" alt="Modern Ofis Koridoru">
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 id="practiceAreas" class="section-title">@GetText("practiceAreas")</h2>
+        <!-- Hizmet Kategorileri -->
+        <div class="services-categories-section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">@GetText("serviceCategories")</h2>
+                </div>
             </div>
-        </div>
-        <div class="row g-4 practice-cards-row">
-            @if (IsLoading)
-            {
-                <div class="col-12 loading-state">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">@GetText("loading")</span>
-                    </div>
-                    <p class="loading-text">@GetText("loadingText")</p>
-                </div>
-            }
-            else if (!FilteredPosts.Any())
-            {
-                <div class="col-12">
-                    <div class="alert alert-warning" role="alert">
-                        @GetText("noServices")
-                    </div>
-                </div>
-            }
-            else
-            {
-                @foreach (var post in DisplayedPosts)
-                {
-                    var postUrl = GetPostUrl(post);
 
-                    <div class="col-lg-3">
-                        <div class="practice-card">
-                            <img src="@post.CoverImageUrl" alt="@GetPostTitle(post)" />
-                            <a href="@postUrl">
-                                <h3 class="practice-title">@GetPostTitle(post)</h3>
-                            </a>
+            <div class="row g-4 service-category-cards">
+                <div class="col-lg-3 col-md-6">
+                    <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-briefcase"></i>
                         </div>
-                    </div>
-                }
-            }
-        </div>
+                        <h3>@GetText("generalServices")</h3>
+                        <p>@GetText("generalServicesDesc")</p>
+                        <span class="category-arrow">→</span>
+                    </a>
+                </div>
 
-        <!-- Tümünü Göster butonu -->
-        @if (ShowLoadMoreButton && !IsLoading)
-        {
-            <div class="row mt-4 mb-5">
-                <div class="col-lg-12 text-center">
-                    <button class="show-all-button" @onclick="ShowAll">@GetText("showAllButton")</button>
+                <div class="col-lg-3 col-md-6">
+                    <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>@GetText("specialConsultancy")</h3>
+                        <p>@GetText("specialConsultancyDesc")</p>
+                        <span class="category-arrow">→</span>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3>@GetText("expertOpinion")</h3>
+                        <p>@GetText("expertOpinionDesc")</p>
+                        <span class="category-arrow">→</span>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>@GetText("mediation")</h3>
+                        <p>@GetText("mediationDesc")</p>
+                        <span class="category-arrow">→</span>
+                    </a>
                 </div>
             </div>
-        }
+        </div>
+
+        <!-- Neden Bizi Seçmelisiniz -->
+        <div class="why-choose-us-section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">@GetText("whyChooseUs")</h2>
+                </div>
+            </div>
+
+            <div class="row g-4 features-row">
+                <div class="col-lg-4">
+                    <div class="feature-box">
+                        <div class="feature-number">01</div>
+                        <h4>@GetText("feature1Title")</h4>
+                        <p>@GetText("feature1Text")</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="feature-box">
+                        <div class="feature-number">02</div>
+                        <h4>@GetText("feature2Title")</h4>
+                        <p>@GetText("feature2Text")</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="feature-box">
+                        <div class="feature-number">03</div>
+                        <h4>@GetText("feature3Title")</h4>
+                        <p>@GetText("feature3Text")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- İletişim CTA -->
         <div class="row-contact">
             <div class="col-12" id="contact-buttonid">
                 <p class="contact-text">@GetText("contactText")</p>
-                <a href="@LanguageService.GetLocalizedUrl("iletisim")" class="contact-button">
+                <a href="@GetLocalizedUrl("iletisim")" class="contact-button">
                     @GetText("contactButton") <span class="arrow-icon"></span>
                 </a>
             </div>
@@ -124,17 +163,10 @@
 
 @code {
     private List<Post> AllPosts { get; set; } = new();
-    private List<Post> ServicePosts { get; set; } = new(); // Sadece Hizmetlerimiz kategorisindeki postlar
-    private List<Post> FilteredPosts { get; set; } = new();
-    private List<Post> DisplayedPosts { get; set; } = new();
+    private List<Post> ServicePosts { get; set; } = new();
     private List<Category> DistinctCategories { get; set; } = new();
 
-    private int CurrentCategoryId { get; set; } = 0;
     private bool IsLoading { get; set; } = true;
-    private int InitialDisplayCount { get; set; } = 9;
-    private bool ShowingAll { get; set; } = false;
-
-    private bool ShowLoadMoreButton => FilteredPosts.Count > InitialDisplayCount && !ShowingAll;
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 
     private Dictionary<string, Dictionary<string, string>> Translations = new()
@@ -151,14 +183,21 @@
             ["mediation"] = "Arabuluculuk",
             ["sectionIntroTitle"] = "Hizmetlerimiz",
             ["sectionIntroText"] = "Müvekkillerimize, ulusal ve uluslararası alanda karşılaştıkları hukuki zorluklarda, uzman kadromuz ve geniş tecrübemizle kapsamlı ve stratejik çözümler sunuyoruz.",
-            ["practiceAnchor"] = "Çalışma Alanları",
-            ["practiceAreas"] = "Çalışma Alanları",
-            ["loading"] = "Yükleniyor...",
-            ["loadingText"] = "İçerikler yükleniyor...",
-            ["noServices"] = "Hizmet bulunamadı.",
+            ["sectionIntroSecondary"] = "Her bir çalışma alanımızda, sektörel uzmanlık ve güncel hukuki gelişmeleri takip eden deneyimli avukatlarımız ile müvekkillerimizin ihtiyaçlarına özel, sonuç odaklı hizmet anlayışı benimsiyoruz.",
+            ["serviceCategories"] = "Hizmet Kategorilerimiz",
+            ["generalServicesDesc"] = "Her alanda kapsamlı hukuki danışmanlık ve avukatlık hizmetleri",
+            ["specialConsultancyDesc"] = "İşletmenize özel tasarlanmış danışmanlık hizmet paketleri",
+            ["expertOpinionDesc"] = "Adli bilimler alanında uzman görüşleri ve teknik destek",
+            ["mediationDesc"] = "Uyuşmazlıkların mahkeme dışı çözümü için profesyonel arabuluculuk",
+            ["whyChooseUs"] = "Neden Bizi Seçmelisiniz?",
+            ["feature1Title"] = "Deneyimli Kadro",
+            ["feature1Text"] = "Uzman avukat ve danışmanımızla geniş bir uzmanlık yelpazesi sunuyoruz.",
+            ["feature2Title"] = "Stratejik Çözümler",
+            ["feature2Text"] = "Her müvekkile özel, ihtiyaç odaklı ve sonuç getiren hukuki stratejiler geliştiriyoruz.",
+            ["feature3Title"] = "Uluslararası Deneyim",
+            ["feature3Text"] = "Ulusal ve uluslararası platformlarda başarılı vaka yönetimi tecrübemiz bulunmaktadır.",
             ["contactText"] = "Birlikte çalışmak için iletişime geçebilirsiniz.",
-            ["contactButton"] = "İLETİŞİM",
-            ["showAllButton"] = "Tümünü Göster"
+            ["contactButton"] = "İLETİŞİM"
         },
         ["en"] = new()
         {
@@ -171,15 +210,22 @@
             ["expertOpinion"] = "Expert Opinion (Forensic Sciences)",
             ["mediation"] = "Mediation",
             ["sectionIntroTitle"] = "Services",
-            ["sectionIntroText"] = "We provide comprehensive and strategic legal solutions to our clients on national and international matters with our expert team.",
-            ["practiceAnchor"] = "Practice Areas",
-            ["practiceAreas"] = "Practice Areas",
-            ["loading"] = "Loading...",
-            ["loadingText"] = "Loading contents...",
-            ["noServices"] = "No services found.",
+            ["sectionIntroText"] = "We provide comprehensive and strategic legal solutions to our clients on national and international matters with our expert team and extensive experience.",
+            ["sectionIntroSecondary"] = "In each of our practice areas, we adopt a results-oriented service approach tailored to our clients' needs with our experienced lawyers who follow sectoral expertise and current legal developments.",
+            ["serviceCategories"] = "Our Service Categories",
+            ["generalServicesDesc"] = "Comprehensive legal consultancy and advocacy services in all areas",
+            ["specialConsultancyDesc"] = "Specially designed consultancy service packages for your business",
+            ["expertOpinionDesc"] = "Expert opinions and technical support in forensic sciences",
+            ["mediationDesc"] = "Professional mediation for out-of-court dispute resolution",
+            ["whyChooseUs"] = "Why Choose Us?",
+            ["feature1Title"] = "Experienced Team",
+            ["feature1Text"] = "We offer a wide range of expertise with expert lawyers and consultants.",
+            ["feature2Title"] = "Strategic Solutions",
+            ["feature2Text"] = "We develop client-specific, needs-focused and result-oriented legal strategies.",
+            ["feature3Title"] = "International Experience",
+            ["feature3Text"] = "We have successful case management experience on national and international platforms.",
             ["contactText"] = "Contact us to work together.",
-            ["contactButton"] = "CONTACT",
-            ["showAllButton"] = "Show All"
+            ["contactButton"] = "CONTACT"
         },
         ["ar"] = new()
         {
@@ -192,15 +238,22 @@
             ["expertOpinion"] = "رأي الخبير (العلوم الجنائية)",
             ["mediation"] = "الوساطة",
             ["sectionIntroTitle"] = "خدماتنا",
-            ["sectionIntroText"] = "نقدم لعملائنا حلولاً قانونية شاملة واستراتيجية على المستويين الوطني والدولي بفريقنا الخبير.",
-            ["practiceAnchor"] = "مجالات العمل",
-            ["practiceAreas"] = "مجالات العمل",
-            ["loading"] = "جارٍ التحميل...",
-            ["loadingText"] = "جارٍ تحميل المحتويات...",
-            ["noServices"] = "لم يتم العثور على خدمات.",
+            ["sectionIntroText"] = "نقدم لعملائنا حلولاً قانونية شاملة واستراتيجية على المستويين الوطني والدولي بفريقنا الخبير وخبرتنا الواسعة.",
+            ["sectionIntroSecondary"] = "في كل مجال من مجالات عملنا، نتبنى نهج خدمة موجه نحو النتائج ومصمم خصيصًا لاحتياجات عملائنا مع محامينا ذوي الخبرة الذين يتابعون الخبرة القطاعية والتطورات القانونية الحالية.",
+            ["serviceCategories"] = "فئات خدماتنا",
+            ["generalServicesDesc"] = "استشارات قانونية شاملة وخدمات المحاماة في جميع المجالات",
+            ["specialConsultancyDesc"] = "حزم خدمات استشارية مصممة خصيصًا لعملك",
+            ["expertOpinionDesc"] = "آراء الخبراء والدعم الفني في العلوم الجنائية",
+            ["mediationDesc"] = "وساطة احترافية لحل النزاعات خارج المحكمة",
+            ["whyChooseUs"] = "لماذا تختارنا؟",
+            ["feature1Title"] = "فريق ذو خبرة",
+            ["feature1Text"] = "نقدم مجموعة واسعة من الخبرات مع نخبة من المحامين والمستشارين الخبراء.",
+            ["feature2Title"] = "حلول استراتيجية",
+            ["feature2Text"] = "نطور استراتيجيات قانونية موجهة نحو النتائج ومركزة على الاحتياجات الخاصة بالعميل.",
+            ["feature3Title"] = "خبرة دولية",
+            ["feature3Text"] = "لدينا خبرة ناجحة في إدارة القضايا على المنصات الوطنية والدولية.",
             ["contactText"] = "تواصل معنا للعمل معاً.",
-            ["contactButton"] = "اتصل",
-            ["showAllButton"] = "عرض الكل"
+            ["contactButton"] = "اتصل"
         }
     };
 
@@ -212,8 +265,6 @@
         try
         {
             AllPosts = await PostService.GetAll();
-
-            // Hizmetlerimiz kategorisini bul
             var categories = await CategoryService.GetAll();
             var hizmetCategory = categories.FirstOrDefault(c =>
                 string.Equals(c.Name_TR?.Trim(), "Hizmetlerimiz", StringComparison.OrdinalIgnoreCase) ||
@@ -223,7 +274,6 @@
 
             if (hizmetCategory != null)
             {
-                // Sadece Hizmetlerimiz kategorisindeki postları al
                 ServicePosts = AllPosts
                     .Where(p => p.CategoryId == hizmetCategory.Id && p.IsActive)
                     .OrderBy(p => GetPostTitle(p))
@@ -231,14 +281,12 @@
             }
             else
             {
-                // Fallback: CategoryId = 18
                 ServicePosts = AllPosts
                     .Where(p => p.CategoryId == 18 && p.IsActive)
                     .OrderBy(p => GetPostTitle(p))
                     .ToList();
             }
 
-            // ServicePosts içindeki benzersiz kategorileri al (alt kategoriler varsa)
             DistinctCategories = ServicePosts
                 .Where(p => p.Category != null)
                 .Select(p => p.Category!)
@@ -254,9 +302,6 @@
             DistinctCategories = new List<Category>();
         }
 
-        FilteredPosts = ServicePosts.ToList();
-        UpdateDisplayedPosts();
-
         IsLoading = false;
     }
 
@@ -268,68 +313,6 @@
     public void Dispose()
     {
         Navigation.LocationChanged -= OnLocationChanged;
-    }
-
-    private void FilterCategory(int categoryId)
-    {
-        CurrentCategoryId = categoryId;
-        ShowingAll = false;
-
-        if (CurrentCategoryId == 0)
-        {
-            FilteredPosts = ServicePosts.ToList();
-        }
-        else
-        {
-            FilteredPosts = ServicePosts.Where(p => p.CategoryId == categoryId).ToList();
-        }
-
-        UpdateDisplayedPosts();
-        StateHasChanged();
-    }
-
-    private void ShowAll()
-    {
-        ShowingAll = true;
-        UpdateDisplayedPosts();
-    }
-
-    private void UpdateDisplayedPosts()
-    {
-        DisplayedPosts = ShowingAll ? FilteredPosts : FilteredPosts.Take(InitialDisplayCount).ToList();
-    }
-
-    private string GetPostUrl(Post post)
-    {
-        if (post?.Category == null) return "#";
-
-        var categorySlug = GetCategorySlug(post.Category);
-        var postSlug = GetPostSlug(post);
-
-        return CurrentLang switch
-        {
-            "en" => $"/en/{categorySlug}/{postSlug}",
-            "ar" => $"/ar/{categorySlug}/{postSlug}",
-            _ => $"/{categorySlug}/{postSlug}"
-        };
-    }
-
-    private string GetCategorySlug(Category category)
-    {
-        var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "").ToLowerInvariant().Trim();
-
-        return categoryName switch
-        {
-            "hizmetlerimiz" or "our services" or "خدماتنا"
-                => CurrentLang == "en" ? "services" : CurrentLang == "ar" ? "services" : "hizmetlerimiz",
-            "duyurular" or "announcements" or "الإعلانات"
-                => CurrentLang == "en" ? "announcements" : CurrentLang == "ar" ? "announcements" : "duyurular",
-            "etkinlikler" or "events" or "الفعاليات"
-                => CurrentLang == "en" ? "events" : CurrentLang == "ar" ? "events" : "etkinlikler",
-            "yayınlar" or "yayinlar" or "publications" or "المنشورات"
-                => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar",
-            _ => CurrentLang == "en" ? "publications" : CurrentLang == "ar" ? "publications" : "yayinlar"
-        };
     }
 
     private string GetText(string key)
@@ -346,16 +329,6 @@
             "en" => post.Title_EN ?? post.Title_TR,
             "ar" => post.Title_AR ?? post.Title_TR,
             _ => post.Title_TR
-        };
-    }
-
-    private string GetPostSlug(Post post)
-    {
-        return CurrentLang switch
-        {
-            "en" => post.Slug_EN ?? post.Slug_TR,
-            "ar" => post.Slug_AR ?? post.Slug_TR,
-            _ => post.Slug_TR
         };
     }
 

@@ -24,11 +24,22 @@ namespace DafHukuk.Service
         // Sayfa route mapping'leri
         private readonly Dictionary<string, Dictionary<string, string>> _pageRoutes = new()
         {
+            // Ana Sayfa
             [""] = new() { ["tr"] = "/", ["en"] = "/en", ["ar"] = "/ar" },
+
+            // Hakkımızda
             ["hakkimizda"] = new() { ["tr"] = "/hakkimizda", ["en"] = "/en/about", ["ar"] = "/ar/about" },
             ["hakkimizda/odullerimiz"] = new() { ["tr"] = "/hakkimizda/odullerimiz", ["en"] = "/en/about/awards", ["ar"] = "/ar/about/awards" },
             ["hakkimizda/sosyal-sorumluluk"] = new() { ["tr"] = "/hakkimizda/sosyal-sorumluluk", ["en"] = "/en/about/social-responsibility", ["ar"] = "/ar/about/social-responsibility" },
+
+            // Hizmetlerimiz - ANA SAYFA VE ALT SAYFALAR
             ["hizmetlerimiz"] = new() { ["tr"] = "/hizmetlerimiz", ["en"] = "/en/services", ["ar"] = "/ar/services" },
+            ["hizmetlerimiz/genel-hizmetler"] = new() { ["tr"] = "/hizmetlerimiz/genel-hizmetler", ["en"] = "/en/services/general-services", ["ar"] = "/ar/services/general-services" },
+            ["hizmetlerimiz/ozel-danismanlik"] = new() { ["tr"] = "/hizmetlerimiz/ozel-danismanlik", ["en"] = "/en/services/special-consultancy", ["ar"] = "/ar/services/special-consultancy" },
+            ["hizmetlerimiz/uzman-gorusu"] = new() { ["tr"] = "/hizmetlerimiz/uzman-gorusu", ["en"] = "/en/services/expert-opinion", ["ar"] = "/ar/services/expert-opinion" },
+            ["hizmetlerimiz/arabuluculuk"] = new() { ["tr"] = "/hizmetlerimiz/arabuluculuk", ["en"] = "/en/services/mediation", ["ar"] = "/ar/services/mediation" },
+
+            // Diğer Sayfalar
             ["ekibimiz"] = new() { ["tr"] = "/ekibimiz", ["en"] = "/en/team", ["ar"] = "/ar/team" },
             ["duyurular"] = new() { ["tr"] = "/duyurular", ["en"] = "/en/announcements", ["ar"] = "/ar/announcements" },
             ["yayinlar"] = new() { ["tr"] = "/yayinlar", ["en"] = "/en/publications", ["ar"] = "/ar/publications" },
@@ -36,10 +47,16 @@ namespace DafHukuk.Service
             ["kariyer"] = new() { ["tr"] = "/kariyer", ["en"] = "/en/career", ["ar"] = "/ar/career" },
             ["iletisim"] = new() { ["tr"] = "/iletisim", ["en"] = "/en/contact", ["ar"] = "/ar/contact" },
             ["arama"] = new() { ["tr"] = "/arama", ["en"] = "/en/search", ["ar"] = "/ar/search" },
+
+            // İngilizce path'lerden Türkçe'ye mapping (geriye uyumluluk)
             ["about"] = new() { ["tr"] = "/hakkimizda", ["en"] = "/en/about", ["ar"] = "/ar/about" },
             ["about/awards"] = new() { ["tr"] = "/hakkimizda/odullerimiz", ["en"] = "/en/about/awards", ["ar"] = "/ar/about/awards" },
             ["about/social-responsibility"] = new() { ["tr"] = "/hakkimizda/sosyal-sorumluluk", ["en"] = "/en/about/social-responsibility", ["ar"] = "/ar/about/social-responsibility" },
             ["services"] = new() { ["tr"] = "/hizmetlerimiz", ["en"] = "/en/services", ["ar"] = "/ar/services" },
+            ["services/general-services"] = new() { ["tr"] = "/hizmetlerimiz/genel-hizmetler", ["en"] = "/en/services/general-services", ["ar"] = "/ar/services/general-services" },
+            ["services/special-consultancy"] = new() { ["tr"] = "/hizmetlerimiz/ozel-danismanlik", ["en"] = "/en/services/special-consultancy", ["ar"] = "/ar/services/special-consultancy" },
+            ["services/expert-opinion"] = new() { ["tr"] = "/hizmetlerimiz/uzman-gorusu", ["en"] = "/en/services/expert-opinion", ["ar"] = "/ar/services/expert-opinion" },
+            ["services/mediation"] = new() { ["tr"] = "/hizmetlerimiz/arabuluculuk", ["en"] = "/en/services/mediation", ["ar"] = "/ar/services/mediation" },
             ["team"] = new() { ["tr"] = "/ekibimiz", ["en"] = "/en/team", ["ar"] = "/ar/team" },
             ["announcements"] = new() { ["tr"] = "/duyurular", ["en"] = "/en/announcements", ["ar"] = "/ar/announcements" },
             ["publications"] = new() { ["tr"] = "/yayinlar", ["en"] = "/en/publications", ["ar"] = "/ar/publications" },

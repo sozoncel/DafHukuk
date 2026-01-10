@@ -247,6 +247,7 @@
         {
             AllSearchResults = AllPosts
               .Where(p => p.IsActive &&
+                    HasContentInCurrentLanguage(p) && // ✅ DİL FİLTRELEMESİ EKLENDI
                     ((p.Title_TR != null && p.Title_TR.Contains(normalizedSearchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (p.Content_TR != null && p.Content_TR.Contains(normalizedSearchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (p.Slug_TR != null && p.Slug_TR.Contains(normalizedSearchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -281,6 +282,16 @@
 
         FilterCategory(0);
         IsLoading = false;
+    }
+
+    private bool HasContentInCurrentLanguage(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => !string.IsNullOrWhiteSpace(post.Title_EN) && !string.IsNullOrWhiteSpace(post.Content_EN),
+            "ar" => !string.IsNullOrWhiteSpace(post.Title_AR) && !string.IsNullOrWhiteSpace(post.Content_AR),
+            _ => !string.IsNullOrWhiteSpace(post.Title_TR) && !string.IsNullOrWhiteSpace(post.Content_TR)
+        };
     }
 
     private void FilterCategory(int categoryId)

@@ -4,6 +4,7 @@
 @layout DafHukuk.Web.Components.Layout.MainLayout
 @inject IPostService PostService
 @inject ILanguageService LanguageService
+@implements IDisposable
 
 <section class="ana-gorsel-bolumu">
     <div class="ana-gorsel-arka-plan"></div>
@@ -22,20 +23,20 @@
                     <span>@((MarkupString)GetText("newsTitle"))</span>
                 </div>
 
-                <div class="haber-icerik-kutusu">
-                    @if (lastPost != null)
+                <div class="haber-icerik-kutusu @slideClass">
+                    @if (currentPost != null)
                     {
                         <div class="haber-gorsel-kapsayici">
-                            <img src="@lastPost.CoverImageUrl" alt="@GetPostTitle(lastPost)" />
+                            <img src="@currentPost.CoverImageUrl" alt="@GetPostTitle(currentPost)" />
                         </div>
 
                         <div class="haber-bilgi">
                             <span class="haber-tarih">
-                                @lastPost.PublishedDate.ToString("dd MMMM yyyy", GetCulture())
+                                @currentPost.PublishedDate.ToString("dd MMMM yyyy", GetCulture())
                             </span>
 
-                            <a href="/@GetCategoryName(lastPost)/@GetPostSlug(lastPost)" class="haber-baglanti">
-                                @GetPostTitle(lastPost)
+                            <a href="@GetPostUrl(currentPost)" class="haber-baglanti">
+                                @GetPostTitle(currentPost)
                             </a>
                         </div>
                     }
@@ -52,38 +53,93 @@
 </section>
 
 @code {
-    private Post lastPost;
+    private List<Post> slidePosts = new();
+    private Post? currentPost;
+    private int currentIndex = 0;
+    private string slideClass = "";
+    private System.Threading.Timer? timer;
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 
     private Dictionary<string, Dictionary<string, string>> Translations = new()
     {
         ["tr"] = new()
         {
-            ["introText"] = "Hukuki danışmanlık alanında Türkiye'nin en güçlü isimlerinden biri olan DAF, hizmetlerini derin hukuki deneyime ve farklı alanlarda tecrübeye sahip 120'nin üstünde avukat, danışman ve destek biriminden oluşan yetkin bir ekiple sunmaktadır.",
-            ["newsTitle"] = "Duyurular & <br> Yayınlar",
-            ["noNews"] = "Henüz yayınlanmış bir haber bulunmuyor."
+            ["introText"] = "Hukuki danışmanlık alanında saygın bir yere sahip olan DAF Hukuk & Danışmanlık, hizmetlerini derin hukuki bilgi birikimine sahip, sonuç odaklı ve seçkin avukat kadrosuyla titizlikle sunmaktadır.",
+            ["newsTitle"] = "Duyurular &<br>Yayınlar",
+            ["noNews"] = "Henüz haber yayınlanmadı."
         },
         ["en"] = new()
         {
-            ["introText"] = "DAF, one of Turkey's leading names in legal consultancy, provides its services with a competent team of over 120 lawyers, consultants and support staff with deep legal experience and expertise in various fields.",
-            ["newsTitle"] = "Announcements & <br> Publications",
+            ["introText"] = "DAF Law & Consultancy, a respected name in the field, delivers its services with a distinguished team of lawyers possessing deep legal insight and a results-oriented approach.",
+            ["newsTitle"] = "News &<br>Publications",
             ["noNews"] = "No news published yet."
         },
         ["ar"] = new()
         {
-            ["introText"] = "تقدم داف، إحدى الأسماء الرائدة في تركيا في مجال الاستشارات القانونية، خدماتها من خلال فريق مؤهل يضم أكثر من 120 محاميًا ومستشارًا وموظف دعم يتمتعون بخبرة قانونية عميقة وخبرة في مجالات مختلفة.",
-            ["newsTitle"] = "الإعلانات و <br> المنشورات",
+            ["introText"] = "تقدم داف للمحاماة والاستشارات خدماتها بعناية فائقة من خلال نخبة متميزة من المحامين الذين يمتلكون خبرة قانونية عميقة ونهجاً يركز على النتائج.",
+            ["newsTitle"] = "الإعلانات &<br>المنشورات",
             ["noNews"] = "لا توجد أخبار منشورة بعد."
         }
     };
 
     protected override async Task OnInitializedAsync()
     {
-        var posts = await PostService.GetAll();
+        var allPosts = await PostService.GetAll();
 
-        lastPost = posts
+        // CategoryId 2 (Yayınlar) ve 3 (Hizmetler) olan postları al
+        slidePosts = allPosts
+            .Where(p => p.IsActive && (p.CategoryId == 2 || p.CategoryId == 3))
             .OrderByDescending(p => p.PublishedDate)
-            .FirstOrDefault();
+            .Take(10) // Son 10 post
+            .ToList();
+
+        if (slidePosts.Any())
+        {
+            // Rastgele başlangıç
+            var random = new Random();
+            currentIndex = random.Next(0, slidePosts.Count);
+            currentPost = slidePosts[currentIndex];
+
+            // Timer başlat - her 10 saniyede bir değişecek
+            timer = new System.Threading.Timer(async _ => await ChangeSlide(), null, 10000, 10000);
+        }
+    }
+
+    private async Task ChangeSlide()
+    {
+        if (!slidePosts.Any()) return;
+
+        // Slide-out animasyonu
+        slideClass = "slide-out";
+        await InvokeAsync(StateHasChanged);
+
+        // 500ms bekle (animasyon süresi)
+        await Task.Delay(500);
+
+        // Rastgele yeni post seç (mevcut post hariç)
+        var random = new Random();
+        int newIndex;
+        do
+        {
+            newIndex = random.Next(0, slidePosts.Count);
+        } while (newIndex == currentIndex && slidePosts.Count > 1);
+
+        currentIndex = newIndex;
+        currentPost = slidePosts[currentIndex];
+
+        // Slide-in animasyonu
+        slideClass = "slide-in";
+        await InvokeAsync(StateHasChanged);
+
+        // Animasyon tamamlandıktan sonra class'ı temizle
+        await Task.Delay(500);
+        slideClass = "";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
     }
 
     private string GetText(string key)
@@ -123,6 +179,71 @@
             "ar" => post.Category.Name_AR ?? post.Category.Name_TR,
             _ => post.Category.Name_TR
         };
+    }
+
+    // ✅ DÜZELTİLDİ: Mevcut dile göre doğru slug'ı döndürür
+    private string GetCategorySlug(Category category)
+    {
+        if (category == null) return "";
+
+        var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "")
+            .ToLowerInvariant()
+            .Trim();
+
+        // Kategori adına göre, MEVCUT DİLE UYGUN slug'ı döndür
+        return categoryName switch
+        {
+            "hizmetlerimiz" or "our services" or "خدماتنا"
+                => CurrentLang == "en" ? "services"
+                 : CurrentLang == "ar" ? "services"
+                 : "hizmetlerimiz",
+
+            "duyurular" or "announcements" or "الإعلانات"
+                => CurrentLang == "en" ? "announcements"
+                 : CurrentLang == "ar" ? "announcements"
+                 : "duyurular",
+
+            "etkinlikler" or "events" or "الفعاليات"
+                => CurrentLang == "en" ? "events"
+                 : CurrentLang == "ar" ? "events"
+                 : "etkinlikler",
+
+            "yayınlar" or "yayinlar" or "publications" or "المنشورات"
+                => CurrentLang == "en" ? "publications"
+                 : CurrentLang == "ar" ? "publications"
+                 : "yayinlar",
+
+            _ => CurrentLang == "en" ? "publications"
+               : CurrentLang == "ar" ? "publications"
+               : "yayinlar"
+        };
+    }
+
+    // ✅ LANGAUGESERVICE ENTEGRASYONU: Dile göre doğru kategori slug'ı + LanguageService
+    private string GetPostUrl(Post post)
+    {
+        if (post?.Category == null) return "#";
+
+        // 1. Kategori slug'ını al (dile göre: TR="hizmetlerimiz", EN="services")
+        var categorySlug = GetCategorySlug(post.Category);
+
+        // 2. Post slug'ını al (zaten dile göre)
+        var postSlug = GetPostSlug(post);
+
+        if (string.IsNullOrWhiteSpace(postSlug))
+        {
+            // Sadece kategori sayfasına yönlendir
+            return LanguageService.GetLocalizedUrl(categorySlug);
+        }
+
+        // 3. Path'i birleştir (dil prefix'i olmadan)
+        var basePath = $"{categorySlug}/{postSlug}";
+
+        // 4. LanguageService'e ver, o dil prefix'ini eklesin
+        // TR: /hizmetlerimiz/slug
+        // EN: /en/services/slug
+        // AR: /ar/services/slug
+        return LanguageService.GetLocalizedUrl(basePath);
     }
 
     private System.Globalization.CultureInfo GetCulture()

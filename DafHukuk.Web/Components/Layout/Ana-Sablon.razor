@@ -59,7 +59,7 @@
             "hizmetlerimiz" or "services" => "Services",
             "duyurular" or "announcements" => "Announcements",
             "etkinlikler" or "events" => "Events",
-            "yayinlar" or "publications" => "Publications",
+            "yayinlar" or "publications" or "yayınlar" => "Publications",
             _ => "Unknown"
         };
 
@@ -92,10 +92,18 @@
 
         var dateCutOff = DateTime.Now.AddMonths(-12);
         var recent = allPosts
-            .Where(p => p.Id != currentPost?.Id && p.PublishedDate >= dateCutOff && p.IsActive)
+            .Where(p => p.Id != currentPost?.Id &&
+                        p.PublishedDate >= dateCutOff &&
+                        p.IsActive &&
+                        HasContentInCurrentLanguage(p))
             .ToList();
 
-        var candidateList = recent.Any() ? recent : allPosts.Where(p => p.Id != currentPost?.Id && p.IsActive).ToList();
+        var candidateList = recent.Any()
+            ? recent
+            : allPosts.Where(p => p.Id != currentPost?.Id &&
+                                 p.IsActive &&
+                                 HasContentInCurrentLanguage(p))
+                     .ToList();
 
         if (candidateList.Any())
         {
@@ -104,7 +112,9 @@
         }
 
         relatedPosts = allPosts
-            .Where(p => p.Id != currentPost?.Id && p.IsActive)
+            .Where(p => p.Id != currentPost?.Id &&
+                        p.IsActive &&
+                        HasContentInCurrentLanguage(p))
             .OrderByDescending(p => p.PublishedDate)
             .ToList();
 
@@ -116,16 +126,40 @@
             .ToList()!;
     }
 
+    private bool HasContentInCurrentLanguage(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => !string.IsNullOrWhiteSpace(post.Title_EN) && !string.IsNullOrWhiteSpace(post.Content_EN),
+            "ar" => !string.IsNullOrWhiteSpace(post.Title_AR) && !string.IsNullOrWhiteSpace(post.Content_AR),
+            _ => !string.IsNullOrWhiteSpace(post.Title_TR) && !string.IsNullOrWhiteSpace(post.Content_TR)
+        };
+    }
+
+    // ✅ DÜZELTME: URL decode eklendi
     private string GetPostUrlPrefix()
     {
-        var path = NavManager.ToAbsoluteUri(NavManager.Uri).AbsolutePath.ToLowerInvariant();
+        var path = NavManager.ToAbsoluteUri(NavManager.Uri).AbsolutePath;
+
+        // URL decode işlemi - %20 gibi encoded karakterleri düzelt
+        path = Uri.UnescapeDataString(path).ToLowerInvariant();
+
         var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries).ToList();
 
         if (parts.Any() && (parts[0] == "en" || parts[0] == "ar"))
             parts.RemoveAt(0);
 
         if (parts.Any())
-            return parts[0];
+        {
+            var firstPart = parts[0].Trim();
+
+            // İngilizce ve Arapça path'leri normalize et
+            return firstPart switch
+            {
+                "our services" or "خدماتنا" => "services",
+                _ => firstPart
+            };
+        }
 
         return "";
     }
@@ -157,7 +191,11 @@
 
     private string GetCategorySlug(Category category)
     {
-        var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "").ToLowerInvariant().Trim();
+        if (category == null) return "";
+
+        var categoryName = (category.Name_TR ?? category.Name_EN ?? category.Name_AR ?? "")
+            .ToLowerInvariant()
+            .Trim();
 
         return categoryName switch
         {

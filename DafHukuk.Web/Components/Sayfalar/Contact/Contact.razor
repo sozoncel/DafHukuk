@@ -1,10 +1,12 @@
 ﻿@page "/iletisim"
 @page "/en/contact"
 @page "/ar/contact"
+@using System.ComponentModel.DataAnnotations
 @layout DafHukuk.Web.Components.Layout.MainLayout
 @rendermode InteractiveServer
 
 @inject DafHukuk.Service.ILanguageService LanguageService
+@inject DafHukuk.Service.IEmailService EmailService
 
 <PageTitle>@GetText("pageTitle")</PageTitle>
 
@@ -31,7 +33,7 @@
 
                     <div class="iletisim-card-top row-card">
                         <div class="col-sm-6 foto-col">
-                            <img src="img/sayfalar/iletisim/daf-iletisim-01.png" alt="@GetText("officeName")" class="ofis-img" />
+                            <img src="/img/Ofis Genel/6.jpeg" alt="@GetText("officeName")" class="ofis-img" />
                             <a class="link-no-deco haritada-goster" href="@GetText("mapLink")" target="_blank" rel="noopener">
                                 @GetText("showOnMap")
                                 <span class="link-external-icon" aria-hidden="true">↗</span>
@@ -44,9 +46,21 @@
                             <span class="ofis-line">@GetText("officeAddressLine1")</span>
                             <span class="ofis-line">@GetText("officeAddressLine2")</span>
 
-                            <p class="alt-bilgi">
-                                @GetText("officeHours")
-                            </p>
+                            <div class="ofis-hours-wrapper">
+                                <p class="hours-title">@GetText("hoursTitle")</p>
+                                <div class="hours-line">
+                                    <span class="hours-label">@GetText("weekdaysLabel")</span>
+                                    <span class="hours-value">@GetText("weekdaysValue")</span>
+                                </div>
+                                <div class="hours-line">
+                                    <span class="hours-label">@GetText("weekendLabel")</span>
+                                    <span class="hours-value">@GetText("weekendValue")</span>
+                                </div>
+                                <div class="hours-line">
+                                    <span class="hours-label">@GetText("sundayLabel")</span>
+                                    <span class="hours-value hours-closed">@GetText("sundayValue")</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -73,17 +87,6 @@
                     </div>
 
                     <hr class="sep" />
-
-                    <div class="row-card3">
-                        <p>
-                            @((MarkupString)GetText("careerText"))
-                        </p>
-
-                        <a class="linkedin-btn" href="@GetText("linkedinLink")" target="_blank" rel="noopener">
-                            <span class="ln-icon" aria-hidden="true">in</span> LinkedIn
-                        </a>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -95,46 +98,64 @@
                     <p class="form-intro">@GetText("formIntro")</p>
                 </div>
 
-                <form id="contactForm" onsubmit="return handleContactSubmit(event)" novalidate>
+                @if (!string.IsNullOrEmpty(statusMessage))
+                {
+                    <div class="alert @(isSuccess ? "alert-success" : "alert-danger")" role="alert">
+                        @statusMessage
+                    </div>
+                }
+
+                <EditForm Model="@contactForm" OnValidSubmit="@HandleSubmit" FormName="contactForm">
+                    <DataAnnotationsValidator />
+
                     <div class="form-row">
-                        <input type="text" name="ad" placeholder="@GetText("namePlaceholder")" required />
-                        <input type="text" name="soyad" placeholder="@GetText("surnamePlaceholder")" required />
+                        <InputText @bind-Value="contactForm.FirstName" placeholder="@GetText("namePlaceholder")" class="form-control" />
+                        <InputText @bind-Value="contactForm.LastName" placeholder="@GetText("surnamePlaceholder")" class="form-control" />
                     </div>
 
                     <div class="form-row">
-                        <input type="text" name="sirket" placeholder="@GetText("companyPlaceholder")" />
-                        <input type="text" name="pozisyon" placeholder="@GetText("positionPlaceholder")" />
+                        <InputText @bind-Value="contactForm.Company" placeholder="@GetText("companyPlaceholder")" class="form-control" />
+                        <InputText @bind-Value="contactForm.Position" placeholder="@GetText("positionPlaceholder")" class="form-control" />
                     </div>
 
                     <div class="form-row">
-                        <input type="email" name="email" placeholder="@GetText("emailPlaceholder")" required />
-                        <input type="tel" name="telefon" placeholder="@GetText("phonePlaceholder")" />
+                        <InputText @bind-Value="contactForm.Email" type="email" placeholder="@GetText("emailPlaceholder")" class="form-control" />
+                        <InputText @bind-Value="contactForm.Phone" type="tel" placeholder="@GetText("phonePlaceholder")" class="form-control" />
                     </div>
 
                     <div class="form-row single">
-                        <textarea name="konu" rows="6" placeholder="@GetText("messagePlaceholder")"></textarea>
+                        <InputTextArea @bind-Value="contactForm.Message" rows="6" placeholder="@GetText("messagePlaceholder")" class="form-control" />
                     </div>
 
                     <div class="form-row checkbox-row">
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="kvkk" required />
+                            <InputCheckbox @bind-Value="contactForm.KvkkAccepted" />
                             <span>@GetText("kvkkText")</span>
                         </label>
+                        <ValidationMessage For="@(() => contactForm.KvkkAccepted)" />
                     </div>
 
                     <div class="form-row">
-                        <button type="submit" class="btn-send">@GetText("sendButton")</button>
+                        <button type="submit" class="btn-send" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span>@GetText("sending")</span>
+                            }
+                            else
+                            {
+                                <span>@GetText("sendButton")</span>
+                            }
+                        </button>
                     </div>
 
                     <p class="form-note">@GetText("formNote")</p>
-                </form>
+                </EditForm>
             </div>
         </div>
     </div>
 
     <div class="row-google-map">
         <div class="col-lg-12">
-
             <div class="mapouter">
                 <div class="gmap_canvas">
                     <iframe class="gmap_iframe"
@@ -145,53 +166,34 @@
                             src="@GetText("mapEmbedSrc")">
                     </iframe>
                 </div>
-
-                <style>
-                </style>
             </div>
         </div>
     </div>
 </section>
 
-<script>
-    function handleContactSubmit(e) {
-        e.preventDefault();
-        const form = document.getElementById('contactForm');
-        const required = form.querySelectorAll('[required]');
-        let ok = true;
-
-        required.forEach(r => {
-            if (r.name !== 'sirket' && r.name !== 'pozisyon' && r.name !== 'telefon') { 
-                if (!r.value || (r.type === 'checkbox' && !r.checked)) ok = false;
-            }
-        });
-
-        if (!ok) {
-            alert('@GetText("formValidationAlert")');
-            return false;
-        }
-
-        alert('@GetText("formSentAlert")');
-        form.reset();
-        return false;
-    }
-</script>
-
-
 @code {
+    private ContactFormModel contactForm = new();
+    private bool isSubmitting = false;
+    private string statusMessage = "";
+    private bool isSuccess = false;
+
     private Dictionary<string, Dictionary<string, string>> Translations = new()
     {
         ["tr"] = new()
         {
             ["pageTitle"] = "İletişim",
             ["mainTitle"] = "Nasıl yardımcı olabiliriz?",
-            ["breadcrumbHome"] = "Ana Sayfa",
-            ["breadcrumbContact"] = "İletişim",
             ["officeUpperTitle"] = "Ankara Ofis",
-            ["officeName"] = "DAF Hukuk ve Danışmanlık ve Danışmanlık",
+            ["officeName"] = "DAF Hukuk ve Danışmanlık",
             ["officeAddressLine1"] = "Namık Kemal, 94. Cd. 3/6",
             ["officeAddressLine2"] = "06420 Çankaya / Ankara",
-            ["officeHours"] = "00:00–07:30, 08:30–00:00 (Her Gün)",
+            ["hoursTitle"] = "Çalışma Saatleri",
+            ["weekdaysLabel"] = "Hafta İçi:",
+            ["weekdaysValue"] = "09:00-12:00, 13:00-18:00",
+            ["weekendLabel"] = "Hafta Sonu:",
+            ["weekendValue"] = "13:00-18:00",
+            ["sundayLabel"] = "Pazar:",
+            ["sundayValue"] = "Kapalı",
             ["mapLink"] = "https://www.google.com/maps?ll=39.918327,32.849047&z=14&t=m&hl=en&gl=US&mapclient=embed&cid=5456635688855047434",
             ["showOnMap"] = "Haritada Göster",
             ["generalInquiries"] = "Genel Sorular",
@@ -199,8 +201,6 @@
             ["emailValue"] = "contact@dafhukuk.tr",
             ["phoneLabel"] = "Telefon",
             ["phoneValue"] = "0533 738 31 58",
-            ["careerText"] = @"İş başvurusunda bulunmak isteyen ziyaretçilerimizin <a class=""underline-anim"" href=""/kariyer"">Kariyer</a> sayfamız veya <a class=""underline-anim"" href=""https://www.linkedin.com"" target=""_blank"" rel=""noopener"">LinkedIn</a> hesabımız aracılığıyla CV’lerini göndermelerini rica ederiz.",
-            ["linkedinLink"] = "https://www.linkedin.com",
             ["formTag"] = "İLETİŞİM FORMU",
             ["formIntro"] = "İletişim bilgilerimizden bize ulaşabilir veya aşağıdaki formu doldurabilirsiniz.",
             ["namePlaceholder"] = "Ad",
@@ -212,22 +212,27 @@
             ["messagePlaceholder"] = "Konu / Mesaj",
             ["kvkkText"] = "İşbu iletişim formu aracılığıyla sağlanacak olan kişisel veriler ile ilgili aydınlatma metnini okudum ve anladım.",
             ["sendButton"] = "GÖNDER",
+            ["sending"] = "GÖNDERİLİYOR...",
             ["formNote"] = "dataprotection@dafhukuk.tr adresine yazarak her zaman rızanızı geri çekebilirsiniz.",
-            ["formValidationAlert"] = "Lütfen zorunlu alanları doldurun.",
-            ["formSentAlert"] = "Form gönderildi (demo).",
+            ["successMessage"] = "Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.",
+            ["errorMessage"] = "Mesajınız gönderilemedi. Lütfen daha sonra tekrar deneyin veya doğrudan email ile iletişime geçin.",
             ["mapEmbedSrc"] = "https://maps.google.com/maps?hl=tr&q=DAF Hukuk ve Danışmanlık, Namık Kemal, 94. Cd. 3/6, Çankaya/Ankara, Türkiye&z=16&ie=UTF8&iwloc=B&output=embed"
         },
         ["en"] = new()
         {
             ["pageTitle"] = "Contact",
             ["mainTitle"] = "How can we help?",
-            ["breadcrumbHome"] = "Home",
-            ["breadcrumbContact"] = "Contact",
             ["officeUpperTitle"] = "Ankara Office",
             ["officeName"] = "DAF Law and Consultancy",
             ["officeAddressLine1"] = "Namık Kemal, 94. Cd. 3/6",
             ["officeAddressLine2"] = "06420 Çankaya / Ankara, Turkey",
-            ["officeHours"] = "00:00–07:30, 08:30–00:00 (Every Day)",
+            ["hoursTitle"] = "Working Hours",
+            ["weekdaysLabel"] = "Weekdays:",
+            ["weekdaysValue"] = "09:00-12:00, 13:00-18:00",
+            ["weekendLabel"] = "Weekend:",
+            ["weekendValue"] = "13:00-18:00",
+            ["sundayLabel"] = "Sunday:",
+            ["sundayValue"] = "Closed",
             ["mapLink"] = "https://www.google.com/maps?ll=39.918327,32.849047&z=14&t=m&hl=en&gl=US&mapclient=embed&cid=5456635688855047434",
             ["showOnMap"] = "View on Map",
             ["generalInquiries"] = "General Inquiries",
@@ -235,8 +240,6 @@
             ["emailValue"] = "contact@daflaw.com",
             ["phoneLabel"] = "Phone",
             ["phoneValue"] = "+90 533 738 31 58",
-            ["careerText"] = @"Visitors who wish to apply for a job are kindly requested to submit their CVs via our <a class=""underline-anim"" href=""/en/career"">Career</a> page or our <a class=""underline-anim"" href=""https://www.linkedin.com"" target=""_blank"" rel=""noopener"">LinkedIn</a> account.",
-            ["linkedinLink"] = "https://www.linkedin.com",
             ["formTag"] = "CONTACT FORM",
             ["formIntro"] = "You can reach us through our contact information or by filling out the form below.",
             ["namePlaceholder"] = "First Name",
@@ -248,22 +251,27 @@
             ["messagePlaceholder"] = "Subject / Message",
             ["kvkkText"] = "I have read and understood the clarification text regarding the personal data to be provided through this contact form.",
             ["sendButton"] = "SEND",
+            ["sending"] = "SENDING...",
             ["formNote"] = "You can withdraw your consent at any time by writing to dataprotection@daflaw.com.",
-            ["formValidationAlert"] = "Please fill in the required fields.",
-            ["formSentAlert"] = "Form submitted (demo).",
+            ["successMessage"] = "Your message has been sent successfully. We will get back to you as soon as possible.",
+            ["errorMessage"] = "Your message could not be sent. Please try again later or contact us directly via email.",
             ["mapEmbedSrc"] = "https://maps.google.com/maps?hl=tr&q=DAF Hukuk ve Danışmanlık, Namık Kemal, 94. Cd. 3/6, Çankaya/Ankara, Türkiye&z=16&ie=UTF8&iwloc=B&output=embed"
         },
         ["ar"] = new()
         {
             ["pageTitle"] = "اتصل بنا",
             ["mainTitle"] = "كيف يمكننا المساعدة؟",
-            ["breadcrumbHome"] = "الصفحة الرئيسية",
-            ["breadcrumbContact"] = "اتصل بنا",
             ["officeUpperTitle"] = "مكتب أنقرة",
-            ["officeName"] = "داو للقانون والاستشارات",
+            ["officeName"] = "داف للقانون والاستشارات",
             ["officeAddressLine1"] = "Namık Kemal, 94. Cd. 3/6",
             ["officeAddressLine2"] = "06420 Çankaya / Ankara, Türkiye",
-            ["officeHours"] = "00:00–07:30, 08:30–00:00 (كل يوم)",
+            ["hoursTitle"] = "ساعات العمل",
+            ["weekdaysLabel"] = "أيام الأسبوع:",
+            ["weekdaysValue"] = "09:00-12:00, 13:00-18:00",
+            ["weekendLabel"] = "عطلة نهاية الأسبوع:",
+            ["weekendValue"] = "13:00-18:00",
+            ["sundayLabel"] = "الأحد:",
+            ["sundayValue"] = "مغلق",
             ["mapLink"] = "https://www.google.com/maps?ll=39.918327,32.849047&z=14&t=m&hl=en&gl=US&mapclient=embed&cid=5456635688855047434",
             ["showOnMap"] = "عرض على الخريطة",
             ["generalInquiries"] = "استفسارات عامة",
@@ -271,8 +279,6 @@
             ["emailValue"] = "contact@daflaw.ar",
             ["phoneLabel"] = "الهاتف",
             ["phoneValue"] = "+90 533 738 31 58",
-            ["careerText"] = @"يُرجى من الزوار الراغبين في التقدم للوظائف إرسال سيرهم الذاتية عبر صفحة <a class=""underline-anim"" href=""/ar/career"">الوظائف</a> أو حسابنا على <a class=""underline-anim"" href=""https://www.linkedin.com"" target=""_blank"" rel=""noopener"">LinkedIn</a>.",
-            ["linkedinLink"] = "https://www.linkedin.com",
             ["formTag"] = "نموذج الاتصال",
             ["formIntro"] = "يمكنك التواصل معنا عبر معلومات الاتصال الخاصة بنا أو ملء النموذج أدناه.",
             ["namePlaceholder"] = "الاسم",
@@ -284,14 +290,63 @@
             ["messagePlaceholder"] = "الموضوع / الرسالة",
             ["kvkkText"] = "لقد قرأت وفهمت نص التوضيح المتعلق بالبيانات الشخصية التي سيتم تقديمها من خلال نموذج الاتصال هذا.",
             ["sendButton"] = "إرسال",
+            ["sending"] = "جارٍ الإرسال...",
             ["formNote"] = "يمكنك سحب موافقتك في أي وقت عن طريق الكتابة إلى dataprotection@daflaw.ar.",
-            ["formValidationAlert"] = "الرجاء ملء الحقول المطلوبة.",
-            ["formSentAlert"] = "تم إرسال النموذج (تجريبي).",
+            ["successMessage"] = "تم إرسال رسالتك بنجاح. سنتواصل معك في أقرب وقت ممكن.",
+            ["errorMessage"] = "تعذر إرسال رسالتك. يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بنا مباشرة عبر البريد الإلكتروني.",
             ["mapEmbedSrc"] = "https://maps.google.com/maps?hl=tr&q=DAF Hukuk ve Danışmanlık, Namık Kemal, 94. Cd. 3/6, Çankaya/Ankara, Türkiye&z=16&ie=UTF8&iwloc=B&output=embed"
         }
     };
 
     private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    private async Task HandleSubmit()
+    {
+        if (!contactForm.KvkkAccepted)
+        {
+            statusMessage = GetText("errorMessage");
+            isSuccess = false;
+            return;
+        }
+
+        isSubmitting = true;
+        statusMessage = "";
+
+        try
+        {
+            bool result = await EmailService.SendContactFormEmail(
+                contactForm.FirstName,
+                contactForm.LastName,
+                contactForm.Email,
+                contactForm.Phone ?? "",
+                contactForm.Company ?? "",
+                contactForm.Position ?? "",
+                contactForm.Message ?? ""
+            );
+
+            if (result)
+            {
+                statusMessage = GetText("successMessage");
+                isSuccess = true;
+                contactForm = new ContactFormModel(); // Formu temizle
+            }
+            else
+            {
+                statusMessage = GetText("errorMessage");
+                isSuccess = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            statusMessage = GetText("errorMessage");
+            isSuccess = false;
+            Console.WriteLine($"Form gönderim hatası: {ex.Message}");
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
 
     private string GetText(string key)
     {
@@ -302,5 +357,35 @@
             return Translations["tr"][key];
 
         return key;
+    }
+
+    public class ContactFormModel
+    {
+        [Required(ErrorMessage = "Ad zorunludur")]
+        public string FirstName { get; set; } = "";
+
+        [Required(ErrorMessage = "Soyad zorunludur")]
+        public string LastName { get; set; } = "";
+
+        public string? Company { get; set; }
+        public string? Position { get; set; }
+
+        [Required(ErrorMessage = "E-posta zorunludur")]
+        [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi girin")]
+        public string Email { get; set; } = "";
+
+        public string? Phone { get; set; }
+        public string? Message { get; set; }
+
+        [MustBeTrue(ErrorMessage = "KVKK metnini kabul etmelisiniz")]
+        public bool KvkkAccepted { get; set; }
+    }
+
+    public class MustBeTrueAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object? value)
+        {
+            return value is bool b && b;
+        }
     }
 }

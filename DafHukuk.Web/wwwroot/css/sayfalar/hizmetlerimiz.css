@@ -52,7 +52,7 @@ a {
 .hero-services-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/sayfalar/hizmetlerimiz/daf-hizmetlerimiz-office.png");
+    background-image: url("/img/Ofis Genel/9.jpeg");
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -136,7 +136,7 @@ a {
     }
 
 /* =========================================================
-    ✅ HERO ALT NAVİGASYON (Hakkımızda ile Aynı)
+    HERO ALT NAVİGASYON
 ========================================================= */
 .hero-services-sub-nav-bar {
     position: relative;
@@ -224,43 +224,194 @@ a {
     margin-bottom: 30px;
 }
 
-.content-container .pageMove {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 12px 32px;
-    font-weight: 600;
-    font-size: 14px;
-    color: white;
-    background-color: #1F3363;
-    border: 2px solid #1F3363;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.intro-secondary {
+    font-size: clamp(15px, 2vw, 16px);
+    line-height: 1.8;
+    color: #666;
+    margin-top: 15px;
 }
-
-    .content-container .pageMove::after {
-        content: '\2193';
-        font-size: 16px;
-        font-weight: bold;
-        transition: transform 0.3s ease;
-    }
-
-    .content-container .pageMove:hover {
-        background-color: transparent;
-        color: #1F3363;
-        box-shadow: 0 0 0 6px rgba(31, 51, 99, 0.1);
-    }
 
 .content-container img {
     width: 100%;
     height: auto;
     border-radius: 4px;
     object-fit: cover;
+}
+
+/* =========================================================
+    HİZMET KATEGORİLERİ KARTLARI
+========================================================= */
+.services-categories-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.service-category-cards {
+    margin-top: 40px;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 25px;
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+    .category-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: #1F3363;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        border-color: #1F3363;
+    }
+
+.category-icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1F3363;
+    color: white;
+    border-radius: 50%;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+    .category-icon i {
+        font-size: 32px;
+    }
+
+.category-card:hover .category-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: #2a4380;
+}
+
+.category-card h3 {
+    font-size: clamp(16px, 2vw, 18px);
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    transition: color 0.3s;
+}
+
+.category-card:hover h3 {
+    color: #1F3363;
+}
+
+.category-card p {
+    font-size: clamp(14px, 1.5vw, 15px);
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.category-arrow {
+    font-size: 24px;
+    color: #1F3363;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+    margin-top: auto;
+}
+
+.category-card:hover .category-arrow {
+    transform: translateX(8px);
+}
+
+/* =========================================================
+    NEDEN BİZİ SEÇMELİSİNİZ BÖLÜMÜ
+========================================================= */
+.why-choose-us-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 60px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.features-row {
+    margin-top: 40px;
+}
+
+.feature-box {
+    padding: 35px 25px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    .feature-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: #1F3363;
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-box:hover::before {
+        transform: scaleY(1);
+    }
+
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+.feature-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: #1F3363;
+    opacity: 0.15;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.feature-box h4 {
+    font-size: clamp(18px, 2vw, 20px);
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+}
+
+.feature-box p {
+    font-size: clamp(14px, 1.5vw, 15px);
+    line-height: 1.7;
+    color: #666;
+    margin-bottom: 0;
 }
 
 /* =========================================================
@@ -827,6 +978,11 @@ a {
         padding-left: 40px;
         padding-right: 40px;
     }
+
+    .why-choose-us-section {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 }
 
 @media (max-width: 992px) {
@@ -864,8 +1020,13 @@ a {
         max-width: 33.333%;
     }
 
-    .content-container .pageMove {
-        margin-bottom: 0.75rem;
+    .why-choose-us-section {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    .feature-box {
+        margin-bottom: 20px;
     }
 }
 
@@ -1010,10 +1171,26 @@ a {
             font-size: 14px;
             padding: 10px 15px;
         }
+
+    .why-choose-us-section {
+        padding: 40px 20px;
+        margin-top: 40px;
+    }
+
+    .service-category-cards .col-lg-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .services-categories-section {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
 }
 
 /* =========================================================
-    RESPONSIVE - SMALL MOBILE (600px and below)
+RESPONSIVE - SMALL MOBILE (600px and below)
 ========================================================= */
 @media (max-width: 600px) {
     .services-page-content,
@@ -1040,55 +1217,62 @@ a {
         padding-left: 20px;
         padding-right: 20px;
     }
-
-    .hero-services-sub-nav-container .button {
-        font-size: 13px;
-        padding: 6px 10px;
-    }
-
-    .practice-cards-row .col-lg-3 {
-        flex: 0 0 50%;
-        max-width: 50%;
-        padding: 0 8px;
-    }
-
-    .practice-card {
-        max-width: 100%;
-    }
-
-        .practice-card img {
-            height: 140px;
-        }
-
-    .practice-title {
-        font-size: 13px;
-        padding: 12px 10px;
-        line-height: 1.3;
-    }
-
-    .hizmetlerimiz-avukat-col {
-        padding: 0 10px;
-    }
-
-    .hizmetlerimiz-avukat-card {
-        max-width: 100%;
-    }
-
-    .hizmetlerimiz-avukat-img {
-        height: 260px;
-        width: 100%;
-    }
-
-    .featured-img {
-        height: 180px;
-    }
-
-    .content-card {
-        padding: 25px 15px;
-    }
-
-    .featured-publication-card {
-        padding: 25px 15px;
-        max-width: 100%;
-    }
+.hero-services-sub-nav-container .button {
+    font-size: 13px;
+    padding: 6px 10px;
 }
+
+.practice-cards-row .col-lg-3 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0 8px;
+}
+
+.practice-card {
+    max-width: 100%;
+}
+
+    .practice-card img {
+        height: 140px;
+    }
+
+.practice-title {
+    font-size: 13px;
+    padding: 12px 10px;
+    line-height: 1.3;
+}
+
+.hizmetlerimiz-avukat-col {
+    padding: 0 10px;
+}
+
+.hizmetlerimiz-avukat-card {
+    max-width: 100%;
+}
+
+.hizmetlerimiz-avukat-img {
+    height: 260px;
+    width: 100%;
+}
+
+.featured-img {
+    height: 180px;
+}
+
+.content-card {
+    padding: 25px 15px;
+}
+
+.featured-publication-card {
+    padding: 25px 15px;
+    max-width: 100%;
+}
+
+.category-card {
+    padding: 30px 20px;
+}
+
+.feature-box {
+    padding: 30px 20px;
+}
+
