@@ -1,9 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using DafHukuk.Core.Entities
 
-@inject NavigationManager Navigation
-@inject SignInManager<AppUser> SignInManager
-
 <div class="admin-sidebar" id="admin-sidebar">
     <div class="sidebar-header">
         <div class="brand-container">
@@ -102,7 +99,7 @@
                 <span>Sistem</span>
             </div>
 
-            <button class="nav-link nav-link-logout" @onclick="HandleLogout">
+            <a href="/Auth/Logout" class="nav-link nav-link-logout">
                 <div class="nav-link-icon">
                     <i class="bi bi-box-arrow-left"></i>
                 </div>
@@ -113,7 +110,7 @@
                 <div class="nav-link-arrow">
                     <i class="bi bi-chevron-right"></i>
                 </div>
-            </button>
+            </a>
         </div>
     </nav>
 
@@ -137,11 +134,3 @@
 </div>
 
 <div class="admin-mobile-overlay" id="admin-mobile-overlay"></div>
-
-@code {
-    private async Task HandleLogout()
-    {
-        await SignInManager.SignOutAsync();
-        Navigation.NavigateTo("/Auth/Login", forceLoad: true);
-    }
-}

@@ -108,85 +108,85 @@ else
         </div>
     </section>
 
-    @if (relatedPosts.Any() || servicePosts.Any())
-    {
-        <section class="related-content-section-modern">
-            <div class="related-content-container">
-                <div class="section-header-center">
-                    <span class="section-badge">@GetText("contentBadge")</span>
-                    <h2 class="section-title-center">@GetText("relatedContentHeading")</h2>
-                </div>
+@if (relatedPosts.Any() || servicePosts.Any())
+{
+    <section class="related-content-section-modern">
+        <div class="related-content-container">
+            <div class="section-header-center">
+                <span class="section-badge">@GetText("contentBadge")</span>
+                <h2 class="section-title-center">@GetText("relatedContentHeading")</h2>
+            </div>
 
-                <div class="category-tabs-modern">
-                    <button class="@(CurrentFilterCategory == 0 ? "tab-button-modern active" : "tab-button-modern")"
-                            @onclick="() => FilterCategory(0)">
-                        <span>@GetText("showAll")</span>
-                    </button>
+            <div class="category-tabs-modern">
+                <button class="@(CurrentFilterCategory == 0 ? "tab-button-modern active" : "tab-button-modern")"
+                        @onclick="() => FilterCategory(0)">
+                    <span>@GetText("showAll")</span>
+                </button>
 
-                    @if (servicePosts.Any())
-                    {
-                        <button class="@(CurrentFilterCategory == -1 ? "tab-button-modern active" : "tab-button-modern")"
-                                @onclick="() => FilterCategory(-1)">
-                            <span>@GetText("servicesHeading")</span>
-                        </button>
-                    }
-
-                    @foreach (var cat in distinctCategories)
-                    {
-                        <button class="@(CurrentFilterCategory == cat.Id ? "tab-button-modern active" : "tab-button-modern")"
-                                @onclick="() => FilterCategory(cat.Id)">
-                            <span>@GetCategoryName(cat)</span>
-                        </button>
-                    }
-                </div>
-
-                <div class="content-grid-modern">
-                    @if (!GetDisplayedRelatedPosts().Any())
-                    {
-                        <div class="empty-content-state">
-                            <i class="bi bi-folder2-open"></i>
-                            <p>@GetText("noContentMessage")</p>
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var p in GetDisplayedRelatedPosts())
-                        {
-                            var url = GetPostUrl(p);
-                            var categoryName = GetCategoryName(p.Category);
-
-                            <a href="@LanguageService.GetLocalizedUrl(url)" class="content-card-modern">
-                                <div class="card-image-wrapper">
-                                    <img src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.jpg" : p.CoverImageUrl)"
-                                         alt="@GetPostTitle(p)"
-                                         class="card-image-modern" />
-                                    <div class="card-overlay-modern"></div>
-                                </div>
-                                <div class="card-content-modern">
-                                    <span class="card-date-modern">
-                                        <i class="bi bi-calendar3"></i>
-                                        @p.PublishedDate.ToString("dd MMMM yyyy", GetCulture())
-                                    </span>
-                                    <h3 class="card-title-modern">@GetPostTitle(p)</h3>
-                                    <span class="content-tag-modern" data-category="@categoryName">@categoryName</span>
-                                </div>
-                            </a>
-                        }
-                    }
-                </div>
-
-                @if (GetDisplayedRelatedPosts().Count() < FilteredPosts.Count() && !ShowingAll && FilteredPosts.Any())
+                @if (servicePosts.Any())
                 {
-                    <div class="show-more-section">
-                        <button class="show-more-button-modern" @onclick="ShowAll">
-                            <span>@GetText("showAll")</span>
-                            <i class="bi bi-arrow-down"></i>
-                        </button>
-                    </div>
+                    <button class="@(CurrentFilterCategory == -1 ? "tab-button-modern active" : "tab-button-modern")"
+                            @onclick="() => FilterCategory(-1)">
+                        <span>@GetText("servicesHeading")</span>
+                    </button>
+                }
+
+                @foreach (var cat in distinctCategories)
+                {
+                    <button class="@(CurrentFilterCategory == cat.Id ? "tab-button-modern active" : "tab-button-modern")"
+                            @onclick="() => FilterCategory(cat.Id)">
+                        <span>@GetCategoryName(cat)</span>
+                    </button>
                 }
             </div>
-        </section>
-    }
+
+            <div class="content-grid-modern">
+                @if (!GetDisplayedRelatedPosts().Any())
+                {
+                    <div class="empty-content-state">
+                        <i class="bi bi-folder2-open"></i>
+                        <p>@GetText("noContentMessage")</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var p in GetDisplayedRelatedPosts())
+                    {
+                        var url = GetPostUrl(p);
+                        var categoryName = GetCategoryName(p.Category);
+
+                        <a href="@LanguageService.GetLocalizedUrl(url)" class="content-card-modern">
+                            <div class="card-image-wrapper">
+                                <img src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.jpg" : p.CoverImageUrl)"
+                                     alt="@GetPostTitle(p)"
+                                     class="card-image-modern" />
+                                <div class="card-overlay-modern"></div>
+                            </div>
+                            <div class="card-content-modern">
+                                <span class="card-date-modern">
+                                    <i class="bi bi-calendar3"></i>
+                                    @p.PublishedDate.ToString("dd MMM yyyy", GetCulture())
+                                </span>
+                                <h3 class="card-title-modern">@GetPostTitle(p)</h3>
+                                <span class="content-tag-modern" data-category="@categoryName">@categoryName</span>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+
+            @if (GetDisplayedRelatedPosts().Count() < FilteredPosts.Count() && !ShowingAll && FilteredPosts.Any())
+            {
+                <div class="load-more-wrapper">
+                    <button class="load-more-button" @onclick="ShowAll">
+                        <span>@GetText("showAll")</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </section>
+    }  
 }
 
 @code {
@@ -200,7 +200,7 @@ else
     private List<Category> distinctCategories = new();
     private int CurrentFilterCategory = 0;
     private bool ShowingAll = false;
-    private int InitialDisplayCount = 6;
+    private int InitialDisplayCount = 8;
 
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 

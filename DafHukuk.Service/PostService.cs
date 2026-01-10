@@ -34,6 +34,16 @@ namespace DafHukuk.Service
                 .ToListAsync();
         }
 
+        public async Task<List<Post>> GetByServiceType(ServiceType serviceType)
+        {
+            return await _context.Posts
+                .Include(p => p.Category)
+                .Where(p => p.IsActive && p.ServiceType == serviceType)
+                .OrderBy(p => p.Title_TR)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<Post?> GetById(int id)
         {
             return await _context.Posts
@@ -53,7 +63,6 @@ namespace DafHukuk.Service
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            // Category'yi tekrar yükle
             return await GetById(post.Id) ?? post;
         }
 
@@ -63,13 +72,12 @@ namespace DafHukuk.Service
             if (existing == null)
                 return null;
 
-            // Temel alanları güncelle
             existing.CategoryId = post.CategoryId;
             existing.IsActive = post.IsActive;
             existing.PublishedDate = post.PublishedDate;
             existing.CoverImageUrl = post.CoverImageUrl;
+            existing.ServiceType = post.ServiceType;
 
-            // Dil bazlı alanları güncelle
             existing.Title_TR = post.Title_TR;
             existing.Content_TR = post.Content_TR;
             existing.Slug_TR = post.Slug_TR;
@@ -84,7 +92,6 @@ namespace DafHukuk.Service
 
             await _context.SaveChangesAsync();
 
-            // Category'yi dahil et
             return await GetById(id);
         }
 

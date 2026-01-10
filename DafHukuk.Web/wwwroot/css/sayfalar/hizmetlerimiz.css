@@ -13,12 +13,26 @@ a {
 }
 
 .section-title {
+    position: relative;
+    display: inline-block;
+    margin-top: 3rem;
     font-size: clamp(28px, 4vw, 36px);
     font-weight: 700;
     color: #000;
     margin-bottom: 40px;
-    text-align: center;
+    z-index: 1;
 }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 5px;
+        width: 100%;
+        height: 15%;
+        background-color: #eadac5;
+        z-index: -1;
+    }
 
 /* =========================================================
     HERO SECTION
@@ -55,37 +69,40 @@ a {
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 60px;
+    padding: 0 40px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
-    padding-top: 140px;
-    padding-bottom: 40px;
+    padding-top: 120px;
 }
 
 .hero-services-title-content {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 30px;
+    justify-content: center;
 }
 
 .services-hero-title-upper {
     font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 4px;
+    font-weight: 300;
     color: #E2DFD2;
     text-transform: uppercase;
-    opacity: 0.9;
-    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+.hero-services-title-wrapper {
+    margin-bottom: 5px;
 }
 
 .hero-services-title {
-    font-size: clamp(32px, 5vw, 48px);
+    font-size: clamp(30px, 5vw, 56px);
     font-weight: 700;
     color: #fff;
     margin: 0;
@@ -94,12 +111,9 @@ a {
 
 .hero-about-breadcrumb,
 .hero-services-breadcrumb {
-    font-size: 13px;
     font-weight: 400;
     color: #ddd;
-    margin-top: 15px;
-    display: flex;
-    align-items: center;
+    justify-content: flex-start;
 }
 
     .hero-about-breadcrumb a,
@@ -117,29 +131,67 @@ a {
     .hero-about-breadcrumb span,
     .hero-services-breadcrumb span {
         color: #fff;
-        font-weight: 400;
-        margin-left: 8px;
+        font-weight: 600;
+        margin-left: 5px;
     }
 
-.hero-about-slogan-wrapper,
-.hero-services-slogan-wrapper {
+/* =========================================================
+    ✅ HERO ALT NAVİGASYON (Hakkımızda ile Aynı)
+========================================================= */
+.hero-services-sub-nav-bar {
+    position: relative;
     width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 20px;
+    background-color: #f8f8f8;
+    z-index: 10;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    overflow: visible;
 }
 
-.hero-about-slogan-text-style,
-.hero-services-slogan-text-style {
-    font-family: "Playfair Display", Georgia, serif;
-    font-size: clamp(18px, 2.5vw, 22px);
-    font-weight: 600;
-    line-height: 1.3;
-    border-left: 3px solid #fff;
-    padding-left: 18px;
-    color: #fff;
-    text-transform: capitalize;
+.hero-services-sub-nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
 }
+
+    .hero-services-sub-nav-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .hero-services-sub-nav-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .hero-services-sub-nav-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .hero-services-sub-nav-container .button {
+        background: transparent;
+        color: #111;
+        font-size: clamp(14px, 2vw, 15px);
+        font-weight: 600;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        transition: background 0.3s, color 0.3s;
+        border: none;
+        display: inline-block;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+        .hero-services-sub-nav-container .button:hover,
+        .hero-services-sub-nav-container .button.active {
+            background: #e0e0e0;
+            color: #1F3363;
+        }
 
 /* =========================================================
     CONTENT SECTION
@@ -149,7 +201,6 @@ a {
 }
 
 .services-page-content {
-    max-width: 1200px;
     margin: 0 auto;
     padding: 0 60px;
 }
@@ -176,13 +227,15 @@ a {
 .content-container .pageMove {
     display: inline-flex;
     align-items: center;
-    padding: 14px 32px;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 32px;
     font-weight: 600;
     font-size: 14px;
-    color: #fff;
+    color: white;
     background-color: #1F3363;
     border: 2px solid #1F3363;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -190,17 +243,18 @@ a {
     letter-spacing: 0.5px;
 }
 
-@media (max-width: 992px) {
-    .content-container .pageMove {
-        margin-bottom: 0.75rem;
+    .content-container .pageMove::after {
+        content: '\2193';
+        font-size: 16px;
+        font-weight: bold;
+        transition: transform 0.3s ease;
     }
-}
 
-.content-container .pageMove:hover {
-    background-color: transparent;
-    color: #1F3363;
-    box-shadow: 0 0 0 6px rgba(31, 51, 99, 0.1);
-}
+    .content-container .pageMove:hover {
+        background-color: transparent;
+        color: #1F3363;
+        box-shadow: 0 0 0 6px rgba(31, 51, 99, 0.1);
+    }
 
 .content-container img {
     width: 100%;
@@ -226,41 +280,56 @@ a {
 
 .practice-card {
     background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    border: none;
+    border-radius: 0;
     overflow: hidden;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     height: 100%;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    position: relative;
 }
 
     .practice-card:hover {
-        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         transform: translateY(-8px);
-        border-color: #1F3363;
     }
 
     .practice-card img {
         width: 100%;
-        height: 200px;
+        height: 220px;
         object-fit: cover;
         display: block;
-        transition: transform 0.3s ease;
+        transition: transform 0.4s ease;
     }
 
     .practice-card:hover img {
-        transform: scale(1.05);
+        transform: scale(1.08);
     }
 
     .practice-card a {
         text-decoration: none;
         color: inherit;
+        display: block;
+        position: relative;
+    }
+
+        .practice-card a::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+    .practice-card:hover a::after {
+        opacity: 1;
     }
 
 .practice-title {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     color: #1a1a1a;
     padding: 20px 18px;
@@ -268,26 +337,32 @@ a {
     text-align: center;
     line-height: 1.4;
     transition: color 0.3s;
+    background: #fff;
 }
 
 .practice-card:hover .practice-title {
     color: #1F3363;
 }
 
-@media (max-width: 480px) {
-    .practice-card {
-        max-width: 100%;
+/* =========================================================
+    LOADING STATE
+========================================================= */
+.loading-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+    .loading-state .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3rem;
+        color: #1F3363;
     }
 
-        .practice-card img {
-            height: 140px;
-        }
-
-    .practice-title {
-        font-size: 13px;
-        padding: 12px 10px;
-        line-height: 1.3;
-    }
+.loading-text {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #666;
 }
 
 /* =========================================================
@@ -591,43 +666,6 @@ a {
         color: #1F3363;
     }
 
-/* Telefon için geniş avukat kartları */
-@media (max-width: 768px) {
-    .hizmetlerimiz-avukat-col {
-        flex: 0 0 100%;
-        max-width: 100%;
-        padding: 0 10px;
-    }
-
-    .hizmetlerimiz-avukat-card {
-        max-width: 100%;
-        margin: 0 auto 30px;
-    }
-
-    .hizmetlerimiz-avukat-img {
-        height: 280px;
-        width: 100%;
-    }
-
-    .hizmetlerimiz-avukat-name-link {
-        padding: 25px 20px 20px;
-    }
-
-    .hizmetlerimiz-avukat-name {
-        font-size: 20px;
-    }
-
-    .avukat-title {
-        font-size: 15px;
-    }
-
-    .card-divider {
-        width: 70px;
-        height: 4px;
-        margin: 15px auto 20px;
-    }
-}
-
 /* =========================================================
     FEATURED PUBLICATIONS
 ========================================================= */
@@ -665,24 +703,6 @@ a {
     object-fit: cover;
     border-radius: 6px;
     margin-bottom: 15px;
-}
-
-@media (max-width: 768px) {
-    .featured-publication-card {
-        text-align: center;
-        padding: 30px 20px;
-        max-width: 500px;
-        margin: 0 auto;
-    }
-
-        .featured-publication-card .content-tag-button {
-            margin: 0 auto 15px;
-            display: inline-block;
-        }
-
-    .featured-img {
-        margin: 0 auto 20px;
-    }
 }
 
 /* =========================================================
@@ -771,17 +791,6 @@ a {
     line-height: 1.6;
 }
 
-@media (max-width: 768px) {
-    .content-card {
-        text-align: center;
-        padding: 30px 20px;
-    }
-
-        .content-card img {
-            margin: 0 auto 15px;
-        }
-}
-
 .show-all-button {
     background-color: transparent;
     color: #1F3363;
@@ -804,13 +813,34 @@ a {
 /* =========================================================
     RESPONSIVE - TABLET (992px - 768px)
 ========================================================= */
+@media (max-width: 1200px) {
+    .hero-services-container {
+        padding: 0 32px;
+        padding-top: 120px;
+    }
+
+    .hero-services-sub-nav-container {
+        padding: 20px 32px;
+    }
+
+    .services-page-content {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+
 @media (max-width: 992px) {
     .hero-services-container,
     .hero-servicesTemplate-container,
     .services-page-content,
     .page-content {
-        padding-left: 40px;
-        padding-right: 40px;
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    .hero-services-sub-nav-container {
+        padding: 15px 24px;
+        gap: 15px;
     }
 
     .practice-cards-row .col-lg-3 {
@@ -834,17 +864,8 @@ a {
         max-width: 33.333%;
     }
 
-    .hizmetlerimiz-avukat-col {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    .hizmetlerimiz-avukat-card {
-        max-width: 100%;
-    }
-
-    .hizmetlerimiz-avukat-img {
-        height: 380px;
+    .content-container .pageMove {
+        margin-bottom: 0.75rem;
     }
 }
 
@@ -860,20 +881,29 @@ a {
 
     .hero-services-container,
     .hero-servicesTemplate-container {
-        padding: 30px 25px;
-        padding-top: 120px;
-        padding-bottom: 30px;
+        padding: 24px;
+        padding-top: 110px;
+        padding-bottom: 40px;
     }
 
     .services-page-content,
     .page-content {
-        padding: 40px 25px;
+        padding: 40px 24px;
     }
 
     .intro-container {
         padding-top: 40px;
         padding-bottom: 40px;
     }
+
+    .hero-services-sub-nav-container {
+        gap: 10px;
+        padding: 12px 20px;
+    }
+
+        .hero-services-sub-nav-container .button {
+            padding: 6px 12px;
+        }
 
     .practice-cards-row {
         margin-bottom: 40px;
@@ -900,27 +930,77 @@ a {
         margin-bottom: 40px;
     }
 
+    #contact-buttonid {
+        justify-items: center;
+    }
+
     .tanitimText {
         margin-top: 30px;
         padding: 25px 20px;
     }
 
     .hizmetlerimiz-avukat-col {
-        flex: 0 0 50%;
-        max-width: 50%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 0 10px;
     }
 
     .hizmetlerimiz-avukat-card {
-        margin: 0 auto;
+        max-width: 100%;
+        margin: 0 auto 30px;
     }
 
     .hizmetlerimiz-avukat-img {
-        height: 340px;
+        height: 280px;
+        width: 100%;
+    }
+
+    .hizmetlerimiz-avukat-name-link {
+        padding: 25px 20px 20px;
+    }
+
+    .hizmetlerimiz-avukat-name {
+        font-size: 20px;
+    }
+
+    .avukat-title {
+        font-size: 15px;
+    }
+
+    .card-divider {
+        width: 70px;
+        height: 4px;
+        margin: 15px auto 20px;
     }
 
     .featured-img {
         height: 200px;
     }
+
+    .featured-publication-card {
+        text-align: center;
+        padding: 30px 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+        .featured-publication-card .content-tag-button {
+            margin: 0 auto 15px;
+            display: inline-block;
+        }
+
+    .featured-img {
+        margin: 0 auto 20px;
+    }
+
+    .content-card {
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+        .content-card img {
+            margin: 0 auto 15px;
+        }
 
     .custom-tabs {
         justify-content: center;
@@ -933,8 +1013,25 @@ a {
 }
 
 /* =========================================================
-    RESPONSIVE - SMALL MOBILE (480px and below)
+    RESPONSIVE - SMALL MOBILE (600px and below)
 ========================================================= */
+@media (max-width: 600px) {
+    .services-page-content,
+    .page-content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .hero-services-container {
+        padding: 20px;
+        padding-top: 100px;
+    }
+
+    .hero-services-sub-nav-container {
+        padding: 10px 20px;
+    }
+}
+
 @media (max-width: 480px) {
     .hero-services-container,
     .hero-servicesTemplate-container,
@@ -942,6 +1039,11 @@ a {
     .page-content {
         padding-left: 20px;
         padding-right: 20px;
+    }
+
+    .hero-services-sub-nav-container .button {
+        font-size: 13px;
+        padding: 6px 10px;
     }
 
     .practice-cards-row .col-lg-3 {

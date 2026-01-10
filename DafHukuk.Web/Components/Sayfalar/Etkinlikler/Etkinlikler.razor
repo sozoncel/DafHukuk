@@ -1,4 +1,4 @@
-﻿@page "/etkinlikler"
+﻿@* @page "/etkinlikler"
 @page "/en/events"
 @page "/ar/events"
 @layout DafHukuk.Web.Components.Layout.MainLayout
@@ -9,16 +9,13 @@
 @inject DafHukuk.Service.ILanguageService LanguageService
 @inject NavigationManager NavManager
 
-
 @code {
     private List<Post> currentCategoryPosts = new();
     private List<Post> filteredPosts = new();
     private List<Post> otherPostsInSameCategory = new();
     private Category? currentCategory;
-    private string searchQuery = ""; 
-
+    private string searchQuery = "";
     private const int PageCategoryId = 1;
-
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 
     protected override async Task OnInitializedAsync()
@@ -32,7 +29,7 @@
 
         currentCategory = allPosts.FirstOrDefault(p => p.CategoryId == PageCategoryId)?.Category;
         otherPostsInSameCategory = currentCategoryPosts.ToList();
-        filteredPosts = currentCategoryPosts.ToList(); 
+        filteredPosts = currentCategoryPosts.ToList();
     }
 
     private void PerformSearch()
@@ -193,6 +190,7 @@
 
 <PageTitle>@GetText("pageTitle")</PageTitle>
 
+<!-- HERO SECTION -->
 <section class="hero-news-section">
     <div class="hero-services-bg"></div>
     <div class="hero-services-overlay"></div>
@@ -214,94 +212,99 @@
     </div>
 </section>
 
-
+<!-- CONTENT SECTION -->
 <section class="icerikBolumu services-page-content">
-
-    <div class="row mb-5">
-
-        @* ARAMA ÇUBUĞU *@
-        <div class="col-lg-6">
-            <div class="search-bar">
-                <input class="form-control form-control-lg"
-                       type="search"
-                       placeholder="@GetText("searchPlaceholder")"
-                       aria-label="Search"
-                       @bind="searchQuery"
-                       @bind:event="oninput"
-                       @onkeydown="HandleSearchKeyDown">
-                <button class="btn btn-primary px-4" type="button" @onclick="PerformSearch">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-
-        @* DİĞER ETKİNLİKLER DROPDOWN *@
-        <div class="col-lg-6">
-            <div class="dropdown modern-dropdown w-100">
-                <button class="btn dropdown-toggle modern-dropdown-toggle w-100"
-                        type="button"
-                        id="etkinlikDropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    @GetText("dropdownButton")
-                </button>
-
-                <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="etkinlikDropdown">
-                    @foreach (var post in otherPostsInSameCategory)
-                    {
-                        <li><a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">@GetPostTitle(post)</a></li>
-                    }
-                    @if (!otherPostsInSameCategory.Any())
-                    {
-                        <li><span class="dropdown-item text-muted">@GetText("noContentInDropdown")</span></li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    @* İÇERİK KARTLARI KISMI *@
-    <div class="row icerik-Kart">
-        @if (!filteredPosts.Any())
-        {
-            @if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                <div class="col-12 text-center my-5">
-                    <div class="alert alert-warning" role="alert">
-                        <strong>@GetText("noSearchResultsTitle")</strong>
-                        "@searchQuery" @GetText("noSearchResultsText")
-                    </div>
+    <div class="container">
+        <!-- ARAMA VE DROPDOWN -->
+        <div class="row mb-5">
+            <div class="col-lg-6">
+                <div class="search-bar">
+                    <input class="form-control form-control-lg"
+                           type="search"
+                           placeholder="@GetText("searchPlaceholder")"
+                           aria-label="Search"
+                           @bind="searchQuery"
+                           @bind:event="oninput"
+                           @onkeydown="HandleSearchKeyDown">
+                    <button class="btn-yayin-etkinlik btn-primary px-4" type="button" @onclick="PerformSearch">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="dropdown modern-dropdown w-100">
+                    <button class="btn-yayin-etkinlik dropdown-toggle modern-dropdown-toggle w-100"
+                            type="button"
+                            id="etkinlikDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        @GetText("dropdownButton")
+                    </button>
+
+                    <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="etkinlikDropdown">
+                        @foreach (var post in otherPostsInSameCategory)
+                        {
+                            <li><a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">@GetPostTitle(post)</a></li>
+                        }
+                        @if (!otherPostsInSameCategory.Any())
+                        {
+                            <li><span class="dropdown-item text-muted">@GetText("noContentInDropdown")</span></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT CARDS -->
+        <div class="row icerik-Kart">
+            @if (!filteredPosts.Any())
+            {
+                @if (!string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    <div class="col-12 text-center my-5">
+                        <div class="alert alert-warning" role="alert">
+                            <strong>@GetText("noSearchResultsTitle")</strong>
+                            "@searchQuery" @GetText("noSearchResultsText")
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12 text-center my-5"><p>@GetText("noContentText")</p></div>
+                }
             }
             else
             {
-                <div class="col-12 text-center my-5"><p>@GetText("noContentText")</p></div>
-            }
-        }
-        else
-        {
-            @for (int i = 0; i < filteredPosts.Count; i++)
-            {
-                var post = filteredPosts[i];
-                var url = GetPostUrl(post);
-                string columnClass = "col-lg-4 mb-5";
+                @for (int i = 0; i < filteredPosts.Count; i++)
+                {
+                    var post = filteredPosts[i];
+                    var url = GetPostUrl(post);
+                    string columnClass = "col-lg-4 col-md-6 mb-5";
 
-                if (i % 3 == 1) { columnClass += " card-offset-style"; }
+                    if (i % 3 == 1) { columnClass += " card-offset-style"; }
 
-                <div class="@columnClass">
-                    <div class="content-card-item">
-                        <a href="@url"><img src="@post.CoverImageUrl" alt="@GetPostTitle(post)" class="img-fluid post-cover-image"></a>
+                    <div class="@columnClass">
+                        <div class="content-card-item">
+                            <a href="@url">
+                                <img src="@post.CoverImageUrl" alt="@GetPostTitle(post)" class="img-fluid post-cover-image">
+                            </a>
 
-                        <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
+                            <p class="created-Date">@post.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
 
-                        <a href="@url"><h2 class="textTitle">@GetPostTitle(post)</h2></a>
+                            <a href="@url">
+                                <h2 class="textTitle">@GetPostTitle(post)</h2>
+                            </a>
 
-                        <p class="slugText">@GetSummary(post)</p>
-                        <hr>
-                        <a href="@url" class="read-more-link">@GetText("readMore")</a>
+                            <p class="slugText">@GetSummary(post)</p>
+
+                            <hr>
+
+                            <a href="@url" class="read-more-link">@GetText("readMore")</a>
+                        </div>
                     </div>
-                </div>
+                }
             }
-        }
+        </div>
     </div>
-</section>
+</section> *@

@@ -7,6 +7,8 @@
 @inject DafHukuk.Service.Interfaces.IPostService PostService
 @inject DafHukuk.Service.Interfaces.ICategoryService CategoryService
 @inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
 
 <PageTitle>@GetText("pageTitle")</PageTitle>
 
@@ -23,15 +25,19 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="hero-about-slogan-wrapper">
-                    <div class="hero-about-slogan-text-style">
-                        @((MarkupString)GetText("slogan"))
-                    </div>
-                </div>
                 <div class="hero-about-breadcrumb">
                     <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> / <span>@GetText("mainTitle")</span>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="hero-services-sub-nav-bar">
+        <div class="hero-services-sub-nav-container">
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")" class="button">@GetText("generalServices")</a>
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="button">@GetText("specialConsultancy")</a>
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")" class="button">@GetText("expertOpinion")</a>
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")" class="button">@GetText("mediation")</a>
         </div>
     </div>
 </section>
@@ -43,7 +49,7 @@
                 <div class="col-lg-6">
                     <h3>@GetText("sectionIntroTitle")</h3>
                     <p>@GetText("sectionIntroText")</p>
-                    <a href="#practiceAreas" class="pageMove">@GetText("practiceAnchor")</a>
+                    <a href="#" class="pageMove">@GetText("practiceAnchor")</a>
                 </div>
 
                 <div class="col-lg-6">
@@ -57,36 +63,6 @@
                 <h2 id="practiceAreas" class="section-title">@GetText("practiceAreas")</h2>
             </div>
         </div>
-
-        <!-- KATEGORİ TABS (ServicePosts içindeki kategoriler) -->
-        @if (DistinctCategories.Any())
-        {
-            <div class="row related-content-nav-row mb-4">
-                <div class="col-sm-12">
-                    <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
-                        <li class="nav-item">
-                            <button class="nav-link @(CurrentCategoryId == 0 ? "active" : "")"
-                                    type="button"
-                                    @onclick="() => FilterCategory(0)">
-                                @GetText("showAll")
-                            </button>
-                        </li>
-
-                        @foreach (var cat in DistinctCategories)
-                        {
-                            <li class="nav-item">
-                                <button class="nav-link @(CurrentCategoryId == cat.Id ? "active" : "")"
-                                        type="button"
-                                        @onclick="() => FilterCategory(cat.Id)">
-                                    @GetCategoryName(cat)
-                                </button>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        }
-
         <div class="row g-4 practice-cards-row">
             @if (IsLoading)
             {
@@ -135,7 +111,7 @@
 
         <!-- İletişim CTA -->
         <div class="row-contact">
-            <div class="col-12">
+            <div class="col-12" id="contact-buttonid">
                 <p class="contact-text">@GetText("contactText")</p>
                 <a href="@LanguageService.GetLocalizedUrl("iletisim")" class="contact-button">
                     @GetText("contactButton") <span class="arrow-icon"></span>
@@ -168,8 +144,11 @@
             ["pageTitle"] = "Hizmetlerimiz",
             ["upperTitle"] = "Hizmetlerimiz",
             ["mainTitle"] = "Çalışma Alanlarımız",
-            ["slogan"] = "Senin <br> Başarın. <br> Bizim <br> İşimiz.",
             ["home"] = "Ana Sayfa",
+            ["generalServices"] = "Genel Hizmetler",
+            ["specialConsultancy"] = "Özel Danışmanlık Hizmet Paketleri",
+            ["expertOpinion"] = "Uzman Görüşü (Adli Bilimler)",
+            ["mediation"] = "Arabuluculuk",
             ["sectionIntroTitle"] = "Hizmetlerimiz",
             ["sectionIntroText"] = "Müvekkillerimize, ulusal ve uluslararası alanda karşılaştıkları hukuki zorluklarda, uzman kadromuz ve geniş tecrübemizle kapsamlı ve stratejik çözümler sunuyoruz.",
             ["practiceAnchor"] = "Çalışma Alanları",
@@ -179,7 +158,6 @@
             ["noServices"] = "Hizmet bulunamadı.",
             ["contactText"] = "Birlikte çalışmak için iletişime geçebilirsiniz.",
             ["contactButton"] = "İLETİŞİM",
-            ["showAll"] = "Hepsini Göster",
             ["showAllButton"] = "Tümünü Göster"
         },
         ["en"] = new()
@@ -187,8 +165,11 @@
             ["pageTitle"] = "Services",
             ["upperTitle"] = "Our Services",
             ["mainTitle"] = "Practice Areas",
-            ["slogan"] = "Your <br> Success. <br> Our <br> Business.",
             ["home"] = "Home",
+            ["generalServices"] = "General Services",
+            ["specialConsultancy"] = "Special Consultancy Packages",
+            ["expertOpinion"] = "Expert Opinion (Forensic Sciences)",
+            ["mediation"] = "Mediation",
             ["sectionIntroTitle"] = "Services",
             ["sectionIntroText"] = "We provide comprehensive and strategic legal solutions to our clients on national and international matters with our expert team.",
             ["practiceAnchor"] = "Practice Areas",
@@ -198,7 +179,6 @@
             ["noServices"] = "No services found.",
             ["contactText"] = "Contact us to work together.",
             ["contactButton"] = "CONTACT",
-            ["showAll"] = "Show All",
             ["showAllButton"] = "Show All"
         },
         ["ar"] = new()
@@ -206,8 +186,11 @@
             ["pageTitle"] = "خدماتنا",
             ["upperTitle"] = "خدماتنا",
             ["mainTitle"] = "مجالات العمل",
-            ["slogan"] = "نجاحك. <br> هو <br> عملنا. <br>",
             ["home"] = "الرئيسية",
+            ["generalServices"] = "الخدمات العامة",
+            ["specialConsultancy"] = "حزم الاستشارات الخاصة",
+            ["expertOpinion"] = "رأي الخبير (العلوم الجنائية)",
+            ["mediation"] = "الوساطة",
             ["sectionIntroTitle"] = "خدماتنا",
             ["sectionIntroText"] = "نقدم لعملائنا حلولاً قانونية شاملة واستراتيجية على المستويين الوطني والدولي بفريقنا الخبير.",
             ["practiceAnchor"] = "مجالات العمل",
@@ -217,13 +200,13 @@
             ["noServices"] = "لم يتم العثور على خدمات.",
             ["contactText"] = "تواصل معنا للعمل معاً.",
             ["contactButton"] = "اتصل",
-            ["showAll"] = "عرض الكل",
             ["showAllButton"] = "عرض الكل"
         }
     };
 
     protected override async Task OnInitializedAsync()
     {
+        Navigation.LocationChanged += OnLocationChanged;
         IsLoading = true;
 
         try
@@ -275,6 +258,16 @@
         UpdateDisplayedPosts();
 
         IsLoading = false;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
     }
 
     private void FilterCategory(int categoryId)
@@ -339,37 +332,6 @@
         };
     }
 
-    private string GetCategoryColor(string? categoryName)
-    {
-        if (string.IsNullOrWhiteSpace(categoryName))
-            return "#3b82f6";
-
-        var normalized = categoryName.ToLowerInvariant().Trim();
-
-        return normalized switch
-        {
-            "hizmetlerimiz" or "our services" or "خدماتنا" => "#366C80",
-            "duyurular" or "announcements" or "الإعلانات" => "#5c7341",
-            "etkinlikler" or "events" or "الفعاليات" => "#78514A",
-            "yayınlar" or "yayinlar" or "publications" or "المنشورات" => "#dfb899",
-            _ => "#3b82f6"
-        };
-    }
-
-    private string GetSummary(Post post)
-    {
-        var content = CurrentLang switch
-        {
-            "en" => post.Content_EN ?? post.Content_TR,
-            "ar" => post.Content_AR ?? post.Content_TR,
-            _ => post.Content_TR
-        };
-
-        if (string.IsNullOrWhiteSpace(content)) return "";
-        content = content.Replace(Environment.NewLine, " ").Trim();
-        return content.Length > 120 ? content.Substring(0, 120) + "..." : content;
-    }
-
     private string GetText(string key)
     {
         if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
@@ -409,13 +371,8 @@
         };
     }
 
-    private System.Globalization.CultureInfo GetCulture()
+    private string GetLocalizedUrl(string path)
     {
-        return CurrentLang switch
-        {
-            "en" => new System.Globalization.CultureInfo("en-US"),
-            "ar" => new System.Globalization.CultureInfo("ar-SA"),
-            _ => new System.Globalization.CultureInfo("tr-TR")
-        };
+        return LanguageService.GetLocalizedUrl(path);
     }
 }

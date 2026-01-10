@@ -1,0 +1,260 @@
+﻿@page "/hizmetlerimiz/uzman-gorusu"
+@page "/en/services/expert-opinion"
+@page "/ar/services/expert-opinion"
+@layout DafHukuk.Web.Components.Layout.MainLayout
+
+@using DafHukuk.Core.Entities
+@inject DafHukuk.Service.Interfaces.IPostService PostService
+@inject DafHukuk.Service.ILanguageService LanguageService
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>@GetText("pageTitle")</PageTitle>
+
+<section class="hero-services-section">
+    <div class="hero-services-bg"></div>
+    <div class="hero-services-overlay"></div>
+
+    <div class="hero-services-container">
+        <div class="hero-services-title-content">
+            <h2 class="services-hero-title-upper">@GetText("upperTitle")</h2>
+            <div class="hero-services-title-wrapper">
+                <h1 class="hero-services-title">@GetText("mainTitle")</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="hero-about-breadcrumb">
+                    <a href="@GetLocalizedUrl("")">@GetText("home")</a> /
+                    <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a> /
+                    <span>@GetText("expertOpinion")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-services-sub-nav-bar">
+        <div class="hero-services-sub-nav-container">
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")" class="button">@GetText("generalServices")</a>
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="button">@GetText("specialConsultancy")</a>
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")" class="button active">@GetText("expertOpinion")</a>
+            <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")" class="button">@GetText("mediation")</a>
+        </div>
+    </div>
+</section>
+
+<section class="services-content">
+    <div class="services-page-content">
+        <div class="content-container intro-container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <h3>@GetText("sectionIntroTitle")</h3>
+                    <p>@GetText("sectionIntroText")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 id="practiceAreas" class="section-title">@GetText("practiceAreas")</h2>
+            </div>
+        </div>
+
+        <div class="row g-4 practice-cards-row">
+            @if (IsLoading)
+            {
+                <div class="col-12 loading-state">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">@GetText("loading")</span>
+                    </div>
+                    <p class="loading-text">@GetText("loadingText")</p>
+                </div>
+            }
+            else if (!ServicePosts.Any())
+            {
+                <div class="col-12">
+                    <div class="alert alert-warning" role="alert">
+                        @GetText("noServices")
+                    </div>
+                </div>
+            }
+            else
+            {
+                @foreach (var post in ServicePosts)
+                {
+                    var postUrl = GetPostUrl(post);
+
+                    <div class="col-lg-3">
+                        <div class="practice-card">
+                            <img src="@post.CoverImageUrl" alt="@GetPostTitle(post)" />
+                            <a href="@postUrl">
+                                <h3 class="practice-title">@GetPostTitle(post)</h3>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- İletişim CTA -->
+        <div class="row-contact">
+            <div class="col-12" id="contact-buttonid">
+                <p class="contact-text">@GetText("contactText")</p>
+                <a href="@GetLocalizedUrl("iletisim")" class="contact-button">
+                    @GetText("contactButton") <span class="arrow-icon"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<Post> ServicePosts { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private string CurrentLang => LanguageService.GetCurrentLanguage();
+
+    private Dictionary<string, Dictionary<string, string>> Translations = new()
+    {
+        ["tr"] = new()
+        {
+            ["pageTitle"] = "Uzman Görüşü (Adli Bilimler)",
+            ["upperTitle"] = "Hizmetlerimiz",
+            ["mainTitle"] = "Uzman Görüşü (Adli Bilimler)",
+            ["home"] = "Ana Sayfa",
+            ["services"] = "Hizmetlerimiz",
+            ["generalServices"] = "Genel Hizmetler",
+            ["specialConsultancy"] = "Özel Danışmanlık Hizmet Paketleri",
+            ["expertOpinion"] = "Uzman Görüşü (Adli Bilimler)",
+            ["mediation"] = "Arabuluculuk",
+            ["sectionIntroTitle"] = "Uzman Görüşü (Adli Bilimler)",
+            ["sectionIntroText"] = "Adli bilimler alanında uzman görüşleri sunarak davalara teknik destek sağlıyoruz.",
+            ["practiceAreas"] = "Çalışma Alanları",
+            ["loading"] = "Yükleniyor...",
+            ["loadingText"] = "İçerikler yükleniyor...",
+            ["noServices"] = "Bu kategoride henüz hizmet bulunmamaktadır.",
+            ["contactText"] = "Birlikte çalışmak için iletişime geçebilirsiniz.",
+            ["contactButton"] = "İLETİŞİM"
+        },
+        ["en"] = new()
+        {
+            ["pageTitle"] = "Expert Opinion (Forensic Sciences)",
+            ["upperTitle"] = "Our Services",
+            ["mainTitle"] = "Expert Opinion (Forensic Sciences)",
+            ["home"] = "Home",
+            ["services"] = "Services",
+            ["generalServices"] = "General Services",
+            ["specialConsultancy"] = "Special Consultancy Packages",
+            ["expertOpinion"] = "Expert Opinion (Forensic Sciences)",
+            ["mediation"] = "Mediation",
+            ["sectionIntroTitle"] = "Expert Opinion (Forensic Sciences)",
+            ["sectionIntroText"] = "We provide technical support to cases by offering expert opinions in the field of forensic sciences.",
+            ["practiceAreas"] = "Practice Areas",
+            ["loading"] = "Loading...",
+            ["loadingText"] = "Loading contents...",
+            ["noServices"] = "No services found in this category.",
+            ["contactText"] = "Contact us to work together.",
+            ["contactButton"] = "CONTACT"
+        },
+        ["ar"] = new()
+        {
+            ["pageTitle"] = "رأي الخبير (العلوم الجنائية)",
+            ["upperTitle"] = "خدماتنا",
+            ["mainTitle"] = "رأي الخبير (العلوم الجنائية)",
+            ["home"] = "الرئيسية",
+            ["services"] = "الخدمات",
+            ["generalServices"] = "الخدمات العامة",
+            ["specialConsultancy"] = "حزم الاستشارات الخاصة",
+            ["expertOpinion"] = "رأي الخبير (العلوم الجنائية)",
+            ["mediation"] = "الوساطة",
+            ["sectionIntroTitle"] = "رأي الخبير (العلوم الجنائية)",
+            ["sectionIntroText"] = "نقدم دعمًا فنيًا للقضايا من خلال تقديم آراء الخبراء في مجال العلوم الجنائية.",
+            ["practiceAreas"] = "مجالات العمل",
+            ["loading"] = "جارٍ التحميل...",
+            ["loadingText"] = "جارٍ تحميل المحتويات...",
+            ["noServices"] = "لا توجد خدمات في هذه الفئة.",
+            ["contactText"] = "تواصل معنا للعمل معاً.",
+            ["contactButton"] = "اتصل"
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+        await LoadServices();
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+    private async Task LoadServices()
+    {
+        IsLoading = true;
+        try
+        {
+            // ServiceType.ExpertOpinion olan postları getir
+            ServicePosts = await PostService.GetByServiceType(ServiceType.ExpertOpinion);
+            ServicePosts = ServicePosts.Where(p => p.IsActive).OrderBy(p => GetPostTitle(p)).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hata: {ex.Message}");
+            ServicePosts = new List<Post>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetPostUrl(Post post)
+    {
+        if (post?.Category == null) return "#";
+        var categorySlug = "hizmetlerimiz";
+        var postSlug = GetPostSlug(post);
+        return CurrentLang switch
+        {
+            "en" => $"/en/services/{postSlug}",
+            "ar" => $"/ar/services/{postSlug}",
+            _ => $"/{categorySlug}/{postSlug}"
+        };
+    }
+
+    private string GetText(string key)
+    {
+        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
+            return Translations[CurrentLang][key];
+        return key;
+    }
+
+    private string GetPostTitle(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Title_EN ?? post.Title_TR ?? "",
+            "ar" => post.Title_AR ?? post.Title_TR ?? "",
+            _ => post.Title_TR ?? ""
+        };
+    }
+
+    private string GetPostSlug(Post post)
+    {
+        return CurrentLang switch
+        {
+            "en" => post.Slug_EN ?? post.Slug_TR ?? "",
+            "ar" => post.Slug_AR ?? post.Slug_TR ?? "",
+            _ => post.Slug_TR ?? ""
+        };
+    }
+
+    private string GetLocalizedUrl(string path)
+    {
+        return LanguageService.GetLocalizedUrl(path);
+    }
+}

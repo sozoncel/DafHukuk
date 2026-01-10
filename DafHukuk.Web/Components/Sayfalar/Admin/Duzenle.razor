@@ -64,6 +64,12 @@
                                                             @p.Category.Name_TR
                                                         </span>
                                                     }
+                                                    @if (p.ServiceType != ServiceType.None)
+                                                    {
+                                                        <span class="ms-1 badge bg-light text-dark">
+                                                            @GetServiceTypeName(p.ServiceType)
+                                                        </span>
+                                                    }
                                                 </small>
                                             </div>
                                         </div>
@@ -161,6 +167,25 @@
                                     </div>
                                 }
                             </div>
+
+                            @* ✅ ServiceType Dropdown - Sadece Hizmetlerimiz kategorisinde görünür *@
+                            @if (isServiceCategory)
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="bi bi-gear me-1"></i>
+                                        @GetText("serviceType")
+                                    </label>
+                                    <select class="form-select" @bind="post.ServiceType">
+                                        <option value="@ServiceType.None">-- @GetText("selectServiceType") --</option>
+                                        <option value="@ServiceType.GeneralServices">@GetText("generalServices")</option>
+                                        <option value="@ServiceType.SpecialConsultancy">@GetText("specialConsultancy")</option>
+                                        <option value="@ServiceType.ExpertOpinion">@GetText("expertOpinion")</option>
+                                        <option value="@ServiceType.Mediation">@GetText("mediation")</option>
+                                    </select>
+                                    <small class="text-muted">@GetText("serviceTypeHelp")</small>
+                                </div>
+                            }
 
                             <div class="mb-3">
                                 <label class="form-label">
@@ -408,7 +433,10 @@
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
 
-    // ✅ Kategori değişim kontrolü
+    // ✅ ServiceType kontrolü
+    private bool isServiceCategory = false;
+
+    // Kategori değişim kontrolü
     private bool categoryChanged = false;
     private int originalCategoryId = 0;
     private string suggestedSlugTR = string.Empty;
@@ -431,6 +459,13 @@
             ["generalInfo"] = "Genel Bilgiler",
             ["category"] = "Kategori",
             ["selectCategory"] = "Kategori Seçin",
+            ["serviceType"] = "Hizmet Tipi",
+            ["selectServiceType"] = "Hizmet Tipi Seçin",
+            ["generalServices"] = "Genel Hizmetler",
+            ["specialConsultancy"] = "Özel Danışmanlık Hizmet Paketleri",
+            ["expertOpinion"] = "Uzman Görüşü (Adli Bilimler)",
+            ["mediation"] = "Arabuluculuk",
+            ["serviceTypeHelp"] = "Bu çalışma alanı hangi hizmet grubuna ait?",
             ["coverImage"] = "Kapak Resmi",
             ["dragDropImage"] = "Görseli buraya sürükleyin veya tıklayın",
             ["orClickToSelect"] = "Dosya seçmek için tıklayın",
@@ -467,6 +502,13 @@
             ["generalInfo"] = "General Information",
             ["category"] = "Category",
             ["selectCategory"] = "Select Category",
+            ["serviceType"] = "Service Type",
+            ["selectServiceType"] = "Select Service Type",
+            ["generalServices"] = "General Services",
+            ["specialConsultancy"] = "Special Consultancy Packages",
+            ["expertOpinion"] = "Expert Opinion (Forensic Sciences)",
+            ["mediation"] = "Mediation",
+            ["serviceTypeHelp"] = "Which service group does this practice area belong to?",
             ["coverImage"] = "Cover Image",
             ["dragDropImage"] = "Drag image here or click",
             ["orClickToSelect"] = "Click to select file",
@@ -503,6 +545,13 @@
             ["generalInfo"] = "معلومات عامة",
             ["category"] = "الفئة",
             ["selectCategory"] = "اختر الفئة",
+            ["serviceType"] = "نوع الخدمة",
+            ["selectServiceType"] = "اختر نوع الخدمة",
+            ["generalServices"] = "الخدمات العامة",
+            ["specialConsultancy"] = "حزم الاستشارات الخاصة",
+            ["expertOpinion"] = "رأي الخبير (العلوم الجنائية)",
+            ["mediation"] = "الوساطة",
+            ["serviceTypeHelp"] = "إلى أي مجموعة خدمات ينتمي مجال الممارسة هذا؟",
             ["coverImage"] = "صورة الغلاف",
             ["dragDropImage"] = "اسحب الصورة هنا أو انقر",
             ["orClickToSelect"] = "انقر لاختيار الملف",
@@ -576,6 +625,9 @@
             // Kategori kontrolü için orijinal ID sakla
             originalCategoryId = post.CategoryId;
 
+            // ✅ ServiceType kontrolü yap
+            CheckIfServiceCategory();
+
             originalPost = new Post
             {
                 Id = post.Id,
@@ -591,7 +643,8 @@
                 CategoryId = post.CategoryId,
                 CoverImageUrl = post.CoverImageUrl,
                 PublishedDate = post.PublishedDate,
-                IsActive = post.IsActive
+                IsActive = post.IsActive,
+                ServiceType = post.ServiceType
             };
 
             includeTr = !string.IsNullOrWhiteSpace(post.Title_TR);
@@ -716,7 +769,7 @@
         }
     }
 
-    // ✅ Kategori değişim tespiti
+    // ✅ Kategori değişimi kontrolü ve ServiceType gösterimi
     private void OnCategoryChanged()
     {
         if (post != null && originalCategoryId != post.CategoryId)
@@ -728,17 +781,54 @@
         {
             categoryChanged = false;
         }
+
+        // ServiceType kontrolü
+        CheckIfServiceCategory();
+    }
+
+    // ✅ ServiceType kontrolü - Hizmetlerimiz kategorisinde mi?
+    private void CheckIfServiceCategory()
+    {
+        if (post == null) return;
+
+        var selectedCategory = categories.FirstOrDefault(c => c.Id == post.CategoryId);
+        if (selectedCategory != null)
+        {
+            var categoryName = (selectedCategory.Name_TR ?? selectedCategory.Name_EN ?? "").ToLowerInvariant();
+            isServiceCategory = categoryName.Contains("hizmet") || categoryName.Contains("service");
+        }
+        else
+        {
+            isServiceCategory = false;
+        }
+
+        // Eğer Hizmetlerimiz kategorisi değilse ServiceType'ı None yap
+        if (!isServiceCategory)
+        {
+            post.ServiceType = ServiceType.None;
+        }
+    }
+
+    // ✅ ServiceType adını getir
+    private string GetServiceTypeName(ServiceType serviceType)
+    {
+        return serviceType switch
+        {
+            ServiceType.GeneralServices => "Genel",
+            ServiceType.SpecialConsultancy => "Özel",
+            ServiceType.ExpertOpinion => "Uzman",
+            ServiceType.Mediation => "Arabulucu",
+            _ => ""
+        };
     }
 
     // ✅ Slug güncelleme ve öneri metodları
     private void UpdateSlugTR()
     {
         if (post == null) return;
-        // Eğer slug boşsa veya kategori değiştiyse otomatik öneri/güncelleme yap
         if (string.IsNullOrWhiteSpace(post.Slug_TR) || categoryChanged)
         {
             var slug = GenerateSlug(post.Title_TR);
-            // Eğer kategori değişimi yoksa direkt uygula, varsa sadece öneride kullan
             if (!categoryChanged) post.Slug_TR = slug;
             suggestedSlugTR = slug;
         }
@@ -845,7 +935,8 @@
                 CategoryId = post.CategoryId,
                 IsActive = post.IsActive,
                 PublishedDate = post.PublishedDate,
-                CoverImageUrl = post.CoverImageUrl
+                CoverImageUrl = post.CoverImageUrl,
+                ServiceType = post.ServiceType // ✅ ServiceType eklendi
             };
 
             // Dil seçimlerini eşle
@@ -892,7 +983,8 @@
                 CategoryId = post.CategoryId,
                 CoverImageUrl = post.CoverImageUrl,
                 PublishedDate = post.PublishedDate,
-                IsActive = post.IsActive
+                IsActive = post.IsActive,
+                ServiceType = post.ServiceType
             };
 
             includeTr = !string.IsNullOrWhiteSpace(post.Title_TR);

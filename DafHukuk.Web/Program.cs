@@ -49,6 +49,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Auth/Login";
     options.LogoutPath = "/Auth/Logout";
     options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.SlidingExpiration = true;
+
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.Name = ".AspNetCore.Identity.Application";
 });
 
 builder.Services.AddScoped<ILanguageService, LanguageService>();
@@ -58,7 +65,6 @@ builder.Services.AddScoped<ILawyerService, LawyerService>();
 builder.Services.AddScoped<ISolutionPartnerService, SolutionPartnerService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
-// XSS Protection
 builder.Services.AddSingleton<IHtmlSanitizerService, HtmlSanitizerService>();
 
 builder.Services.AddRateLimiter(options =>
@@ -105,10 +111,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 var app = builder.Build();
 
-
-// ======================================================
-// ✅ DEFAULT ADMIN SEED
-// ======================================================
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -147,8 +149,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
-// ======================================================
-
 
 if (!app.Environment.IsDevelopment())
 {

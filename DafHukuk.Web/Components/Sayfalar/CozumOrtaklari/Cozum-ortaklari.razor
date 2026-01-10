@@ -66,18 +66,20 @@
                         <div class="partner-card-inner">
                             <div class="partner-logo-section">
                                 <div class="logo-background-pattern"></div>
+                                <div class="image-overlay-cozum"></div>
                                 <img src="@(string.IsNullOrEmpty(partner.ImageUrl) ? "/img/placeholder.jpg" : partner.ImageUrl)"
                                      alt="@partner.Name"
                                      class="partner-logo-img" />
+                                <div class="partner-hover-info">
+                                    <span class="view-details-text">@GetText("viewDetails")</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </div>
                             </div>
 
                             <div class="partner-info-section">
                                 <h3 class="partner-name">@partner.Name</h3>
                                 <p class="partner-desc">@GetPartnerDescription(partner)</p>
-                                <div class="partner-link-arrow">
-                                    <span>@GetText("viewDetails")</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </div>
+                                <div class="partner-card-divider"></div>
                             </div>
                         </div>
                     </a>

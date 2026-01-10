@@ -18,10 +18,6 @@
     --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ================================================
-   KATEGORI RENKLENDIRME
-================================================ */
-
 .post-category-tag {
     display: inline-block;
     padding: 6px 16px;
@@ -59,10 +55,6 @@
     .post-category-tag[data-category*="منشورات"] {
         background: var(--accent-gold-light);
     }
-
-/* ================================================
-   PARTNERS HERO SECTION
-================================================ */
 
 .modern-partners-hero {
     position: relative;
@@ -200,10 +192,6 @@
     font-weight: 500;
 }
 
-/* ================================================
-   PARTNERS MAIN SECTION
-================================================ */
-
 .partners-main-section {
     padding: 120px 0;
     background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-light) 100%);
@@ -237,50 +225,40 @@
     font-weight: 400;
 }
 
-/* ================================================
-   PARTNERS GRID
-================================================ */
-
 .partners-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
 }
 
 .partner-card-modern {
     display: block;
     background: var(--bg-white);
-    border-radius: 16px;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     transition: var(--transition-slow);
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--border-light);
-    height: 100%;
 }
 
     .partner-card-modern:hover {
-        transform: translateY(-12px);
-        box-shadow: var(--shadow-xl);
-        border-color: var(--accent-gold);
+        transform: translateY(-8px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 
 .partner-card-inner {
+    position: relative;
     height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 .partner-logo-section {
     position: relative;
     width: 100%;
-    padding-top: 70%;
-    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+    padding-top: 100%;
+    background: var(--bg-lighter);
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .logo-background-pattern {
@@ -295,67 +273,91 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    padding: 10px;
+    object-fit: cover;
     transition: var(--transition-slow);
     z-index: 2;
 }
 
 .partner-card-modern:hover .partner-logo-img {
-    transform: scale(1.08);
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, transparent 50%, rgba(11, 26, 61, 0.7) 100%);
+    z-index: 2;
+    opacity: 0;
+    transition: var(--transition-base);
+}
+
+.partner-card-modern:hover .image-overlay {
+    opacity: 1;
+}
+
+.partner-hover-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--bg-white);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: var(--transition-base);
+}
+
+.partner-card-modern:hover .partner-hover-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.view-details-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.partner-hover-info i {
+    font-size: 1.125rem;
 }
 
 .partner-info-section {
-    padding: 32px 28px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    padding: 24px 20px;
+    background: var(--bg-white);
 }
 
 .partner-name {
-    font-size: 1.375rem;
+    font-size: 1.125rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0 0 16px 0;
+    margin: 0 0 8px 0;
     line-height: 1.3;
     letter-spacing: -0.01em;
 }
 
 .partner-desc {
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-size: 0.875rem;
     color: var(--text-secondary);
-    margin: 0 0 auto 0;
-    flex: 1;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+    font-weight: 400;
 }
 
-.partner-link-arrow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--accent-gold);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    margin-top: 20px;
+.partner-card-divider {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+    border-radius: 2px;
     transition: var(--transition-base);
 }
 
-.partner-card-modern:hover .partner-link-arrow {
-    gap: 12px;
+.partner-card-modern:hover .partner-card-divider {
+    width: 60px;
 }
-
-.partner-link-arrow i {
-    font-size: 1.125rem;
-    transition: var(--transition-base);
-}
-
-.partner-card-modern:hover .partner-link-arrow i {
-    transform: translateX(4px);
-}
-
-/* ================================================
-   LOADING & EMPTY STATES
-================================================ */
 
 .loading-container,
 .empty-container {
@@ -364,13 +366,13 @@
 }
 
 .loading-spinner {
-    width: 56px;
-    height: 56px;
-    border: 5px solid var(--border-light);
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border-light);
     border-top-color: var(--accent-gold);
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin: 0 auto 24px;
+    margin: 0 auto 20px;
 }
 
 @keyframes spin {
@@ -387,15 +389,11 @@
 }
 
 .empty-container i {
-    font-size: 5rem;
+    font-size: 4rem;
     color: var(--text-muted);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: block;
 }
-
-/* ================================================
-   LOADING FULL PAGE
-================================================ */
 
 .loading-full-page {
     position: fixed;
@@ -426,10 +424,6 @@
     letter-spacing: 0.5px;
 }
 
-/* ================================================
-   PARTNER DETAIL HERO
-================================================ */
-
 .partner-hero-detail {
     position: relative;
     background: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
@@ -449,13 +443,13 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: 40% 60%;
-    min-height: 70vh;
+    min-height: 60vh;
     align-items: center;
 }
 
 .partner-logo-area {
     position: relative;
-    padding: 60px;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -464,16 +458,12 @@
 .logo-frame-wrapper {
     position: relative;
     width: 100%;
-    max-width: 450px;
     aspect-ratio: 1;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px;
 }
-
-
 
 .partner-hero-logo {
     position: relative;
@@ -560,10 +550,6 @@
         font-size: 1.125rem;
     }
 
-/* ================================================
-   PARTNER ABOUT SECTION
-================================================ */
-
 .partner-about-section {
     padding: 120px 0;
     background: var(--bg-white);
@@ -634,263 +620,6 @@
             margin-bottom: 0;
         }
 
-/* ================================================
-   PARTNER RELATED CONTENT
-================================================ */
-
-.partner-related-content {
-    padding: 120px 0;
-    background: var(--bg-light);
-}
-
-.related-content-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 60px;
-}
-
-.related-section-header {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.related-section-badge {
-    display: inline-block;
-    padding: 6px 16px;
-    background: rgba(201, 169, 97, 0.1);
-    border-radius: 100px;
-    color: var(--accent-gold);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-}
-
-.related-section-title {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
-    color: var(--text-primary);
-    margin: 0;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-}
-
-/* ================================================
-   RELATED TABS
-================================================ */
-
-.related-tabs-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 60px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--border-light);
-}
-
-.related-tab {
-    padding: 12px 28px;
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    border-radius: 100px;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: var(--transition-base);
-    white-space: nowrap;
-}
-
-    .related-tab:hover {
-        background: var(--bg-lighter);
-        border-color: var(--accent-gold);
-        color: var(--text-primary);
-    }
-
-    .related-tab.active {
-        background: var(--accent-gold);
-        border-color: var(--accent-gold);
-        color: var(--bg-white);
-        box-shadow: var(--shadow-md);
-    }
-
-/* ================================================
-   RELATED POSTS GRID
-================================================ */
-
-.related-posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 32px;
-}
-
-.related-post-card {
-    display: block;
-    background: var(--bg-white);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition-slow);
-    text-decoration: none;
-    color: inherit;
-    border: 1px solid var(--border-light);
-}
-
-    .related-post-card:hover {
-        transform: translateY(-8px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--accent-gold);
-    }
-
-.post-card-image-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 65%;
-    overflow: hidden;
-    background: var(--bg-lighter);
-}
-
-.post-card-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition-slow);
-}
-
-.related-post-card:hover .post-card-image {
-    transform: scale(1.1);
-}
-
-.post-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(11, 26, 61, 0.6) 100%);
-    opacity: 0;
-    transition: var(--transition-base);
-}
-
-.related-post-card:hover .post-card-overlay {
-    opacity: 1;
-}
-
-.post-card-content {
-    padding: 28px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.post-card-date {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-    .post-card-date i {
-        font-size: 1rem;
-        color: var(--accent-gold);
-    }
-
-.post-card-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    transition: var(--transition-base);
-}
-
-.related-post-card:hover .post-card-title {
-    color: var(--accent-gold);
-}
-
-/* ================================================
-   EMPTY POSTS STATE
-================================================ */
-
-.empty-posts-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 80px 20px;
-    background: var(--bg-white);
-    border-radius: 12px;
-    border: 2px dashed var(--border-light);
-}
-
-    .empty-posts-state i {
-        font-size: 4rem;
-        color: var(--text-muted);
-        margin-bottom: 20px;
-        display: block;
-        opacity: 0.5;
-    }
-
-    .empty-posts-state p {
-        font-size: 1.125rem;
-        color: var(--text-muted);
-        margin: 0;
-        font-weight: 500;
-    }
-
-/* ================================================
-   LOAD MORE BUTTON
-================================================ */
-
-.load-more-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 60px;
-}
-
-.load-more-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 40px;
-    background: var(--bg-white);
-    color: var(--accent-gold);
-    border: 2px solid var(--accent-gold);
-    border-radius: 100px;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: var(--transition-base);
-    box-shadow: var(--shadow-sm);
-}
-
-    .load-more-button:hover {
-        background: var(--accent-gold);
-        color: var(--bg-white);
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .load-more-button i {
-        font-size: 1.25rem;
-        transition: var(--transition-base);
-    }
-
-    .load-more-button:hover i {
-        transform: translateY(4px);
-    }
-
-/* ================================================
-   RESPONSIVE DESIGN
-================================================ */
-
 @media (max-width: 1400px) {
     .hero-partners-container,
     .partners-content-wrapper,
@@ -900,6 +629,11 @@
 }
 
 @media (max-width: 1200px) {
+    .partners-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 32px;
+    }
+
     .partner-hero-grid {
         grid-template-columns: 1fr;
         min-height: auto;
@@ -931,21 +665,11 @@
         padding: 80px 0;
     }
 
-    .partners-grid,
-    .related-posts-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 28px;
-    }
-
     .partners-intro-section {
         margin-bottom: 60px;
     }
 
     .related-section-header {
-        margin-bottom: 40px;
-    }
-
-    .related-tabs-container {
         margin-bottom: 40px;
     }
 }
@@ -973,8 +697,7 @@
         gap: 8px;
     }
 
-    .partners-grid,
-    .related-posts-grid {
+    .partners-grid {
         grid-template-columns: 1fr;
         gap: 24px;
     }
@@ -1009,19 +732,6 @@
     .partner-website-button {
         padding: 14px 28px;
         font-size: 0.9375rem;
-    }
-
-    .related-tabs-container {
-        gap: 8px;
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 16px;
-        scrollbar-width: thin;
-    }
-
-    .related-tab {
-        padding: 10px 20px;
-        font-size: 0.875rem;
     }
 
     .load-more-wrapper {

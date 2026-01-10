@@ -11,6 +11,7 @@ namespace DafHukuk.Core.Entities
         public string? CoverImageUrl { get; set; }
         public DateTime PublishedDate { get; set; } = DateTime.Now;
         public int CategoryId { get; set; }
+        public ServiceType ServiceType { get; set; } = ServiceType.None;
 
         public Category? Category { get; set; }
 

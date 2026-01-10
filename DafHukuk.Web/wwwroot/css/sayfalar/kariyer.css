@@ -48,10 +48,9 @@
 }
 
 .hero-kariyer-breadcrumb {
-    font-size: 14px;
     font-weight: 600;
     color: white;
-    justify-content: flex-start;
+    justify-content: flex-end;
 }
 
     .hero-kariyer-breadcrumb a {

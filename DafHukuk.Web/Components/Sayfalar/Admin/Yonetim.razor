@@ -65,7 +65,7 @@
                             <i class="bi bi-folder me-1"></i>
                             @GetText("category")
                         </label>
-                        <select class="form-select" @bind="newPost.CategoryId">
+                        <select class="form-select" @bind="newPost.CategoryId" @bind:after="OnCategoryChanged">
                             <option value="0">-- @GetText("selectCategory") --</option>
                             @foreach (var c in categories)
                             {
@@ -73,6 +73,24 @@
                             }
                         </select>
                     </div>
+
+                    @if (isServiceCategory)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-gear me-1"></i>
+                                @GetText("serviceType")
+                            </label>
+                            <select class="form-select" @bind="newPost.ServiceType">
+                                <option value="@ServiceType.None">-- @GetText("selectServiceType") --</option>
+                                <option value="@ServiceType.GeneralServices">@GetText("generalServices")</option>
+                                <option value="@ServiceType.SpecialConsultancy">@GetText("specialConsultancy")</option>
+                                <option value="@ServiceType.ExpertOpinion">@GetText("expertOpinion")</option>
+                                <option value="@ServiceType.Mediation">@GetText("mediation")</option>
+                            </select>
+                            <small class="text-muted">@GetText("serviceTypeHelp")</small>
+                        </div>
+                    }
 
                     <div class="mb-3">
                         <label class="form-label">
@@ -333,6 +351,10 @@
                                            font-weight: bold;
                                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
                             @categoryName
+                            @if (p.ServiceType != ServiceType.None)
+                            {
+                                <span class="badge bg-light text-dark ms-1">@GetServiceTypeName(p.ServiceType)</span>
+                            }
                         </div>
 
                         <div class="admin-card-image">
@@ -372,9 +394,8 @@
         </div>
     }
 </div>
-
 @code {
-    private Post newPost = new Post { PublishedDate = DateTime.Today, IsActive = true };
+    private Post newPost = new Post { PublishedDate = DateTime.Today, IsActive = true, ServiceType = ServiceType.None };
     private List<Category> categories = new();
     private List<Post> posts = new();
     private string activeLang = "tr";
@@ -392,6 +413,7 @@
     private bool includeTr { get; set; } = true;
     private bool includeEn { get; set; } = false;
     private bool includeAr { get; set; } = false;
+    private bool isServiceCategory = false;
 
     private string dropZoneId = $"dropzone-{Guid.NewGuid():N}";
     private string inputFileId = $"inputfile-{Guid.NewGuid():N}";
@@ -407,6 +429,13 @@
             ["newContentTitle"] = "Yeni İçerik Ekle",
             ["category"] = "Kategori",
             ["selectCategory"] = "Kategori Seçin",
+            ["serviceType"] = "Hizmet Tipi",
+            ["selectServiceType"] = "Hizmet Tipi Seçin",
+            ["generalServices"] = "Genel Hizmetler",
+            ["specialConsultancy"] = "Özel Danışmanlık Hizmet Paketleri",
+            ["expertOpinion"] = "Uzman Görüşü (Adli Bilimler)",
+            ["mediation"] = "Arabuluculuk",
+            ["serviceTypeHelp"] = "Bu çalışma alanı hangi hizmet grubuna ait?",
             ["coverImage"] = "Kapak Resmi",
             ["dragDropImage"] = "Görseli buraya sürükleyin veya tıklayın",
             ["orClickToSelect"] = "Dosya seçmek için tıklayın",
@@ -446,6 +475,13 @@
             ["newContentTitle"] = "Add New Content",
             ["category"] = "Category",
             ["selectCategory"] = "Select Category",
+            ["serviceType"] = "Service Type",
+            ["selectServiceType"] = "Select Service Type",
+            ["generalServices"] = "General Services",
+            ["specialConsultancy"] = "Special Consultancy Packages",
+            ["expertOpinion"] = "Expert Opinion (Forensic Sciences)",
+            ["mediation"] = "Mediation",
+            ["serviceTypeHelp"] = "Which service group does this practice area belong to?",
             ["coverImage"] = "Cover Image",
             ["dragDropImage"] = "Drag image here or click",
             ["orClickToSelect"] = "Click to select file",
@@ -485,6 +521,13 @@
             ["newContentTitle"] = "إضافة محتوى جديد",
             ["category"] = "الفئة",
             ["selectCategory"] = "اختر الفئة",
+            ["serviceType"] = "نوع الخدمة",
+            ["selectServiceType"] = "اختر نوع الخدمة",
+            ["generalServices"] = "الخدمات العامة",
+            ["specialConsultancy"] = "حزم الاستشارات الخاصة",
+            ["expertOpinion"] = "رأي الخبير (العلوم الجنائية)",
+            ["mediation"] = "الوساطة",
+            ["serviceTypeHelp"] = "إلى أي مجموعة خدمات ينتمي مجال الممارسة هذا؟",
             ["coverImage"] = "صورة الغلاف",
             ["dragDropImage"] = "اسحب الصورة هنا أو انقر",
             ["orClickToSelect"] = "انقر لاختيار الملف",
@@ -540,6 +583,37 @@
             await JS.InvokeVoidAsync("blazorImageUpload.disposeDragDrop", dropZoneId);
         }
         catch { }
+    }
+
+    private void OnCategoryChanged()
+    {
+        var selectedCategory = categories.FirstOrDefault(c => c.Id == newPost.CategoryId);
+        if (selectedCategory != null)
+        {
+            var categoryName = (selectedCategory.Name_TR ?? selectedCategory.Name_EN ?? "").ToLowerInvariant();
+            isServiceCategory = categoryName.Contains("hizmet") || categoryName.Contains("service");
+        }
+        else
+        {
+            isServiceCategory = false;
+        }
+
+        if (!isServiceCategory)
+        {
+            newPost.ServiceType = ServiceType.None;
+        }
+    }
+
+    private string GetServiceTypeName(ServiceType serviceType)
+    {
+        return serviceType switch
+        {
+            ServiceType.GeneralServices => activeLang == "tr" ? "Genel" : activeLang == "en" ? "General" : "عام",
+            ServiceType.SpecialConsultancy => activeLang == "tr" ? "Özel" : activeLang == "en" ? "Special" : "خاص",
+            ServiceType.ExpertOpinion => activeLang == "tr" ? "Uzman" : activeLang == "en" ? "Expert" : "خبير",
+            ServiceType.Mediation => activeLang == "tr" ? "Arabulucu" : activeLang == "en" ? "Mediation" : "وساطة",
+            _ => ""
+        };
     }
 
     private string GetText(string key)
@@ -607,7 +681,6 @@
             isUploading = true;
             StateHasChanged();
 
-            // ✅ IImageService direkt kullanımı
             var formFile = new BrowserFileFormFile(file);
             var result = await ImageService.UploadImageAsync(formFile, "posts", maxWidth: 1200, maxHeight: 800);
 
@@ -810,7 +883,8 @@
                 _ => "İçerik başarıyla eklendi!"
             };
 
-            newPost = new Post { PublishedDate = DateTime.Today, IsActive = true };
+            newPost = new Post { PublishedDate = DateTime.Today, IsActive = true, ServiceType = ServiceType.None };
+            isServiceCategory = false;
             await LoadPosts();
 
             showSuccess = true;
@@ -963,12 +1037,5 @@
             "yayınlar" or "yayinlar" or "publications" => "#dfb899",
             _ => "#3b82f6"
         };
-    }
-
-    private class ImageUploadResult
-    {
-        public bool Success { get; set; }
-        public string? Message { get; set; }
-        public string? FilePath { get; set; }
     }
 }

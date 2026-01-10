@@ -33,7 +33,6 @@
                 <h4 class="footer-column-title" data-target="duyurular">@GetText("newsAndPublications")<span class="mobile-toggle-icon"></span></h4>
                 <ul class="footer-links" id="duyurular">
                     <li><a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a></li>
-                    <li><a href="@GetLocalizedUrl("etkinlikler")">@GetText("events")</a></li>
                 </ul>
             </div>
 
@@ -50,36 +49,10 @@
         </div>
 
         <div class="footer-bottom">
-            <div class="footer-bottom-left">
-                <div class="footer-language">
-                    <a href="@GetLanguageChangeUrl("en")"
-                       class="footer-lang-link @(CurrentLang == "en" ? "active" : "")"
-                       @onclick="@(() => OnLanguageClick("en"))">
-                        <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon">
-                        <span>EN</span>
-                    </a>
-                    <a href="@GetLanguageChangeUrl("ar")"
-                       class="footer-lang-link @(CurrentLang == "ar" ? "active" : "")"
-                       @onclick="@(() => OnLanguageClick("ar"))">
-                        <img src="/img/Ortak/flag-ar.png" alt="AR" class="flag-icon">
-                        <span>AR</span>
-                    </a>
-                    <a href="@GetLanguageChangeUrl("tr")"
-                       class="footer-lang-link @(CurrentLang == "tr" ? "active" : "")"
-                       @onclick="@(() => OnLanguageClick("tr"))">
-                        <img src="/img/Ortak/flag-tr.svg" alt="TR" class="flag-icon">
-                        <span>TR</span>
-                    </a>
-                </div>
-                <div class="footer-legal">
-                    <a href="#">@GetText("cookiePreferences")</a>
-                    <span class="separator">|</span>
-                    <a href="#">@GetText("termsAndConditions")</a>
-                </div>
-            </div>
-            <div class="footer-bottom-right">
-                <p class="footer-copyright">@GetText("copyright")</p>
-            </div>
+            <span class="footer-info">
+                “Ziyaret ettiğiniz bu internet sitesi 1136 sayılı Avukatlık Kanunu ve Yönetmeliği ile Hukuk Uyuşmazlıklarında Arabuluculuk Kanunu Yönetmeliği’nde yer alan reklâm yasağı hükümleri çerçevesinde sadece bilgi verme amacı ile tasarlanmıştır. Bu sitede yer alan bilgiler tavsiye niteliğinde değildir. Ayrıca bu sitedeki bilgilere dayanılarak yapılacak iş ve eylemlerden sorumlu olmadığımızı ilan ederiz.”
+                © DAF Hukuk ve Danışmanlık 2025. Tüm hakları saklıdır.
+            </span>
         </div>
     </div>
 </footer>
@@ -106,9 +79,9 @@
     {
         ["tr"] = new()
         {
-            ["newsletterTitle"] = "Bültenimize kaydolun",
-            ["newsletterDesc"] = "Güncel sektörel yayınlar ve duyurular için bültenimize kaydolun.",
-            ["newsletterButton"] = "BÜLTENİMİZE KAYDOLUN",
+            ["newsletterTitle"] = "GÜNCEL HUKUK KONULARI İÇİN KAYDOLUN",
+            ["newsletterDesc"] = "Hukuk dünyasındaki son gelişmelerden ve uzman görüşlerimizden haberdar olun.",
+            ["newsletterButton"] = "KAYIT OLUN",
             ["getToKnowUs"] = "Bizi Tanıyın",
             ["about"] = "Hakkımızda",
             ["services"] = "Hizmetlerimiz",
@@ -116,20 +89,19 @@
             ["partners"] = "Çözüm Ortakları",
             ["career"] = "Kariyer",
             ["contact"] = "İletişim",
-            ["siteName"] = "DAF Hukuk ve Danışmanlık",
+            ["siteName"] = "DAF Hukuk & Danışmanlık",
             ["newsAndPublications"] = "Duyurular & Yayınlar",
             ["publications"] = "Yayınlar",
-            ["events"] = "Etkinlikler",
             ["followUs"] = "Takip et",
             ["cookiePreferences"] = "Çerez Tercihleri",
             ["termsAndConditions"] = "Hüküm ve Koşullar",
-            ["copyright"] = "© DAF Hukuk ve Danışmanlık 2025. Tüm hakları saklıdır."
+            ["copyright"] = "© DAF Hukuk & Danışmanlık 2025. Tüm hakları saklıdır."
         },
         ["en"] = new()
         {
-            ["newsletterTitle"] = "Subscribe to our newsletter",
-            ["newsletterDesc"] = "Subscribe to our newsletter for current sector publications and announcements.",
-            ["newsletterButton"] = "SUBSCRIBE TO OUR NEWSLETTER",
+            ["newsletterTitle"] = "SUBSCRIBE FOR LEGAL UPDATES",
+            ["newsletterDesc"] = "Stay informed about the latest legal developments and expert insights.",
+            ["newsletterButton"] = "SIGN UP",
             ["getToKnowUs"] = "Get to Know Us",
             ["about"] = "About Us",
             ["services"] = "Services",
@@ -140,7 +112,6 @@
             ["siteName"] = "DAF LAW FIRM",
             ["newsAndPublications"] = "News & Publications",
             ["publications"] = "Publications",
-            ["events"] = "Events",
             ["followUs"] = "Follow Us",
             ["cookiePreferences"] = "Cookie Preferences",
             ["termsAndConditions"] = "Terms and Conditions",
@@ -148,9 +119,9 @@
         },
         ["ar"] = new()
         {
-            ["newsletterTitle"] = "اشترك في نشرتنا الإخبارية",
-            ["newsletterDesc"] = "اشترك في نشرتنا الإخبارية للحصول على المنشورات والإعلانات القطاعية الحالية.",
-            ["newsletterButton"] = "اشترك في نشرتنا الإخبارية",
+            ["newsletterTitle"] = "سجل للحصول على التحديثات القانونية",
+            ["newsletterDesc"] = "ابق على اطلاع بآخر التطورات القانونية وآراء خبرائنا.",
+            ["newsletterButton"] = "سجل الآن",
             ["getToKnowUs"] = "تعرف علينا",
             ["about"] = "من نحن",
             ["services"] = "خدماتنا",
@@ -161,7 +132,6 @@
             ["siteName"] = "داف للمحاماة",
             ["newsAndPublications"] = "الأخبار والمنشورات",
             ["publications"] = "منشورات",
-            ["events"] = "فعاليات",
             ["followUs"] = "تابعنا",
             ["cookiePreferences"] = "تفضيلات ملفات تعريف الارتباط",
             ["termsAndConditions"] = "الشروط والأحكام",

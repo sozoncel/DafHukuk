@@ -36,7 +36,7 @@
     private List<Post> relatedPosts = new();
     private List<Category> distinctCategories = new();
     private bool ShowingAll = false;
-    private int InitialDisplayCount = 6;
+    private int InitialDisplayCount = 8;
     private int CurrentFilterCategory = 0;
 
     private string CurrentLang => LanguageService.GetCurrentLanguage();
@@ -288,9 +288,9 @@
 
         var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", String.Empty);
 
-        return plainText.Length <= 120
+        return plainText.Length <= 150
             ? plainText
-            : plainText.Substring(0, 120) + "...";
+            : plainText.Substring(0, 150) + "...";
     }
 
     private Dictionary<string, Dictionary<string, string>> Translations = new()
@@ -302,19 +302,19 @@
             ["announcements"] = "Duyurular",
             ["events"] = "Etkinlikler",
             ["publications"] = "Yayınlar",
-            ["selectService"] = "Hizmet konusu seçin",
-            ["selectAnnouncement"] = "Diğer Duyurular",
-            ["selectEvent"] = "Diğer Etkinlikler",
-            ["selectPublication"] = "Diğer Yayınlar",
-            ["noOtherServices"] = "Diğer hizmet bulunamadı.",
+            ["selectService"] = "Hizmet Seçin",
+            ["selectAnnouncement"] = "Duyuru Seçin",
+            ["selectEvent"] = "Etkinlik Seçin",
+            ["selectPublication"] = "Yayın Seçin",
+            ["noOtherServices"] = "Başka hizmet bulunamadı.",
             ["noOtherContent"] = "Bu kategoride başka içerik bulunamadı.",
             ["suggestedContent"] = "Önerilen İçerik",
             ["featuredPublications"] = "Öne Çıkan Yayınlar",
-            ["noFeatured"] = "Öne çıkan yayın bulunamadı.",
+            ["noFeatured"] = "Önerilen içerik bulunamadı.",
             ["notFound"] = "İçerik bulunamadı.",
-            ["relatedContent"] = "İlişkili İçerikler",
+            ["relatedContent"] = "İlgili İçerikler",
             ["showAll"] = "Tümünü Göster",
-            ["noRelatedContent"] = "Bu içerikle ilişkili yayın bulunamadı."
+            ["noRelatedContent"] = "İlgili içerik bulunamadı."
         },
         ["en"] = new()
         {
@@ -323,19 +323,19 @@
             ["announcements"] = "Announcements",
             ["events"] = "Events",
             ["publications"] = "Publications",
-            ["selectService"] = "Select service",
-            ["selectAnnouncement"] = "Other Announcements",
-            ["selectEvent"] = "Other Events",
-            ["selectPublication"] = "Other Publications",
+            ["selectService"] = "Select Service",
+            ["selectAnnouncement"] = "Select Announcement",
+            ["selectEvent"] = "Select Event",
+            ["selectPublication"] = "Select Publication",
             ["noOtherServices"] = "No other services found.",
             ["noOtherContent"] = "No other content found in this category.",
             ["suggestedContent"] = "Suggested Content",
             ["featuredPublications"] = "Featured Publications",
-            ["noFeatured"] = "No featured publication found.",
+            ["noFeatured"] = "No suggested content found.",
             ["notFound"] = "Content not found.",
             ["relatedContent"] = "Related Content",
             ["showAll"] = "Show All",
-            ["noRelatedContent"] = "No related content found for this post."
+            ["noRelatedContent"] = "No related content found."
         },
         ["ar"] = new()
         {
@@ -344,19 +344,19 @@
             ["announcements"] = "الإعلانات",
             ["events"] = "الفعاليات",
             ["publications"] = "المنشورات",
-            ["selectService"] = "اختر موضوع الخدمة",
-            ["selectAnnouncement"] = "إعلانات أخرى",
-            ["selectEvent"] = "فعاليات أخرى",
-            ["selectPublication"] = "منشورات أخرى",
+            ["selectService"] = "اختر الخدمة",
+            ["selectAnnouncement"] = "اختر الإعلان",
+            ["selectEvent"] = "اختر الفعالية",
+            ["selectPublication"] = "اختر المنشور",
             ["noOtherServices"] = "لا توجد خدمات أخرى.",
             ["noOtherContent"] = "لا يوجد محتوى آخر في هذه الفئة.",
             ["suggestedContent"] = "محتوى مقترح",
             ["featuredPublications"] = "المنشورات المميزة",
-            ["noFeatured"] = "لا توجد منشورات مميزة.",
+            ["noFeatured"] = "لا يوجد محتوى مقترح.",
             ["notFound"] = "المحتوى غير موجود.",
             ["relatedContent"] = "المحتوى ذو الصلة",
             ["showAll"] = "عرض الكل",
-            ["noRelatedContent"] = "لا توجد محتويات ذات صلة لهذا المنشور."
+            ["noRelatedContent"] = "لا توجد محتويات ذات صلة."
         }
     };
 
@@ -370,237 +370,210 @@
 
 <PageTitle>@(GetPostTitle(currentPost ?? new Post()))</PageTitle>
 
-<section class="hero-servicesTemplate-section">
-    <div class="hero-servicesTemplate-bg" style="background-image: url('@currentPost?.CoverImageUrl');"></div>
-    <div class="hero-servicesTemplate-overlay"></div>
+<section class="dph-hero-wrapper">
+    <div class="dph-hero-bg-image" style="background-image: url('@currentPost?.CoverImageUrl');"></div>
+    <div class="dph-hero-overlay-layer"></div>
 
-    <div class="hero-servicesTemplate-container">
-        <div class="hero-servicesTemplate-title-content">
-            <h2 class="servicesTemplate-hero-title-upper">@GetCategoryName(currentPost?.Category)</h2>
+    <div class="dph-hero-inner-container">
+        <div class="dph-hero-text-content">
+            <span class="dph-category-badge">@GetCategoryName(currentPost?.Category)</span>
+            <h1 class="dph-main-title">@GetPostTitle(currentPost ?? new Post())</h1>
 
-            <div class="hero-servicesTemplate-title-wrapper">
-                <h1 class="hero-servicesTemplate-title">@GetPostTitle(currentPost ?? new Post())</h1>
-
-                <div class="hero-servicesTemplate-breadcrumb">
-                    <a href="@LanguageService.GetLocalizedUrl("/")">@GetText("home")</a> /
-
-                    @switch (PageType)
-                    {
-                        case "Services":
-                            <a href="@LanguageService.GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
-                            break;
-                        case "Announcements":
-                            <a href="@LanguageService.GetLocalizedUrl("duyurular")">@GetText("announcements")</a>
-                            break;
-                        case "Events":
-                            <a href="@LanguageService.GetLocalizedUrl("etkinlikler")">@GetText("events")</a>
-                            break;
-                        case "Publications":
-                            <a href="@LanguageService.GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
-                            break;
-                    }
-                    /
-                    <span>@GetPostTitle(currentPost ?? new Post())</span>
-                </div>
-            </div>
+            <nav class="dph-breadcrumb-wrapper">
+                <a href="@LanguageService.GetLocalizedUrl("/")" class="dph-breadcrumb-item">@GetText("home")</a>
+                <span class="dph-breadcrumb-divider">/</span>
+                @switch (PageType)
+                {
+                    case "Services":
+                        <a href="@LanguageService.GetLocalizedUrl("hizmetlerimiz")" class="dph-breadcrumb-item">@GetText("services")</a>
+                        break;
+                    case "Announcements":
+                        <a href="@LanguageService.GetLocalizedUrl("duyurular")" class="dph-breadcrumb-item">@GetText("announcements")</a>
+                        break;
+                    case "Events":
+                        <a href="@LanguageService.GetLocalizedUrl("etkinlikler")" class="dph-breadcrumb-item">@GetText("events")</a>
+                        break;
+                    case "Publications":
+                        <a href="@LanguageService.GetLocalizedUrl("yayinlar")" class="dph-breadcrumb-item">@GetText("publications")</a>
+                        break;
+                }
+                <span class="dph-breadcrumb-divider">/</span>
+                <span class="dph-breadcrumb-active">@GetPostTitle(currentPost ?? new Post())</span>
+            </nav>
         </div>
     </div>
 </section>
 
-<section class="page-content service-page-content">
-    <div class="row">
-        <div class="col-lg-9">
-            @if (currentPost != null)
-            {
-                <p>@((MarkupString)(CurrentLang == "en" ? currentPost.Content_EN ?? currentPost.Content_TR : CurrentLang == "ar" ? currentPost.Content_AR ?? currentPost.Content_TR : currentPost.Content_TR))</p>
-            }
-            else
-            {
-                <div class="alert alert-warning">@GetText("notFound")</div>
-            }
-        </div>
+<section class="dph-content-wrapper">
+    <div class="dph-content-inner-container">
+        <div class="dph-two-column-layout">
 
-        <div class="col-lg-3">
-
-            @if (PageType == "Services")
-            {
-                <div class="dropdown modern-dropdown w-100 mb-3">
-                    <button class="btn dropdown-toggle modern-dropdown-toggle w-100" type="button" id="hizmetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        @GetText("selectService")
-                    </button>
-
-                    <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="hizmetDropdown">
-                        @foreach (var post in servicePosts)
-                        {
-                            <li>
-                                <a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">
-                                    @GetPostTitle(post)
-                                </a>
-                            </li>
-                        }
-
-                        @if (!servicePosts.Any())
-                        {
-                            <li><span class="dropdown-item text-muted">@GetText("noOtherServices")</span></li>
-                        }
-                    </ul>
-                </div>
-            }
-            else
-            {
-                <div class="dropdown modern-dropdown w-100 mb-3">
-                    <button class="btn dropdown-toggle modern-dropdown-toggle w-100" type="button" id="icerikDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        @(PageType == "Announcements" ? GetText("selectAnnouncement") : PageType == "Events" ? GetText("selectEvent") : GetText("selectPublication"))
-                    </button>
-                    <ul class="dropdown-menu modern-dropdown-menu w-100" aria-labelledby="icerikDropdown">
-                        @foreach (var post in otherPostsInSameCategory)
-                        {
-                            <li>
-                                <a class="dropdown-item modern-dropdown-item" href="@GetPostUrl(post)">
-                                    @GetPostTitle(post)
-                                </a>
-                            </li>
-                        }
-                        @if (!otherPostsInSameCategory.Any())
-                        {
-                            <li><span class="dropdown-item text-muted">@GetText("noOtherContent")</span></li>
-                        }
-                    </ul>
-                </div>
-            }
-
-            <div class="mt-4">
-                <h5 class="suggested-content-title text-center text-lg-start mb-3">@GetText("suggestedContent")</h5>
-
-                @if (featuredPost != null)
+            <article class="dph-primary-content-area">
+                @if (currentPost != null)
                 {
-                    <div class="content-card featured-publication-card p-3">
-                        <p class="created-Date">@featuredPost.PublishedDate.ToString("dd MMMM yyyy", GetCulture())</p>
-                        <img class="featured-img" src="@featuredPost.CoverImageUrl" alt="@GetPostTitle(featuredPost)">
-                        <a href="@GetFeaturedUrl()" class="content-title-link">
-                            <h3 class="textContent">@GetPostTitle(featuredPost)</h3>
-                        </a>
-
-                        @if (featuredPost.Category != null)
-                        {
-                            var categoryName = GetCategoryName(featuredPost.Category);
-                            <a href="@GetFeaturedUrl()">
-                                <button class="content-tag-button" data-category="@categoryName">@categoryName</button>
-                            </a>
-                        }
-
-                        <p class="slug-text">@GetSummary(featuredPost)</p>
+                    <div class="dph-article-body">
+                        @((MarkupString)(CurrentLang == "en" ? currentPost.Content_EN ?? currentPost.Content_TR : CurrentLang == "ar" ? currentPost.Content_AR ?? currentPost.Content_TR : currentPost.Content_TR))
                     </div>
                 }
                 else
                 {
-                    <div class="alert alert-info" role="alert">@GetText("noFeatured")</div>
-                }
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row featured align-items-start mt-5">
-
-        <div class="col-lg-9 col-md-12 mb-4">
-
-            <div class="row related-content-nav-row mb-3">
-                <div class="col-sm-12">
-                    <h3 class="related-content-heading">@GetText("relatedContent")</h3>
-
-                    <ul class="nav nav-tabs custom-tabs" id="categoryTabs">
-
-                        <li class="nav-item">
-                            <a class="@(CurrentFilterCategory == 0 ? "nav-link active" : "nav-link")"
-                               href="javascript:void(0)"
-                               @onclick="() => FilterCategory(0)"
-                               @onclick:preventDefault="true">
-                                @GetText("showAll")
-                            </a>
-                        </li>
-
-                        @foreach (var cat in distinctCategories)
-                        {
-                            <li class="nav-item">
-                                <a class="@(CurrentFilterCategory == cat.Id ? "nav-link active" : "nav-link")"
-                                   href="javascript:void(0)"
-                                   @onclick="() => FilterCategory(cat.Id)"
-                                   @onclick:preventDefault="true">
-                                    @GetCategoryName(cat)
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <div class="row content-cards-row" id="contentContainer">
-                @if (!relatedPosts.Any())
-                {
-                    <div class="col-12 text-center">
-                        <p style="font-weight:bold; margin-top:20px;">
-                            @GetText("noRelatedContent")
-                        </p>
+                    <div class="dph-alert-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span>@GetText("notFound")</span>
                     </div>
                 }
-                else
+            </article>
+
+            <aside class="dph-secondary-sidebar">
+
+                @if (PageType == "Services")
                 {
-                    @foreach (var p in GetDisplayedRelatedPosts())
-                    {
-                        var url = GetPostUrl(p);
-                        var categoryName = GetCategoryName(p.Category);
-
-                        <div class="col-lg-4 mb-4 content-card-wrapper">
-
-                            <div class="content-card">
-
-                                <p class="created-Date">@p.PublishedDate.ToString("dd MMMM", GetCulture())</p>
-
-                                <a href="@url" class="content-title-link">
-                                    <h3 class="textContent">@GetPostTitle(p)</h3>
-                                </a>
-
-                                @if (p.Category != null)
-                                {
-                                    <a href="@url">
-                                        <button class="content-tag-button" data-category="@categoryName">@categoryName</button>
+                    <div class="dph-dropdown-container">
+                        <button class="dph-dropdown-trigger" type="button" data-bs-toggle="dropdown">
+                            <span>@GetText("selectService")</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dph-dropdown-list">
+                            @foreach (var post in servicePosts)
+                            {
+                                <li>
+                                    <a class="dropdown-item dph-dropdown-option" href="@GetPostUrl(post)">
+                                        @GetPostTitle(post)
                                     </a>
-                                }
-
-                                <p class="slug-text">@GetSummary(p)</p>
-
-                            </div>
-                        </div>
-                    }
-
-                    @if (!GetDisplayedRelatedPosts().Any() && CurrentFilterCategory != 0)
-                    {
-                        <div class="col-12 text-center">
-                            <p class="alert alert-info" style="font-weight:bold; margin-top:20px;">
-                                @GetText("noRelatedContent")
-                            </p>
-                        </div>
-                    }
+                                </li>
+                            }
+                            @if (!servicePosts.Any())
+                            {
+                                <li><span class="dropdown-item dph-dropdown-empty">@GetText("noOtherServices")</span></li>
+                            }
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="dph-dropdown-container">
+                        <button class="dph-dropdown-trigger" type="button" data-bs-toggle="dropdown">
+                            <span>@(PageType == "Announcements" ? GetText("selectAnnouncement") : PageType == "Events" ? GetText("selectEvent") : GetText("selectPublication"))</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dph-dropdown-list">
+                            @foreach (var post in otherPostsInSameCategory)
+                            {
+                                <li>
+                                    <a class="dropdown-item dph-dropdown-option" href="@GetPostUrl(post)">
+                                        @GetPostTitle(post)
+                                    </a>
+                                </li>
+                            }
+                            @if (!otherPostsInSameCategory.Any())
+                            {
+                                <li><span class="dropdown-item dph-dropdown-empty">@GetText("noOtherContent")</span></li>
+                            }
+                        </ul>
+                    </div>
                 }
 
-            </div>
+                <div class="dph-suggested-section">
+                    <h3 class="dph-sidebar-heading">@GetText("suggestedContent")</h3>
 
-            @if (GetDisplayedRelatedPosts().Count() < relatedPosts.Count() && !ShowingAll && relatedPosts.Any() && CurrentFilterCategory == 0)
-            {
-                <div class="row mt-4 mb-5">
-                    <div class="col-lg-12 text-center">
-                        <button id="showAllButton"
-                                class="show-all-button"
-                                @onclick="ShowAll">
-                            @GetText("showAll")
+                    @if (featuredPost != null)
+                    {
+                        <a href="@GetFeaturedUrl()" class="dph-featured-item">
+                            <div class="dph-featured-img-container">
+                                <img src="@featuredPost.CoverImageUrl" alt="@GetPostTitle(featuredPost)" class="dph-featured-thumbnail">
+                                <div class="dph-featured-date-badge">
+                                    <span class="dph-date-number">@featuredPost.PublishedDate.Day</span>
+                                    <span class="dph-date-text">@featuredPost.PublishedDate.ToString("MMM", GetCulture())</span>
+                                </div>
+                            </div>
+                            <div class="dph-featured-details">
+                                @if (featuredPost.Category != null)
+                                {
+                                    <span class="dph-featured-label">@GetCategoryName(featuredPost.Category)</span>
+                                }
+                                <h4 class="dph-featured-heading">@GetPostTitle(featuredPost)</h4>
+                                <p class="dph-featured-summary">@GetSummary(featuredPost)</p>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="dph-alert-box">
+                            <i class="fas fa-info-circle"></i>
+                            <span>@GetText("noFeatured")</span>
+                        </div>
+                    }
+                </div>
+            </aside>
+        </div>
+
+        <section class="partner-related-content">
+            <div class="related-content-wrapper">
+                <div class="related-section-header">
+                    <span class="related-section-badge">@GetText("relatedContent")</span>
+                    <h2 class="related-section-title">@GetText("relatedContent")</h2>
+                </div>
+
+                <div class="related-tabs-container">
+                    <button class="@(CurrentFilterCategory == 0 ? "related-tab active" : "related-tab")"
+                            @onclick="() => FilterCategory(0)">
+                        <span>@GetText("showAll")</span>
+                    </button>
+
+                    @foreach (var cat in distinctCategories)
+                    {
+                        <button class="@(CurrentFilterCategory == cat.Id ? "related-tab active" : "related-tab")"
+                                @onclick="() => FilterCategory(cat.Id)">
+                            <span>@GetCategoryName(cat)</span>
+                        </button>
+                    }
+                </div>
+
+                <div class="related-posts-grid">
+                    @if (!GetDisplayedRelatedPosts().Any())
+                    {
+                        <div class="empty-posts-state">
+                            <i class="bi bi-inbox"></i>
+                            <p>@GetText("noRelatedContent")</p>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var p in GetDisplayedRelatedPosts())
+                        {
+                            var url = GetPostUrl(p);
+                            var categoryName = GetCategoryName(p.Category);
+
+                            <a href="@url" class="related-post-card">
+                                <div class="post-card-image-wrapper">
+                                    <img src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.jpg" : p.CoverImageUrl)"
+                                         alt="@GetPostTitle(p)"
+                                         class="post-card-image" />
+                                    <div class="post-card-overlay"></div>
+                                </div>
+                                <div class="post-card-content">
+                                    <span class="post-card-date">
+                                        <i class="bi bi-calendar3"></i>
+                                        @p.PublishedDate.ToString("dd MMM yyyy", GetCulture())
+                                    </span>
+                                    <h3 class="post-card-title">@GetPostTitle(p)</h3>
+                                    <span class="post-category-tag" data-category="@categoryName">@categoryName</span>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+
+                @if (GetDisplayedRelatedPosts().Count() < (CurrentFilterCategory == 0 ? relatedPosts : relatedPosts.Where(p => p.CategoryId == CurrentFilterCategory).ToList()).Count() && !ShowingAll && relatedPosts.Any())
+                {
+                    <div class="load-more-wrapper">
+                        <button class="load-more-button" @onclick="ShowAll">
+                            <span>@GetText("showAll")</span>
+                            <i class="bi bi-chevron-down"></i>
                         </button>
                     </div>
-                </div>
-            }
-
-        </div>
-        <div class="col-lg-3 col-md-12">
-        </div>
+                }
+            </div>
+        </section>
     </div>
 </section>

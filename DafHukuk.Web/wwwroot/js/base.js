@@ -12,54 +12,67 @@
         }
     });
 
-    /* KATEGORİ RENKLENDİRME (Case-Insensitive + MutationObserver) */
+    /* KATEGORİ RENKLENDİRME (Optimize Edilmiş) */
+    let isColorizing = false;
+
     function colorizeCategoryButtons() {
-        document.querySelectorAll(".content-tag-button").forEach(btn => {
-            let text = btn.innerText.trim().toLowerCase();
+        if (isColorizing) return;
+        isColorizing = true;
 
-            let bgColor = "#dfb899";
-            let txtColor = "white";
+        requestAnimationFrame(() => {
+            document.querySelectorAll(".content-tag-button").forEach(btn => {
+                let text = btn.innerText.trim().toLowerCase();
 
-            switch (text) {
-                case "hizmetlerimiz":
-                case "services":
-                case "our services":
-                case "خدماتنا":
-                case "خدمات":
-                    bgColor = "#366C80";
-                    break;
-                case "duyurular":
-                case "announcements":
-                case "الإعلانات":
-                case "إعلانات":
-                    bgColor = "#5c7341";
-                    break;
-                case "etkinlikler":
-                case "events":
-                case "الفعاليات":
-                case "فعاليات":
-                    bgColor = "#78514A";
-                    break;
-                case "yayınlar":
-                case "yayinlar":
-                case "publications":
-                case "المنشورات":
-                case "منشورات":
-                    bgColor = "#dfb899";
-                    break;
-                default:
-                    bgColor = "#3b82f6";
-                    break;
-            }
+                let bgColor = "#dfb899";
+                let txtColor = "white";
 
-            btn.style.background = bgColor;
-            btn.style.color = txtColor;
+                switch (text) {
+                    case "hizmetlerimiz":
+                    case "services":
+                    case "our services":
+                    case "خدماتنا":
+                    case "خدمات":
+                        bgColor = "#366C80";
+                        break;
+                    case "duyurular":
+                    case "announcements":
+                    case "الإعلانات":
+                    case "إعلانات":
+                        bgColor = "#5c7341";
+                        break;
+                    case "etkinlikler":
+                    case "events":
+                    case "الفعاليات":
+                    case "فعاليات":
+                        bgColor = "#78514A";
+                        break;
+                    case "yayınlar":
+                    case "yayinlar":
+                    case "publications":
+                    case "المنشورات":
+                    case "منشورات":
+                        bgColor = "#dfb899";
+                        break;
+                    default:
+                        bgColor = "#3b82f6";
+                        break;
+                }
+
+                btn.style.background = bgColor;
+                btn.style.color = txtColor;
+            });
+
+            isColorizing = false;
         });
     }
 
-    /* MutationObserver - DOM değişikliklerini izle */
+    /* MutationObserver - THROTTLED VERSION */
+    let observerTimeout;
     const observer = new MutationObserver(() => {
-        colorizeCategoryButtons();
+        clearTimeout(observerTimeout);
+        observerTimeout = setTimeout(() => {
+            colorizeCategoryButtons();
+        }, 100);
     });
 
     observer.observe(document.body, {
@@ -67,11 +80,8 @@
         subtree: true
     });
 
-    /* İlk yükleme + gecikme ile tekrar kontrol */
+    /* İlk yükleme - sadece bir kez */
     colorizeCategoryButtons();
-    setTimeout(colorizeCategoryButtons, 200);
-    setTimeout(colorizeCategoryButtons, 500);
-    setTimeout(colorizeCategoryButtons, 1000);
 
 
     /* SAYICI ANİMASYONU (Counter Animation) */
@@ -277,7 +287,6 @@
 
         activeTab?.classList.add("active");
 
-        /* Kategori değişikliğinde renklendirmeyi tetikle */
         setTimeout(colorizeCategoryButtons, 100);
     };
 
@@ -298,7 +307,6 @@
 
         document.getElementById("showAllButton").style.display = "none";
 
-        /* Tümünü göster'de renklendirmeyi tetikle */
         setTimeout(colorizeCategoryButtons, 100);
     };
 
@@ -495,13 +503,13 @@ window.blazorImageUpload = {
         delete this.dropZoneHandlers[dropZoneId];
     }
 };
+
 function colorizeCategoryNavLinks() {
     const navLinks = document.querySelectorAll('#categoryTabs .nav-link');
 
     navLinks.forEach(link => {
         const text = link.innerText.trim().toLowerCase();
 
-        // reset
         link.style.color = '';
         link.style.borderBottomColor = '';
 
@@ -541,3 +549,24 @@ function colorizeCategoryNavLinks() {
         }
     });
 }
+
+window.adminLogout = async function () {
+    try {
+        const response = await fetch('/Auth/Logout', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Cache-Control': 'no-cache'
+            }
+        });
+
+        if (response.ok || response.redirected) {
+            window.location.replace('/Auth/Login');
+        } else {
+            window.location.replace('/Auth/Logout');
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        window.location.replace('/Auth/Logout');
+    }
+};
