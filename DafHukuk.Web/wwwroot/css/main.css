@@ -92,12 +92,12 @@ a {
 }
 
 .logo-main {
-    font-size: 34px; /* Mevcut büyük DAF boyutunuz */
+    font-size: 70px; /* Mevcut büyük DAF boyutunuz */
     font-weight: 700;
 }
 
 .logo-sub {
-    font-size: 14px; /* Image 2'deki gibi küçük ve zarif alt yazı */
+    font-size: 20px; /* Image 2'deki gibi küçük ve zarif alt yazı */
     font-weight: 400;
     margin-top: 4px; /* DAF'ın hemen altındaki boşluk */
     letter-spacing: 0.5px;
@@ -105,11 +105,11 @@ a {
 
 /* Mevcut scroll ve hover efektleriniz olduğu gibi kalır */
 .header.scrolled .logo {
-    color: #1F3363;
+    color: #1D331F;
 }
 
     .logo:hover, .header.scrolled .logo:hover {
-        color: #dfb887;
+        color: #B2D9C4;
     }
 
 
@@ -514,126 +514,91 @@ a {
         opacity: 1;
         visibility: visible;
     }
-
-/* ALT BİLGİ STİLLERİ */
+/* FOOTER GENEL */
 .footer {
     background-color: #f0f0f0;
-    padding: 4rem 0 0;
+    padding: 1rem 0 0.5rem;
     color: #0e0f11;
 }
 
 .footer-container {
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 0.75rem;
 }
 
-.footer-logo {
-    font-family: "Playfair Display", Georgia, serif;
-    font-weight: 700;
-    font-size: 40px;
-    color: #1F3363;
-}
-
+/* ÜST ALAN */
 .footer-top {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    display: flex;
     gap: 3rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid #d0d0d0;
+    flex-wrap: wrap;
 }
 
-.footer-title {
-    font-family: "Playfair Display", Georgia, serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #0e0f11;
+/* KOLON */
+.footer-column {
+    flex: 1;
+    min-width: 240px;
 }
 
-.footer-description {
-    font-size: 0.95rem;
-    color: #68676a;
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-}
-
-.footer-cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.875rem 1.75rem;
-    background-color: #165aee;
-    color: #ffffff;
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-    .footer-cta-button:hover {
-        background-color: #0d47c9;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(22, 90, 238, 0.3);
-    }
-
+/* BAŞLIK */
 .footer-column-title {
-    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: #0e0f11;
-    margin-left: 1rem;
+    margin-bottom: 0.75rem;
 }
 
+/* LİSTE – SÜREKLİ AÇIK */
 .footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    list-style-type: none;
+    display: block;
+    margin-bottom: 1rem;
 }
 
-    .footer-links a {
-        font-size: 0.9rem;
-        color: #68676a;
-        transition: all 0.3s ease;
-        text-decoration: none;
+/* 🔥 BİZİ TANIYIN – YAN YANA */
+.footer-links-horizontal {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 48px;
+    row-gap: 12px;
+}
+
+/* LİNKLER */
+.footer-links li {
+    list-style: none;
+}
+
+.footer-links a {
+    font-size: 1.1rem;
+    color: #68676a;
+    text-decoration: none;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+    .footer-links a:hover {
+        color: #1d331f;
+        padding-left: 0.4rem;
     }
 
-        .footer-links a:hover {
-            color: #165aee;
-            padding-left: 0.5rem;
-        }
-
-.footer-social {
-    display: flex;
-    gap: 1rem;
+/* ALT ALAN */
+.footer-bottom {
+    border-top: 1px solid #ddd;
+    padding-top: 0.75rem;
+    margin-top: 1rem;
 }
 
-.social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background-color: #ffffff;
-    border-radius: 4px;
-    color: #0e0f11;
-    transition: all 0.3s ease;
+.footer-legal-wrapper {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
 }
 
-    .social-link:hover {
-        background-color: #165aee;
-        color: #ffffff;
-        transform: translateY(-2px);
+/* MOBİL */
+@media (max-width: 768px) {
+    .footer-top {
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
-
-.footer-info {
-    display: flex;
-    text-align:center;
-    gap: 24px; 
-    margin: 0; 
+    .footer-links-horizontal {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* KATEGORİ RENKLERİ */
@@ -836,15 +801,20 @@ a {
         max-height: 0;
         overflow: hidden;
         opacity: 0;
-        transition: max-height 0.4s ease, opacity 0.4s ease, margin 0.4s ease;
         margin-bottom: 0;
+        transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-bottom 0.3s ease;
+        display: block;
     }
 
         .footer-links.open {
-            max-height: 500px;
+            max-height: 600px;
             opacity: 1;
             margin-bottom: 1.5rem;
         }
+
+
+  
+
 
     .footer-social {
         padding-top: 10px;
@@ -899,11 +869,11 @@ a {
     }
 
     .footer {
-        padding: 3rem 0 0;
+        padding: 0.75rem 0 0.5rem;
     }
 
     .footer-container {
-        padding: 0 1.5rem;
+        padding: 0 0.5rem;
     }
 
     .footer-top {
@@ -2085,7 +2055,7 @@ img {
     font-size: 0.8125rem;
     line-height: 1.7;
     color: #666;
-    text-align: justify;
+    text-align: center;
     margin: 0;
 }
 
@@ -2202,7 +2172,7 @@ img {
     }
 
         .dropdown-menu a:hover {
-            background-color: #f8f9fa;
+            background-color: #B2D9C4;
             color: #1a237e !important;
             padding-left: 25px; /* Hafif kayma efekti */
         }

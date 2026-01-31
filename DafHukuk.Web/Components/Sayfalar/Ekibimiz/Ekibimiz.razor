@@ -19,7 +19,7 @@
     <div class="hero-gradient-overlay"></div>
 
     <div class="hero-content-wrapper">
-        <div class="hero-content-inner">
+      @*   <div class="hero-content-inner">
             <span class="hero-badge">@GetText("pageTitleUpper")</span>
             <h1 class="hero-main-title">
                 <span class="title-line">@GetText("mainTitle")</span>
@@ -29,19 +29,14 @@
                 <span class="breadcrumb-separator">/</span>
                 <span class="breadcrumb-current">@GetText("breadcrumbTeam")</span>
             </div>
-        </div>
+        </div> *@
     </div>
 </section>
 
 <section class="modern-team-section">
     <div class="team-container">
 
-        <div class="team-intro-wrapper">
-            <div class="intro-content">
-                <h2 class="section-subtitle">@GetText("teamInfoTitle")</h2>
-                <p class="team-description">@GetText("teamInfoText")</p>
-            </div>
-        </div>
+       
 
         <div class="team-grid-modern">
             @if (Lawyers == null)
@@ -85,6 +80,13 @@
                 }
             }
         </div>
+        <br />
+        <div class="team-intro-wrapper">
+            <div class="intro-content">
+                <h2 class="section-subtitle">@GetText("teamInfoTitle")</h2>
+                <p class="team-description">@GetText("teamInfoText")</p>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -99,7 +101,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Lawyers = await LawyerService.GetAll();
+         Lawyers = await LawyerService.GetAll();
+        Lawyers = Lawyers.OrderBy(l => l.Id).ToList();
     }
 
     private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)

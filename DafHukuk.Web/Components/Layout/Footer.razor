@@ -6,20 +6,11 @@
 <footer class="footer">
     <div class="footer-container">
         <div class="footer-top">
-            <div class="footer-column footer-brand">
-                <h2 class="footer-logo">@GetText("siteName")</h2>
-                <h3 class="footer-title">@GetText("newsletterTitle")</h3>
-                <p class="footer-description">@GetText("newsletterDesc")</p>
-                <a href="#" class="footer-cta-button">
-                    @GetText("newsletterButton")
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </a>
-            </div>
+   
             <div class="footer-column">
                 <h4 class="footer-column-title" data-target="bizi-tanıyın">@GetText("getToKnowUs")<span class="mobile-toggle-icon"></span></h4>
-                <ul class="footer-links" id="bizi-tanıyın">
+               @*  <ul class="footer-links" id="bizi-tanıyın"> *@
+                <ul class="footer-links footer-links-horizontal" id="bizi-tanıyın">
                     <li><a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a></li>
                     <li><a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a></li>
                     <li><a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a></li>
@@ -35,6 +26,19 @@
                     <li><a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a></li>
                 </ul>
             </div>
+
+            @*      <div class="footer-column footer-brand">
+                <h2 class="footer-logo">@GetText("siteName")</h2>
+                <h3 class="footer-title">@GetText("newsletterTitle")</h3>
+                <p class="footer-description">@GetText("newsletterDesc")</p>
+                <a href="#" class="footer-cta-button">
+                    @GetText("newsletterButton")
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div> *@
+
         </div>
 
         <div class="footer-bottom">

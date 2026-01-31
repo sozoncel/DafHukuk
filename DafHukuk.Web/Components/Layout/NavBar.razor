@@ -10,7 +10,12 @@
         <a href="@GetLocalizedUrl("")" class="logo-link">
             <div class="logo">
                 <div class="logo-main">DAF</div>
-                <div class="logo-sub">Hukuk & Danışmanlık</div>
+                @* <div class="logo-sub">Hukuk & Danışmanlık</div> *@
+            </div>
+        </a>
+        <a href="@GetLocalizedUrl("")" class="logo-link">
+            <div class="logo">
+                <div class="logo-sub"> &nbsp;Hukuk  <br>&nbsp; &  <br>  &nbsp;Danışmanlık</div>
             </div>
         </a>
 
@@ -37,27 +42,120 @@
                         <div class="dropdown-submenu">
                             <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")" class="submenu-toggle">@GetText("genelHizmetler") <i class="fas fa-chevron-right"></i></a>
                             <div class="submenu-content">
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/ceza-hukuku")">@GetText("cezaHukuku")</a>
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/idare-vergi")">@GetText("idareVergi")</a>
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/kabahatler")">@GetText("kabahatler")</a>
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/anayasa-aihm")">@GetText("anayasaAihm")</a>
-                                @* Dökümandaki diğer 12 maddeyi buraya ekleyebilirsin *@
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/ceza-hukuku")">
+                                    @GetText("cezaHukuku")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/idare-ve-vergi-hukuku")">
+                                    @GetText("idareVergiHukuku")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/kabahatler-hukuku")">
+                                    @GetText("kabahatlerHukuku")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/anayasa-aihm-bireysel-basvuru")">
+                                    @GetText("anayasaAihm")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/ticaret-ve-sirketler-hukuku")">
+                                    @GetText("ticaretSirketler")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/tazminat-hukuku")">
+                                    @GetText("tazminatHukuku")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/sozlesmeler-hukuku")">
+                                    @GetText("sozlesmelerHukuku")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/is-hukuku")">
+                                    @GetText("isHukuku")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/aile-ve-miras-hukuku")">
+                                    @GetText("aileMiras")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/gayrimenkul-hukuku")">
+                                    @GetText("gayrimenkul")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/saglik-ve-tip-hukuku")">
+                                    @GetText("saglikTip")
+                                </a>
                             </div>
+
                         </div>
 
                         @* Özel Danışmanlık ve Alt Menüsü *@
                         <div class="dropdown-submenu">
-                            <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="submenu-toggle">@GetText("ozelDanismanlik") <i class="fas fa-chevron-right"></i></a>
+                            <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="submenu-toggle">
+                                @GetText("ozelDanismanlik") <i class="fas fa-chevron-right"></i>
+                            </a>
+
                             <div class="submenu-content">
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/osb-kobi")">@GetText("osbKobi")</a>
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/savunma-sanayi")">@GetText("savunmaSanayi")</a>
-                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/yesil-finans")">@GetText("yesilFinans")</a>
-                                @* Dökümandaki diğer 12 maddeyi buraya ekleyebilirsin *@
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/osb-kobi")">
+                                    @GetText("osbKobi")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/savunma-sanayi")">
+                                    @GetText("savunmaSanayi")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/yesil-finans")">
+                                    @GetText("yesilFinans")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/ozel-saglik-kuruluslari")">
+                                    @GetText("ozelSaglikDanismanlik")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/yerel-yonetimler")">
+                                    @GetText("yerelYonetimler")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/hizmet-ici-egitim")">
+                                    @GetText("kurumIciEgitim")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/stratejik-analiz-yonetim")">
+                                    @GetText("stratejikAnaliz")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/stk")">
+                                    @GetText("stkDanismanlik")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/bireysel")">
+                                    @GetText("bireyselDanismanlik")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/kurumsal")">
+                                    @GetText("kurumsalDanismanlik")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/moduler")">
+                                    @GetText("modulerDanismanlik")
+                                </a>
+
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/sektorel")">
+                                    @GetText("sektorelDanismanlik")
+                                </a>
                             </div>
                         </div>
 
                         <a href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")">@GetText("uzmanGorusu")</a>
-                        <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")">@GetText("arabuluculuk")</a>
+                        @* <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")">@GetText("arabuluculuk")</a> *@
+                        <div class="dropdown-submenu">
+                            <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")" class="submenu-toggle">@GetText("arabuluculuk") <i class="fas fa-chevron-right"></i></a>
+                            <div class="submenu-content">
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk/ihtiyariArabuluculuk")">@GetText("ihtiyariArabuluculuk")</a>
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk/zorunluArabuluculuk")">@GetText("zorunluArabuluculuk")</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -116,39 +214,89 @@
     {
         ["tr"] = new()
         {
-            ["home"] = "Ana Sayfa",
-            ["about"] = "Hakkımızda",
-            ["services"] = "Hizmetlerimiz",
-            ["genelHizmetler"] = "Genel Hizmetler",
-            ["ozelDanismanlik"] = "Özel Danışmanlık Hizmet Paketleri",
-            ["uzmanGorusu"] = "Uzman Görüşü (Adli Bilimler)",
-            ["arabuluculuk"] = "Arabuluculuk",
-            ["team"] = "Ekibimiz",
-            ["partners"] = "Çözüm Ortakları",
-            ["publications"] = "Yayınlar",
-            ["career"] = "Kariyer",
-            ["contact"] = "İletişim",
-            ["siteName"] = "DAF Hukuk & Danışmanlık",
-            ["search"] = "Ara",
-            ["searchPlaceholder"] = "İçerik Arayın..."
+            ["home"] = "ANA SAYFA",
+            ["about"] = "HAKKIMIZDA",
+            ["services"] = "HİZMETLERİMİZ",
+            ["genelHizmetler"] = "GENEL HİZMETLER",
+            ["cezaHukuku"] = "CEZA HUKUKU",
+            ["idareVergiHukuku"] = "İDARE ve VERGİ HUKUKU",
+            ["kabahatlerHukuku"] = "KABAHATLER HUKUKU (İDARİ PARA CEZALARI)",
+            ["anayasaAihm"] = "ANAYASA ve AİHM BİREYSEL BAŞVURU",
+            ["ticaretSirketler"] = "TİCARET ve ŞİRKETLER HUKUKU",
+            ["tazminatHukuku"] = "TAZMİNAT HUKUKU",
+            ["sozlesmelerHukuku"] = "SÖZLEŞMELER HUKUKU",
+            ["isHukuku"] = "İŞ ve SOSYAL GÜVENLİK HUKUKU",
+            ["aileMiras"] = "AİLE ve MİRAS HUKUKU",
+            ["gayrimenkul"] = "GAYRİMENKUL (TAŞINMAZ) HUKUKU",
+            ["saglikTip"] = "SAĞLIK ve TIP HUKUKU (MEDİKOLEGAL)",
+            ["ozelDanismanlik"] = "ÖZEL DANIŞMANLIK HİZMET PAKETLERİ",
+            ["osbKobi"] = "OSB ve KOBİ HUKUK ve DANIŞMANLIK HİZMETLERİ",
+            ["savunmaSanayi"] = "SAVUNMA SANAYİ DANIŞMANLIĞI",
+            ["yesilFinans"] = "YEŞİL FİNANS DANIŞMANLIĞI",
+            ["ozelSaglikDanismanlik"] = "ÖZEL SAĞLIK KURULUŞLARI DANIŞMANLIĞI",
+            ["yerelYonetimler"] = "YEREL YÖNETİMLER DANIŞMANLIK HİZMETLERİ",
+            ["kurumIciEgitim"] = "TİCARİ İŞLETMELERE HİZMET İÇİ EĞİTİM DANIŞMANLIĞI",
+            ["stratejikAnaliz"] = "İLERİ DÜZEY STRATEJİK ANALİZ ve YÖNETİM DANIŞMANLIK PAKETLERİ",
+            ["stkDanismanlik"] = "SİVİL TOPLUM KURULUŞLARI DANIŞMANLIK HİZMET PAKETLERİ",
+            ["bireyselDanismanlik"] = "BİREYSEL DANIŞMANLIK HİZMET PAKETLERİ",
+            ["kurumsalDanismanlik"] = "KURUMSAL DANIŞMANLIK HİZMET PAKETLERİ",
+            ["modulerDanismanlik"] = "MODÜLER DANIŞMANLIK HİZMET PAKETLERİ",
+            ["sektorelDanismanlik"] = "SEKTÖREL DANIŞMANLIK HİZMET PAKETLERİ",
+            ["uzmanGorusu"] = "UZMAN GÖRÜŞÜ (ADLİ BİLİMLER)",
+            ["arabuluculuk"] = "ARABULUCULUK",
+            ["ihtiyariArabuluculuk"] = "İHTİYARİ ARABULUCULUK",
+            ["zorunluArabuluculuk"] = "ZORUNLU ARABULUCULUK",
+            ["team"] = "EKİBİMİZ",
+            ["partners"] = "ÇÖZÜM ORTAKLARI",
+            ["publications"] = "YAYINLAR",
+            ["career"] = "KARİYER",
+            ["contact"] = "İLETİŞİM",
+            ["siteName"] = "DAF HUKUK & DANIŞMANLIK",
+            ["search"] = "ARA",
+            ["searchPlaceholder"] = "İÇERİK ARAYIN..."
         },
         ["en"] = new()
         {
-            ["home"] = "Home",
-            ["about"] = "About Us",
-            ["services"] = "Services",
-            ["genelHizmetler"] = "General Services",
-            ["ozelDanismanlik"] = "Special Consultancy Packages",
-            ["uzmanGorusu"] = "Expert Opinion",
-            ["arabuluculuk"] = "Mediation",
-            ["team"] = "Our Team",
-            ["partners"] = "Partners",
-            ["publications"] = "Publications",
-            ["career"] = "Careers",
-            ["contact"] = "Contact",
-            ["siteName"] = "DAF Law & Consultancy",
-            ["search"] = "Search",
-            ["searchPlaceholder"] = "Search Content..."
+            ["home"] = "HOME",
+            ["about"] = "ABOUT US",
+            ["services"] = "SERVICES",
+            ["genelHizmetler"] = "GENERAL SERVICES",
+            ["cezaHukuku"] = "CRIMINAL LAW",
+            ["idareVergiHukuku"] = "ADMINISTRATIVE AND TAX LAW",
+            ["kabahatlerHukuku"] = "MISDEMEANORS LAW (ADMINISTRATIVE FINES)",
+            ["anayasaAihm"] = "CONSTITUTIONAL LAW AND INDIVIDUAL APPLICATIONS TO THE ECHR",
+            ["ticaretSirketler"] = "COMMERCIAL AND COMPANY LAW",
+            ["tazminatHukuku"] = "COMPENSATION LAW",
+            ["sozlesmelerHukuku"] = "CONTRACT LAW",
+            ["isHukuku"] = "LABOR LAW",
+            ["aileMiras"] = "FAMILY AND INHERITANCE LAW",
+            ["gayrimenkul"] = "REAL ESTATE LAW",
+            ["saglikTip"] = "HEALTH AND MEDICAL LAW (MEDICOLEGAL)",
+            ["ozelDanismanlik"] = "SPECIAL CONSULTANCY PACKAGES",
+            ["osbKobi"] = "LEGAL AND CONSULTANCY SERVICES FOR INDUSTRIAL ZONES AND SMES",
+            ["savunmaSanayi"] = "DEFENSE INDUSTRY CONSULTANCY",
+            ["yesilFinans"] = "GREEN FINANCE CONSULTANCY",
+            ["ozelSaglikDanismanlik"] = "PRIVATE HEALTHCARE CONSULTANCY",
+            ["yerelYonetimler"] = "LOCAL GOVERNMENTS CONSULTANCY SERVICES",
+            ["kurumIciEgitim"] = "IN-HOUSE TRAINING CONSULTANCY FOR COMMERCIAL ENTERPRISES",
+            ["stratejikAnaliz"] = "ADVANCED STRATEGIC ANALYSIS AND MANAGEMENT CONSULTANCY PACKAGES",
+            ["stkDanismanlik"] = "NGO CONSULTANCY SERVICE PACKAGES",
+            ["bireyselDanismanlik"] = "INDIVIDUAL CONSULTANCY SERVICE PACKAGES",
+            ["kurumsalDanismanlik"] = "CORPORATE CONSULTANCY SERVICE PACKAGES",
+            ["modulerDanismanlik"] = "MODULAR CONSULTANCY SERVICE PACKAGES",
+            ["sektorelDanismanlik"] = "SECTORAL CONSULTANCY SERVICE PACKAGES",
+            ["uzmanGorusu"] = "EXPERT OPINION",
+            ["arabuluculuk"] = "MEDIATION",
+            ["ihtiyariArabuluculuk"] = "VOLUNTARY MEDIATION",
+            ["zorunluArabuluculuk"] = "MANDATORY MEDIATION",
+            ["team"] = "OUR TEAM",
+            ["partners"] = "PARTNERS",
+            ["publications"] = "PUBLICATIONS",
+            ["career"] = "CAREERS",
+            ["contact"] = "CONTACT",
+            ["siteName"] = "DAF LAW & CONSULTANCY",
+            ["search"] = "SEARCH",
+            ["searchPlaceholder"] = "SEARCH CONTENT..."
         },
         ["ar"] = new()
         {
@@ -156,9 +304,34 @@
             ["about"] = "من نحن",
             ["services"] = "خدماتنا",
             ["genelHizmetler"] = "الخدمات العامة",
+            ["cezaHukuku"] = "القانون الجنائي",
+            ["idareVergiHukuku"] = "القانون الإداري والضريبي",
+            ["kabahatlerHukuku"] = "قانون المخالفات (الغرامات الإدارية)",
+            ["anayasaAihm"] = "القانون الدستوري والطلبات الفردية أمام المحكمة الأوروبية لحقوق الإنسان",
+            ["ticaretSirketler"] = "قانون التجارة والشركات",
+            ["tazminatHukuku"] = "قانون التعويضات",
+            ["sozlesmelerHukuku"] = "قانون العقود",
+            ["isHukuku"] = "قانون العمل",
+            ["aileMiras"] = "قانون الأسرة والميراث",
+            ["gayrimenkul"] = "قانون العقارات",
+            ["saglikTip"] = "القانون الصحي والطبي (الطب الشرعي)",
             ["ozelDanismanlik"] = "حزم الاستشارات الخاصة",
+            ["osbKobi"] = "الخدمات القانونية والاستشارية للمناطق الصناعية والشركات الصغيرة والمتوسطة",
+            ["savunmaSanayi"] = "الاستشارات في صناعة الدفاع",
+            ["yesilFinans"] = "استشارات التمويل الأخضر",
+            ["ozelSaglikDanismanlik"] = "استشارات المؤسسات الصحية الخاصة",
+            ["yerelYonetimler"] = "خدمات الاستشارات للهيئات المحلية",
+            ["kurumIciEgitim"] = "الاستشارات التدريبية الداخلية للمؤسسات التجارية",
+            ["stratejikAnaliz"] = "حزم الاستشارات في التحليل الاستراتيجي المتقدم والإدارة",
+            ["stkDanismanlik"] = "حزم استشارات منظمات المجتمع المدني",
+            ["bireyselDanismanlik"] = "حزم الاستشارات الفردية",
+            ["kurumsalDanismanlik"] = "حزم الاستشارات المؤسسية",
+            ["modulerDanismanlik"] = "حزم الاستشارات المعيارية",
+            ["sektorelDanismanlik"] = "حزم الاستشارات القطاعية",
             ["uzmanGorusu"] = "رأي الخبراء",
             ["arabuluculuk"] = "الوساطة",
+            ["ihtiyariArabuluculuk"] = "الوساطة الاختيارية",
+            ["zorunluArabuluculuk"] = "الوساطة الإلزامية",
             ["team"] = "فريقنا",
             ["partners"] = "الشركاء",
             ["publications"] = "منشورات",
@@ -169,6 +342,7 @@
             ["searchPlaceholder"] = "ابحث عن المحتوى..."
         }
     };
+
 
     private string GetText(string key) => (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key)) ? Translations[CurrentLang][key] : key;
     private string GetLocalizedUrl(string path) => LanguageService.GetLocalizedUrl(path);

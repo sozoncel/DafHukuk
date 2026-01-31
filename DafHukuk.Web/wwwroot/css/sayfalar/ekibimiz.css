@@ -1,6 +1,6 @@
 ﻿:root {
     --primary-navy: #0B1A3D;
-    --secondary-navy: #1F3363;
+    --secondary-navy: #1d331f;
     --accent-gold: #C9A961;
     --accent-gold-light: #DFB887;
     --text-primary: #1A1A1A;
@@ -24,13 +24,13 @@
 
 .modern-team-hero {
     position: relative;
-    min-height: 40vh;
+    min-height: 0.5vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary-navy) 0%, #162447 50%, var(--secondary-navy) 100%);
+    background: #1d331f;
     overflow: hidden;
-    padding: 120px 0 80px;
+    padding: 80px 0 60px;
 }
 
 .hero-particles {
@@ -53,7 +53,7 @@
 .hero-gradient-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(11, 26, 61, 0.4) 50%, rgba(11, 26, 61, 0.8) 100%);
+    background: #1d331f;
 }
 
 .hero-content-wrapper {
@@ -370,7 +370,7 @@
 
 .lawyer-detail-hero-modern {
     position: relative;
-    background: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+    background: linear-gradient(135deg, #b2d9c4 0%, #1A202C 100%);
     overflow: hidden;
 }
 
@@ -420,7 +420,7 @@
 
 .lawyer-hero-info-side {
     padding: 60px 80px;
-    color: var(--bg-white);
+    color: #b2d9c4;
 }
 
 .info-content-wrapper {
@@ -471,7 +471,7 @@
 ================================================ */
 
 .lawyer-contact-bar-modern {
-    background: var(--primary-navy);
+    background: #1d331f;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -489,7 +489,7 @@
 
 .contact-item-modern {
     padding: 32px 28px;
-    background: var(--primary-navy);
+    background: #1d331f;
     display: flex;
     align-items: flex-start;
     gap: 16px;
@@ -497,7 +497,7 @@
 }
 
     .contact-item-modern:hover {
-        background: rgba(255, 255, 255, 0.03);
+        background: #b2d9c4;
     }
 
 .contact-icon {
@@ -527,24 +527,31 @@
     color: rgba(255, 255, 255, 0.5);
     margin-bottom: 8px;
 }
+.contact-label-modern a:hover {
+    color: #b2d9c4;
+}
 
 .contact-value-modern {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--bg-white);
+    color: #b2d9c4;
     margin: 0;
     word-break: break-word;
     line-height: 1.5;
 }
 
+    .contact-value-modern:hover {
+        color: #1d331f; 
+    }
+
     .contact-value-modern a {
-        color: var(--bg-white);
+        color: #1d331f;
         text-decoration: none;
         transition: var(--transition-base);
     }
 
         .contact-value-modern a:hover {
-            color: var(--accent-gold-light);
+            color: #b2d9c4;
         }
 
 /* ================================================

@@ -64,8 +64,8 @@
     {
         ["tr"] = new()
         {
-            ["introText"] = "Hukuki danışmanlık alanında saygın bir yere sahip olan DAF Hukuk & Danışmanlık, hizmetlerini derin hukuki bilgi birikimine sahip, sonuç odaklı ve seçkin avukat kadrosuyla titizlikle sunmaktadır.",
-            ["newsTitle"] = "Duyurular &<br>Yayınlar",
+            ["introText"] = "Misyonumuz, klasik hukuk hizmetlerini en üst standartlarda sunarken danışmanlık, denetim, vergi, finans ve stratejik yönetim gibi farklı disiplinleri tek bir hibrit modelde bir araya getirerek müvekkillerimize entegre ve çok boyutlu çözümler üretmektir. Karmaşık meselelerde çok disiplinli bir bakış açısıyla çalışıp kalıcı ve yenilikçi çözümler geliştiriyoruz. Böylece müvekkillerimizin hukuki sorunların ötesinde iş süreçlerine ve stratejik hedeflerine değer katıyoruz.",
+            ["newsTitle"] = "Yayınlar",
             ["noNews"] = "Henüz haber yayınlanmadı."
         },
         ["en"] = new()
@@ -88,7 +88,7 @@
 
         // CategoryId 2 (Yayınlar) ve 3 (Hizmetler) olan postları al
         slidePosts = allPosts
-            .Where(p => p.IsActive && (p.CategoryId == 2 || p.CategoryId == 3))
+            .Where(p => p.IsActive && (p.CategoryId == 2 ))
             .OrderByDescending(p => p.PublishedDate)
             .Take(10) // Son 10 post
             .ToList();

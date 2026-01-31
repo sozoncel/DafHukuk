@@ -63,8 +63,8 @@
 .hero-about-section {
     position: relative;
     width: 100%;
-    height: 50vh;
-    min-height: 350px;
+    height: 18vh;
+    /*min-height: 350px;*/
     display: flex;
     flex-direction: column;
     color: #fff;
@@ -74,7 +74,8 @@
 .hero-about-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/Ofis Genel/10.jpg");
+    /*background-image: url("/img/Ofis Genel/10.jpg");*/
+    background-color: #1D331F;
     background-size: cover;
     background-position: center;
     z-index: 1;

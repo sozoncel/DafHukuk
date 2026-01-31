@@ -3,7 +3,7 @@
 ========================================================= */
 body {
     font-family: "Source Sans Pro", Arial, sans-serif;
-    color: #444;
+    color: #1d331f;
 }
 
 a {
@@ -15,24 +15,15 @@ a {
 .section-title {
     position: relative;
     display: inline-block;
-    margin-top: 3rem;
+    margin-top: 0.2rem;
     font-size: clamp(28px, 4vw, 36px);
-    font-weight: 700;
-    color: #000;
-    margin-bottom: 40px;
+    font-weight: 500;
+    color: #1d331f;
+    margin-bottom: 10px;
     z-index: 1;
 }
 
-    .section-title::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 5px;
-        width: 100%;
-        height: 15%;
-        background-color: #eadac5;
-        z-index: -1;
-    }
+   
 
 /* =========================================================
     HERO SECTION
@@ -41,18 +32,17 @@ a {
 .hero-news-section {
     position: relative;
     width: 100%;
-    height: 50vh;
-    min-height: 400px;
+    height: 10vh;
+    /*min-height: 400px;*/
     display: flex;
     flex-direction: column;
-    color: #fff;
+    color: #1d331f;
     overflow: hidden;
 }
 
 .hero-services-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/Ofis Genel/9.jpeg");
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -61,7 +51,7 @@ a {
 .hero-services-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.6) 100%);
+    background: #1d331f;
     z-index: 2;
 }
 
@@ -141,7 +131,7 @@ a {
 .hero-services-sub-nav-bar {
     position: relative;
     width: 100%;
-    background-color: #f8f8f8;
+    background-color: #b2d9c4;
     z-index: 10;
     box-shadow: 0 3px 6px rgba(0,0,0,0.05);
     overflow: visible;
@@ -257,7 +247,7 @@ a {
     text-align: center;
     padding: 40px 25px;
     background: #f8f9fa;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #1d331f;
     border-radius: 8px;
     transition: all 0.3s ease;
     height: 100%;
@@ -272,7 +262,7 @@ a {
         left: 0;
         width: 100%;
         height: 4px;
-        background: #1F3363;
+        background: #1d331f;
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.3s ease;
@@ -285,7 +275,7 @@ a {
     .category-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-        border-color: #1F3363;
+        border-color: #1d331f;
     }
 
 .category-icon {
@@ -294,7 +284,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #1F3363;
+    background: #b2d9c4;
     color: white;
     border-radius: 50%;
     margin-bottom: 25px;
@@ -307,19 +297,19 @@ a {
 
 .category-card:hover .category-icon {
     transform: scale(1.1) rotate(5deg);
-    background: #2a4380;
+    background: #1d331f;
 }
 
 .category-card h3 {
     font-size: clamp(16px, 2vw, 18px);
     font-weight: 700;
-    color: #1a1a1a;
+    color: #1d331f;
     margin-bottom: 15px;
     transition: color 0.3s;
 }
 
 .category-card:hover h3 {
-    color: #1F3363;
+    color: #1d331f;
 }
 
 .category-card p {
@@ -347,7 +337,7 @@ a {
 .why-choose-us-section {
     padding-top: 60px;
     padding-bottom: 60px;
-    background: #f8f9fa;
+    background: #b2d9c4;
     border-radius: 8px;
     margin-top: 60px;
     padding-left: 40px;

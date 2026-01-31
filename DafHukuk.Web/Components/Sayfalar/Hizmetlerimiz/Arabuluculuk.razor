@@ -47,16 +47,20 @@
     <div class="services-page-content">
         <div class="content-container intro-container">
             <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <h3>@GetText("sectionIntroTitle")</h3>
-                    <p>@GetText("sectionIntroText")</p>
+                <div class="hero-services-sub-nav-bar">
+                    <div class="hero-services-sub-nav-container">
+                        <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")" class="button">@GetText("generalServices")</a>
+                        <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="button">@GetText("specialConsultancy")</a>
+                        <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")" class="button">@GetText("expertOpinion")</a>
+                        <a role="button" href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")" class="button active">@GetText("mediation")</a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-12">
-                <h2 id="practiceAreas" class="section-title">@GetText("practiceAreas")</h2>
+                @* <h2 id="practiceAreas" class="section-title">@GetText("practiceAreas")</h2> *@
             </div>
         </div>
 

@@ -2,17 +2,17 @@
 .hero-kariyer-section {
     position: relative;
     width: 100%;
-    height: 42vh;
-    min-height: 350px;
+    height: 10vh;
+    /* */ /*min-height: 350px;*/
     display: flex;
     flex-direction: column;
-    color: #fff;
+    color: #1d331f;
 }
 
 .hero-kariyer-bg {
     position: absolute;
     inset: 0;
-    background-image: url("/img/Ofis Genel/8.jpeg");
+    background-color: #1d331f;
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -21,18 +21,18 @@
 .hero-kariyer-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.35));
+    background: #1d331f;
     z-index: 2;
 }
 
-.hero-kariyer-container {
+/*.hero-kariyer-container {
     position: relative;
     z-index: 3;
     width: 100%;
     max-width: 1400px;
-    margin: 0 auto;
-    padding: 120px 40px 40px 40px;
-}
+    margin: 0 auto;*/
+    /*padding: 120px 40px 40px 40px;*/
+/*}*/
 
 .kariyer-hero-title-upper {
     font-size: 14px;
