@@ -56,7 +56,7 @@ a {
     justify-content: space-between;
 }
 
-.logo {
+/*.logo {
     font-family: "Playfair Display", Georgia, serif;
     font-size: 34px;
     font-weight: 700;
@@ -78,7 +78,40 @@ a {
 
     .header.scrolled .logo:hover {
         color: #dfb887;
+    }*/
+
+.logo {
+    /* Mevcut Playfair fontunuzu ve renk geçişlerini korur */
+    font-family: "Playfair Display", Georgia, serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column; /* Yazıları alt alta dizer (Image 2 yapısı) */
+    align-items: flex-start; /* Sola tam hizalar */
+    line-height: 0.85; /* Satır arasını dökümandaki gibi daraltır */
+    text-decoration: none;
+}
+
+.logo-main {
+    font-size: 34px; /* Mevcut büyük DAF boyutunuz */
+    font-weight: 700;
+}
+
+.logo-sub {
+    font-size: 14px; /* Image 2'deki gibi küçük ve zarif alt yazı */
+    font-weight: 400;
+    margin-top: 4px; /* DAF'ın hemen altındaki boşluk */
+    letter-spacing: 0.5px;
+}
+
+/* Mevcut scroll ve hover efektleriniz olduğu gibi kalır */
+.header.scrolled .logo {
+    color: #1F3363;
+}
+
+    .logo:hover, .header.scrolled .logo:hover {
+        color: #dfb887;
     }
+
 
 .menu {
     flex: 1;
@@ -2124,4 +2157,134 @@ img {
     [dir="rtl"] .footer-legal-text::before {
         margin-right: 0;
         margin-left: 0.5rem;
+    }
+
+
+/* Dropdown Genel Konteyner */
+.nav-item.dropdown {
+    position: relative;
+}
+
+    /* Masaüstünde Üzerine Gelince Menüyü Göster */
+    .nav-item.dropdown:hover > .dropdown-menu {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+/* Alt Menü Tasarımı */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    min-width: 250px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 10px 0;
+    border-top: 3px solid #1a237e; /* DAF kurumsal mavisi */
+    transition: all 0.3s ease;
+    transform: translateY(10px);
+    opacity: 0;
+    visibility: hidden;
+}
+
+    .dropdown-menu a {
+        color: #333 !important;
+        padding: 10px 20px;
+        display: block;
+        text-decoration: none;
+        font-size: 14px;
+        border-bottom: 1px solid #f5f5f5;
+        transition: background 0.2s;
+    }
+
+        .dropdown-menu a:hover {
+            background-color: #f8f9fa;
+            color: #1a237e !important;
+            padding-left: 25px; /* Hafif kayma efekti */
+        }
+
+/* Mobil için basit liste görünümü */
+@media (max-width: 991px) {
+    .dropdown-menu {
+        position: static;
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        box-shadow: none;
+        padding-left: 15px;
+        background: transparent;
+    }
+}
+/* Ana dropdown menü içindeki submenu konteyneri */
+.dropdown-submenu {
+    position: relative;
+}
+
+/* Alt menü içeriği (Başlangıçta gizli) */
+.submenu-content {
+    display: none;
+    position: absolute;
+    left: 100%; /* Tam sağında açılmasını sağlar */
+    top: 0;
+    background-color: #fff;
+    min-width: 280px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    border-left: 2px solid #dfb887; /* Ayırıcı çizgi */
+}
+
+/* Üzerine gelince yana aç */
+.dropdown-submenu:hover > .submenu-content {
+    display: block;
+}
+
+/* Sağ ok simgesi için stil */
+.submenu-toggle {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .submenu-toggle i {
+        font-size: 10px;
+        margin-left: 10px;
+    }
+
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 50px 0;
+}
+
+.service-card {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 8px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .service-card .icon-box {
+        width: 70px;
+        height: 70px;
+        background: #1a237e;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 30px;
     }

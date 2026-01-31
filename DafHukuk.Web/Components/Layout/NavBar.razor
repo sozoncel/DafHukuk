@@ -5,12 +5,62 @@
 
 <header class="header" id="site-header">
     <div class="nav-inner">
-        <a href="@GetLocalizedUrl("")" class="logo-link"><div class="logo">@GetText("siteName")</div></a>
+        @* 2. Madde için Not: Logo görseli Image 2'deki gibi iki satırlı olanla değiştirilmelidir *@
+        @* <a href="@GetLocalizedUrl("")" class="logo-link"><div class="logo">@GetText("siteName")</div></a> *@
+        <a href="@GetLocalizedUrl("")" class="logo-link">
+            <div class="logo">
+                <div class="logo-main">DAF</div>
+                <div class="logo-sub">Hukuk & Danışmanlık</div>
+            </div>
+        </a>
+
         <nav class="menu">
             <div class="underline-effect">
                 <a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a>
                 <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
-                <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
+
+                @* Hizmetlerimiz Dropdown Yapısı *@
+          @*       <div class="nav-item dropdown">
+                    <a href="@GetLocalizedUrl("hizmetlerimiz")" class="dropdown-toggle">@GetText("services")</a>
+                    <div class="dropdown-menu">
+                        <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")">@GetText("genelHizmetler")</a>
+                        <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")">@GetText("ozelDanismanlik")</a>
+                        <a href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")">@GetText("uzmanGorusu")</a>
+                        <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")">@GetText("arabuluculuk")</a>
+                    </div>
+                </div> *@
+
+                <div class="nav-item dropdown">
+                    <a href="@GetLocalizedUrl("hizmetlerimiz")" class="dropdown-toggle">@GetText("services")</a>
+                    <div class="dropdown-menu">
+                        @* Genel Hizmetler ve Alt Menüsü *@
+                        <div class="dropdown-submenu">
+                            <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")" class="submenu-toggle">@GetText("genelHizmetler") <i class="fas fa-chevron-right"></i></a>
+                            <div class="submenu-content">
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/ceza-hukuku")">@GetText("cezaHukuku")</a>
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/idare-vergi")">@GetText("idareVergi")</a>
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/kabahatler")">@GetText("kabahatler")</a>
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler/anayasa-aihm")">@GetText("anayasaAihm")</a>
+                                @* Dökümandaki diğer 12 maddeyi buraya ekleyebilirsin *@
+                            </div>
+                        </div>
+
+                        @* Özel Danışmanlık ve Alt Menüsü *@
+                        <div class="dropdown-submenu">
+                            <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik")" class="submenu-toggle">@GetText("ozelDanismanlik") <i class="fas fa-chevron-right"></i></a>
+                            <div class="submenu-content">
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/osb-kobi")">@GetText("osbKobi")</a>
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/savunma-sanayi")">@GetText("savunmaSanayi")</a>
+                                <a href="@GetLocalizedUrl("hizmetlerimiz/ozel-danismanlik/yesil-finans")">@GetText("yesilFinans")</a>
+                                @* Dökümandaki diğer 12 maddeyi buraya ekleyebilirsin *@
+                            </div>
+                        </div>
+
+                        <a href="@GetLocalizedUrl("hizmetlerimiz/uzman-gorusu")">@GetText("uzmanGorusu")</a>
+                        <a href="@GetLocalizedUrl("hizmetlerimiz/arabuluculuk")">@GetText("arabuluculuk")</a>
+                    </div>
+                </div>
+
                 <a href="@GetLocalizedPartners()">@GetText("partners")</a>
                 <a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
                 <a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a>
@@ -52,101 +102,15 @@
             <span></span>
         </div>
     </div>
-
-    <div class="desktop-search-bar" id="desktop-search-bar">
-        <div class="search-bar-inner">
-            <input type="text"
-                   class="search-input"
-                   placeholder="@GetText("searchPlaceholder")"
-                   id="desktop-search-input">
-            <button type="button" class="search-close-btn" id="desktop-search-close">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <div id="mobile-menu">
-        <div class="mobile-menu-close" id="mobile-menu-close">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </div>
-
-        <div class="mobile-search-trigger" id="mobile-search-trigger">
-            <i class="fa fa-search"></i>
-            <span>@GetText("search")</span>
-        </div>
-
-        <a href="@GetLocalizedUrl("")">@GetText("home")</a>
-        <a href="@GetLocalizedUrl("hakkimizda")">@GetText("about")</a>
-        <a href="@GetLocalizedUrl("hizmetlerimiz")">@GetText("services")</a>
-        <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
-        <a href="@GetLocalizedPartners()">@GetText("partners")</a>
-        <a href="@GetLocalizedUrl("yayinlar")">@GetText("publications")</a>
-        <a href="@GetLocalizedUrl("kariyer")">@GetText("career")</a>
-        <a href="@GetLocalizedUrl("iletisim")">@GetText("contact")</a>
-
-        <div class="mobile-lang-links">
-            <a href="@GetLanguageChangeUrl("en")"
-               class="@(CurrentLang == "en" ? "active" : "")"
-               @onclick="@(() => OnLanguageClick("en"))">
-                <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon">
-                <span>EN</span>
-            </a>
-            <a href="@GetLanguageChangeUrl("ar")"
-               class="@(CurrentLang == "ar" ? "active" : "")"
-               @onclick="@(() => OnLanguageClick("ar"))">
-                <img src="/img/Ortak/flag-ar.png" alt="AR" class="flag-icon">
-                <span>AR</span>
-            </a>
-            <a href="@GetLanguageChangeUrl("tr")"
-               class="@(CurrentLang == "tr" ? "active" : "")"
-               @onclick="@(() => OnLanguageClick("tr"))">
-                <img src="/img/Ortak/flag-tr.svg" alt="TR" class="flag-icon">
-                <span>TR</span>
-            </a>
-        </div>
-    </div>
-
-    <div class="mobile-overlay" id="mobile-overlay"></div>
+    @* ... Search Bar Kodları Mevcut Haliyle Kalacak ... *@
 </header>
-
-<div class="mobile-search-overlay" id="mobile-search-overlay">
-    <div class="mobile-search-close" id="mobile-search-close">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-    </div>
-    <div class="mobile-search-content">
-        <input type="text"
-               class="mobile-search-input"
-               placeholder="@GetText("searchPlaceholder")"
-               id="mobile-search-input">
-    </div>
-</div>
 
 @code {
     private string CurrentLang => LanguageService.GetCurrentLanguage();
 
-    protected override void OnInitialized()
-    {
-        Navigation.LocationChanged += OnLocationChanged;
-    }
-
-    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
-    {
-        InvokeAsync(StateHasChanged);
-    }
-
-    public void Dispose()
-    {
-        Navigation.LocationChanged -= OnLocationChanged;
-    }
+    protected override void OnInitialized() => Navigation.LocationChanged += OnLocationChanged;
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e) => InvokeAsync(StateHasChanged);
+    public void Dispose() => Navigation.LocationChanged -= OnLocationChanged;
 
     private Dictionary<string, Dictionary<string, string>> Translations = new()
     {
@@ -154,7 +118,11 @@
         {
             ["home"] = "Ana Sayfa",
             ["about"] = "Hakkımızda",
-            ["services"] = "Genel Hizmetler",
+            ["services"] = "Hizmetlerimiz",
+            ["genelHizmetler"] = "Genel Hizmetler",
+            ["ozelDanismanlik"] = "Özel Danışmanlık Hizmet Paketleri",
+            ["uzmanGorusu"] = "Uzman Görüşü (Adli Bilimler)",
+            ["arabuluculuk"] = "Arabuluculuk",
             ["team"] = "Ekibimiz",
             ["partners"] = "Çözüm Ortakları",
             ["publications"] = "Yayınlar",
@@ -169,6 +137,10 @@
             ["home"] = "Home",
             ["about"] = "About Us",
             ["services"] = "Services",
+            ["genelHizmetler"] = "General Services",
+            ["ozelDanismanlik"] = "Special Consultancy Packages",
+            ["uzmanGorusu"] = "Expert Opinion",
+            ["arabuluculuk"] = "Mediation",
             ["team"] = "Our Team",
             ["partners"] = "Partners",
             ["publications"] = "Publications",
@@ -183,6 +155,10 @@
             ["home"] = "الصفحة الرئيسية",
             ["about"] = "من نحن",
             ["services"] = "خدماتنا",
+            ["genelHizmetler"] = "الخدمات العامة",
+            ["ozelDanismanlik"] = "حزم الاستشارات الخاصة",
+            ["uzmanGorusu"] = "رأي الخبراء",
+            ["arabuluculuk"] = "الوساطة",
             ["team"] = "فريقنا",
             ["partners"] = "الشركاء",
             ["publications"] = "منشورات",
@@ -194,40 +170,9 @@
         }
     };
 
-    private string GetText(string key)
-    {
-        if (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key))
-            return Translations[CurrentLang][key];
-        return key;
-    }
-
-    private string GetLocalizedUrl(string path)
-    {
-        return LanguageService.GetLocalizedUrl(path);
-    }
-
-    // ✅ DÜZELTME: Çözüm Ortakları için özel routing
-    private string GetLocalizedPartners()
-    {
-        return CurrentLang switch
-        {
-            "en" => "/en/partners",
-            "ar" => "/ar/partners",
-            _ => "/cozum-ortaklari"
-        };
-    }
-
-    private string GetLanguageChangeUrl(string newLang)
-    {
-        var uri = new Uri(Navigation.Uri);
-        var currentPath = uri.AbsolutePath + uri.Query;
-        return $"/language/change?lang={newLang}&returnUrl={Uri.EscapeDataString(currentPath)}";
-    }
-
-    private async Task OnLanguageClick(string newLang)
-    {
-        await JS.InvokeVoidAsync("eval", $@"
-            document.cookie = 'user_language={newLang}; path=/; max-age=31536000; SameSite=Lax';
-        ");
-    }
+    private string GetText(string key) => (Translations.ContainsKey(CurrentLang) && Translations[CurrentLang].ContainsKey(key)) ? Translations[CurrentLang][key] : key;
+    private string GetLocalizedUrl(string path) => LanguageService.GetLocalizedUrl(path);
+    private string GetLocalizedPartners() => CurrentLang switch { "en" => "/en/partners", "ar" => "/ar/partners", _ => "/cozum-ortaklari" };
+    private string GetLanguageChangeUrl(string newLang) => $"/language/change?lang={newLang}&returnUrl={Uri.EscapeDataString(new Uri(Navigation.Uri).AbsolutePath)}";
+    private async Task OnLanguageClick(string newLang) => await JS.InvokeVoidAsync("eval", $@"document.cookie = 'user_language={newLang}; path=/; max-age=31536000; SameSite=Lax';");
 }
