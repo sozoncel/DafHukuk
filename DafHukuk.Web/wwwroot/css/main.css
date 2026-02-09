@@ -2204,6 +2204,9 @@ img {
     min-width: 280px;
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     border-left: 2px solid #dfb887; /* Ayırıcı çizgi */
+    max-height: 320px; /* 👈 ihtiyaca göre ayarla */
+    overflow-y: auto; /* 👈 dikey scroll */
+    overflow-x: hidden;
 }
 
 /* Üzerine gelince yana aç */

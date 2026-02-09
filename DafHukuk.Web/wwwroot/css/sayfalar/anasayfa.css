@@ -105,7 +105,7 @@
 }
 
 .haber-baslik-kutusu {
-    background-color: #28406d;
+    background-color: #1d331f;
     width: 240px;
     display: flex;
     align-items: center;
@@ -122,7 +122,7 @@
     }
 
 .haber-icerik-kutusu {
-    background-color: #4e5466;
+    background-color: #b2d9c4;
     width: 500px;
     display: flex;
     align-items: center;
