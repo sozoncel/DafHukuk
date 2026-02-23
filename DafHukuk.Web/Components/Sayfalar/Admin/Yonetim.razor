@@ -224,11 +224,30 @@
                                    placeholder="@GetText("slugPlaceholder")" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">@GetText("content")</label>
+                       @*      <label class="form-label fw-semibold">@GetText("content")</label>
                             <textarea class="form-control"
                                       rows="10"
                                       @bind="newPost.Content_TR"
-                                      placeholder="@GetText("contentPlaceholder")"></textarea>
+                                      placeholder="@GetText("contentPlaceholder")"></textarea> *@
+                            <label class="form-label fw-semibold">@GetText("content")</label>
+                            <RadzenHtmlEditor @bind-Value="newPost.Content_TR" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
+                                <RadzenHtmlEditorUndo />
+                                <RadzenHtmlEditorRedo />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorBold />
+                                <RadzenHtmlEditorItalic />
+                                <RadzenHtmlEditorUnderline />
+                                <RadzenHtmlEditorStrikeThrough />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorAlignLeft />
+                                <RadzenHtmlEditorAlignCenter />
+                                <RadzenHtmlEditorAlignRight />
+                                <RadzenHtmlEditorJustify />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorFormatBlock /> <RadzenHtmlEditorUnorderedList /> <RadzenHtmlEditorOrderedList /> <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorLink />
+                                <RadzenHtmlEditorUnlink />
+                            </RadzenHtmlEditor>
                         </div>
                     </div>
 
@@ -247,10 +266,29 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("content")</label>
-                            <textarea class="form-control"
+                   @*          <textarea class="form-control"
                                       rows="10"
                                       @bind="newPost.Content_EN"
-                                      placeholder="@GetText("contentPlaceholder")"></textarea>
+                                      placeholder="@GetText("contentPlaceholder")"></textarea> *@
+
+                            <RadzenHtmlEditor @bind-Value="newPost.Content_EN" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
+                                <RadzenHtmlEditorUndo />
+                                <RadzenHtmlEditorRedo />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorBold />
+                                <RadzenHtmlEditorItalic />
+                                <RadzenHtmlEditorUnderline />
+                                <RadzenHtmlEditorStrikeThrough />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorAlignLeft />
+                                <RadzenHtmlEditorAlignCenter />
+                                <RadzenHtmlEditorAlignRight />
+                                <RadzenHtmlEditorJustify />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorFormatBlock /> <RadzenHtmlEditorUnorderedList /> <RadzenHtmlEditorOrderedList /> <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorLink />
+                                <RadzenHtmlEditorUnlink />
+                            </RadzenHtmlEditor>
                         </div>
                     </div>
 
@@ -270,10 +308,28 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">@GetText("content")</label>
-                            <textarea class="form-control"
+                           @*  <textarea class="form-control"
                                       rows="10"
                                       @bind="newPost.Content_AR"
-                                      placeholder="@GetText("contentPlaceholder")"></textarea>
+                                      placeholder="@GetText("contentPlaceholder")"></textarea> *@
+                            <RadzenHtmlEditor @bind-Value="newPost.Content_AR" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
+                                <RadzenHtmlEditorUndo />
+                                <RadzenHtmlEditorRedo />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorBold />
+                                <RadzenHtmlEditorItalic />
+                                <RadzenHtmlEditorUnderline />
+                                <RadzenHtmlEditorStrikeThrough />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorAlignLeft />
+                                <RadzenHtmlEditorAlignCenter />
+                                <RadzenHtmlEditorAlignRight />
+                                <RadzenHtmlEditorJustify />
+                                <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorFormatBlock /> <RadzenHtmlEditorUnorderedList /> <RadzenHtmlEditorOrderedList /> <RadzenHtmlEditorSeparator />
+                                <RadzenHtmlEditorLink />
+                                <RadzenHtmlEditorUnlink />
+                            </RadzenHtmlEditor>
                         </div>
                     </div>
                 </div>

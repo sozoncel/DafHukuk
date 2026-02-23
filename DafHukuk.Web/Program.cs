@@ -5,12 +5,13 @@ using DafHukuk.Service.Interfaces;
 using DafHukuk.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
-using System.Text.Json.Serialization;
-using System.Globalization;
-using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Radzen;
+using System.Globalization;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,7 +100,7 @@ builder.Services.AddCors(options =>
                    .AllowCredentials();
     });
 });
-
+builder.Services.AddRadzenComponents();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
