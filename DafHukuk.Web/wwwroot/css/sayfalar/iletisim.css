@@ -50,7 +50,7 @@
 .hero-iletisim-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.35));
+    /*background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.35));*/
     z-index: 2;
 }
 

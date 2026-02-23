@@ -133,6 +133,7 @@
     word-wrap: break-word;
     word-break: break-word;
     min-width: 0;
+    margin: 0 auto; /* Pozisyonu ortalamak için eklendi */
 }
 
 .dph-article-body {

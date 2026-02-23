@@ -412,7 +412,7 @@
     <div class="dph-hero-bg-image" style="background-image: url('@currentPost?.CoverImageUrl');"></div>
     <div class="dph-hero-overlay-layer"></div>
 
-    <div class="dph-hero-inner-container">
+@*     <div class="dph-hero-inner-container">
         <div class="dph-hero-text-content">
             <span class="dph-category-badge">@GetCategoryName(currentPost?.Category)</span>
             <h1 class="dph-main-title">@GetPostTitle(currentPost ?? new Post())</h1>
@@ -439,12 +439,12 @@
                 <span class="dph-breadcrumb-active">@GetPostTitle(currentPost ?? new Post())</span>
             </nav>
         </div>
-    </div>
+    </div> *@
 </section>
 
 <section class="dph-content-wrapper">
     <div class="dph-content-inner-container">
-        <div class="dph-two-column-layout">
+        @* <div class="dph-two-column-layout"> *@
 
             <article class="dph-primary-content-area">
                 @if (currentPost != null)
@@ -462,7 +462,7 @@
                 }
             </article>
 
-            <aside class="dph-secondary-sidebar">
+          @*   <aside class="dph-secondary-sidebar">
 
                 @if (PageType == "Services")
                 {
@@ -542,8 +542,8 @@
                         </div>
                     }
                 </div>
-            </aside>
-        </div>
+            </aside> *@
+        @* </div> *@
 
         <section class="partner-related-content">
             <div class="related-content-wrapper">

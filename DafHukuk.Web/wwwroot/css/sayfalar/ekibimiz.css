@@ -163,6 +163,8 @@
 .modern-team-section {
     padding: 120px 0;
     background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    margin: 0 auto;
+    text-align: center;
 }
 
 .team-container {
@@ -199,8 +201,9 @@
 
 .team-grid-modern {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 300px));
+    justify-content: center; /* grid’i ortalar */
+    gap: 24px;
 }
 
 .lawyer-card-modern {
@@ -213,6 +216,7 @@
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--border-light);
+
 }
 
     .lawyer-card-modern:hover {
