@@ -24,13 +24,13 @@
 
 .modern-team-hero {
     position: relative;
-    min-height: 0.5vh;
+    min-height: 10vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #1d331f;
-    overflow: hidden;
-    padding: 80px 0 60px;
+    overflow: hidden;/*
+    padding: 30px 0 60px;*/
 }
 
 .hero-particles {
