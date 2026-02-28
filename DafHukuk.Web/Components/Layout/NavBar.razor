@@ -25,7 +25,7 @@
                 <a href="@GetLocalizedUrl("ekibimiz")">@GetText("team")</a>
 
                 @* Hizmetlerimiz Dropdown Yapısı *@
-          @*       <div class="nav-item dropdown">
+                @*       <div class="nav-item dropdown">
                     <a href="@GetLocalizedUrl("hizmetlerimiz")" class="dropdown-toggle">@GetText("services")</a>
                     <div class="dropdown-menu">
                         <a href="@GetLocalizedUrl("hizmetlerimiz/genel-hizmetler")">@GetText("genelHizmetler")</a>
@@ -193,22 +193,95 @@
                 <i class="fa fa-search"></i>
             </button>
         </div>
+        <div class="right-actions">
+            <div class="language-Selection">
+                <a href="@GetLanguageChangeUrl("en")" class="navbar-lang-link @(CurrentLang == "en" ? "active" : "")" @onclick="@(() => OnLanguageClick("en"))">
+                    <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon"><span>EN</span>
+                </a>
+                <a href="@GetLanguageChangeUrl("ar")" class="navbar-lang-link @(CurrentLang == "ar" ? "active" : "")" @onclick="@(() => OnLanguageClick("ar"))">
+                    <img src="/img/Ortak/flag-ar.png" alt="AR" class="flag-icon"><span>AR</span>
+                </a>
+                <a href="@GetLanguageChangeUrl("tr")" class="navbar-lang-link @(CurrentLang == "tr" ? "active" : "")" @onclick="@(() => OnLanguageClick("tr"))">
+                    <img src="/img/Ortak/flag-tr.svg" alt="TR" class="flag-icon"><span>TR</span>
+                </a>
+            </div>
+            <button type="button" class="search-trigger" id="search-trigger">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
 
-        <div class="mobile-menu-btn" id="mobile-menu-btn">
+        <div class="mobile-menu-btn @(isMobileMenuOpen ? "active" : "")" @onclick="ToggleMobileMenu">
             <span></span>
             <span></span>
             <span></span>
         </div>
+    </div> <div id="mobile-menu" class="@(isMobileMenuOpen ? "open" : "")">
+        <div class="mobile-menu-close" @onclick="CloseMobileMenu">
+            X
+        </div>
+
+        <a href="@GetLocalizedUrl("hakkimizda")" @onclick="CloseMobileMenu">@GetText("about")</a>
+        <a href="@GetLocalizedUrl("ekibimiz")" @onclick="CloseMobileMenu">@GetText("team")</a>
+        <a href="@GetLocalizedUrl("hizmetlerimiz")" @onclick="CloseMobileMenu">@GetText("services")</a>
+        <a href="@GetLocalizedPartners()" @onclick="CloseMobileMenu">@GetText("partners")</a>
+        <a href="@GetLocalizedUrl("yayinlar")" @onclick="CloseMobileMenu">@GetText("publications")</a>
+        <a href="@GetLocalizedUrl("kariyer")" @onclick="CloseMobileMenu">@GetText("career")</a>
+        <a href="@GetLocalizedUrl("iletisim")" @onclick="CloseMobileMenu">@GetText("contact")</a>
+
+        <div class="mobile-menu-footer">
+            <div class="mobile-lang-links d-flex">
+                <a href="@GetLanguageChangeUrl("en")" class="d-flex align-items-center justify-content-center" @onclick="@(() => { OnLanguageClick("en"); CloseMobileMenu(); })">
+                    <img src="/img/Ortak/flag-en.svg" class="flag-icon"> EN
+                </a>
+                <a href="@GetLanguageChangeUrl("ar")" class="d-flex align-items-center justify-content-center" @onclick="@(() => { OnLanguageClick("ar"); CloseMobileMenu(); })">
+                    <img src="/img/Ortak/flag-ar.png" class="flag-icon"> AR
+                </a>
+                <a href="@GetLanguageChangeUrl("tr")" class="d-flex align-items-center justify-content-center" @onclick="@(() => { OnLanguageClick("tr"); CloseMobileMenu(); })">
+                    <img src="/img/Ortak/flag-tr.svg" class="flag-icon"> TR
+                </a>
+            </div>
+        </div>
     </div>
+
+    <div class="mobile-overlay @(isMobileMenuOpen ? "active" : "")" @onclick="CloseMobileMenu"></div>
+
     @* ... Search Bar Kodları Mevcut Haliyle Kalacak ... *@
 </header>
 
 @code {
     private string CurrentLang => LanguageService.GetCurrentLanguage();
-
+    private bool isMobileMenuOpen = false;
     protected override void OnInitialized() => Navigation.LocationChanged += OnLocationChanged;
     private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e) => InvokeAsync(StateHasChanged);
     public void Dispose() => Navigation.LocationChanged -= OnLocationChanged;
+
+    private async Task ToggleMobileMenu()
+    {
+        isMobileMenuOpen = !isMobileMenuOpen;
+        await ManageBodyScroll();
+    }
+
+    private async Task CloseMobileMenu()
+    {
+        if (isMobileMenuOpen)
+        {
+            isMobileMenuOpen = false;
+            await ManageBodyScroll();
+        }
+    }
+
+    // Menü açıldığında arkanın kaymasını (scroll) önleyen kod
+    private async Task ManageBodyScroll()
+    {
+        try
+        {
+            if (isMobileMenuOpen)
+                await JS.InvokeVoidAsync("eval", "document.body.style.overflow = 'hidden';");
+            else
+                await JS.InvokeVoidAsync("eval", "document.body.style.overflow = '';");
+        }
+        catch { }
+    }
 
     private Dictionary<string, Dictionary<string, string>> Translations = new()
     {
