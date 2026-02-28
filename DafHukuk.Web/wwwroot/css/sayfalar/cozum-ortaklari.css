@@ -58,13 +58,13 @@
 
 .modern-partners-hero {
     position: relative;
-    min-height: 10vh;
+    min-height: 20vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #1d331f;
-    overflow: hidden;/*
-    padding: 10px 0 80px;*/
+    overflow: hidden;
+    /*padding: 120px 0 80px;*/
 }
 
 .hero-animated-background {

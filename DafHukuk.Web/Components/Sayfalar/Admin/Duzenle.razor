@@ -339,7 +339,7 @@
                                               rows="10"
                                               @bind="post.Content_TR"
                                               placeholder="@GetText("contentPlaceholder")"></textarea> *@
-                                    <RadzenHtmlEditor @bind-Value="post.Content_TR" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
+                                    <RadzenHtmlEditor @key="post?.Id"  @bind-Value="post.Content_TR" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
                                         <RadzenHtmlEditorUndo />
                                         <RadzenHtmlEditorRedo />
                                         <RadzenHtmlEditorSeparator />
@@ -388,7 +388,7 @@
                                               rows="10"
                                               @bind="post.Content_EN"
                                               placeholder="@GetText("contentPlaceholder")"></textarea> *@
-                                    <RadzenHtmlEditor @bind-Value="post.Content_EN" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
+                                    <RadzenHtmlEditor @key="post?.Id" @bind-Value="post.Content_EN" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
                                         <RadzenHtmlEditorUndo />
                                         <RadzenHtmlEditorRedo />
                                         <RadzenHtmlEditorSeparator />
@@ -437,7 +437,7 @@
                                               rows="10"
                                               @bind="post.Content_AR"
                                               placeholder="@GetText("contentPlaceholder")"></textarea> *@
-                                    <RadzenHtmlEditor @bind-Value="post.Content_AR" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
+                                    <RadzenHtmlEditor @key="post?.Id" @bind-Value="post.Content_AR" style="height: 350px;" Placeholder="@GetText("contentPlaceholder")">
                                         <RadzenHtmlEditorUndo />
                                         <RadzenHtmlEditorRedo />
                                         <RadzenHtmlEditorSeparator />
@@ -474,6 +474,7 @@
     private List<Post> allPosts = new();
     private List<Category> categories = new();
     private string activeLang = "tr";
+    private bool isDragDropInitialized = false;
     private bool isLoading = true;
     private bool isUploading = false;
     private bool isDragging = false;
@@ -636,11 +637,13 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        // Yükleme bitmişse (!isLoading), içerik ekrandaysa (post != null)
+        // ve JS henüz çalışmamışsa (!isDragDropInitialized) çalıştır.
+        if (!isLoading && post != null && !isDragDropInitialized)
         {
             try
             {
-                await Task.Delay(100);
+                isDragDropInitialized = true;
                 await JS.InvokeVoidAsync("blazorImageUpload.initDragDrop", dropZoneId, inputFileId);
             }
             catch (Exception ex)
@@ -650,9 +653,17 @@
         }
     }
 
+
+
     protected override async Task OnInitializedAsync()
     {
+        // Sayfa ilk açıldığında kategorileri 1 kez yükle
         await LoadCategories();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        // URL'deki PostId her değiştiğinde (SPA geçişi) burası tetiklenir
+        isDragDropInitialized = false; // Yeni sayfa için sürükle-bırak'ı sıfırla
 
         if (PostId > 0)
         {
@@ -983,7 +994,8 @@
         try
         {
             isSaving = true;
-            // Entity oluştur
+
+            // Entity oluştur (Eksik olan updatePost burada tanımlanıyor)
             var updatePost = new Post
             {
                 Id = PostId,
@@ -991,7 +1003,7 @@
                 IsActive = post.IsActive,
                 PublishedDate = post.PublishedDate,
                 CoverImageUrl = post.CoverImageUrl,
-                ServiceType = post.ServiceType // ✅ ServiceType eklendi
+                ServiceType = post.ServiceType
             };
 
             // Dil seçimlerini eşle
@@ -1008,6 +1020,7 @@
             updatePost.Slug_AR = includeAr ? post.Slug_AR : originalPost.Slug_AR;
 
             var updatedPost = await PostService.Update(PostId, updatePost);
+
             if (updatedPost == null)
             {
                 throw new Exception("Güncelleme başarısız oldu!");
@@ -1016,7 +1029,10 @@
             successMessage = activeLang == "tr" ? "✓ İçerik başarıyla güncellendi!" : "✓ Content updated successfully!";
             showSuccess = true;
 
-            await Task.Delay(1000);
+            StateHasChanged(); // YEŞİL KUTUYU EKRANA ÇİZ
+
+            await Task.Delay(1500); // Kullanıcı 1.5 saniye mesajı görsün
+
             post = updatedPost;
 
             // Orijinali güncelle ve kategori değişim bayrağını sıfırla
@@ -1046,8 +1062,9 @@
             includeEn = !string.IsNullOrWhiteSpace(post.Title_EN);
             includeAr = !string.IsNullOrWhiteSpace(post.Title_AR);
 
-            await Task.Delay(2000);
             showSuccess = false;
+
+            StateHasChanged(); // YEŞİL KUTUYU EKRANDAN KALDIR
         }
         catch (Exception ex)
         {
@@ -1060,7 +1077,6 @@
             isSaving = false;
         }
     }
-
     private async Task DeletePost()
     {
         if (post == null) return;
