@@ -438,12 +438,21 @@ a {
         transform: translateY(-8px);
     }
 
-    .practice-card img {
+   /* .practice-card img {
         width: 100%;
         height: 220px;
         object-fit: cover;
         display: block;
         transition: transform 0.4s ease;
+    }*/
+    .practice-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: contain; /* cover yerine contain yazdık */
+        background-color: #ffffff; /* Kenarlarda boşluk kalırsa beyaz görünsün */
+        display: block;
+        transition: transform 0.4s ease;
+        padding: 10px; /* Görsel kutuya çok yapışmasın diye hafif boşluk */
     }
 
     .practice-card:hover img {

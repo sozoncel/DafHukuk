@@ -255,7 +255,9 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* Görseli kesmeden sığdırır */
+    background-color: #ffffff; /* Boşlukları beyaz doldurur */
+    padding: 10px; /* Görsel kutuya yapışmasın diye boşluk */
     transition: var(--transition-slow);
 }
 
