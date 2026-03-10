@@ -193,7 +193,7 @@
                 <i class="fa fa-search"></i>
             </button>
         </div>
-        <div class="right-actions">
+   @*      <div class="right-actions">
             <div class="language-Selection">
                 <a href="@GetLanguageChangeUrl("en")" class="navbar-lang-link @(CurrentLang == "en" ? "active" : "")" @onclick="@(() => OnLanguageClick("en"))">
                     <img src="/img/Ortak/flag-en.svg" alt="EN" class="flag-icon"><span>EN</span>
@@ -208,7 +208,7 @@
             <button type="button" class="search-trigger" id="search-trigger">
                 <i class="fa fa-search"></i>
             </button>
-        </div>
+        </div> *@
 
         <div class="mobile-menu-btn @(isMobileMenuOpen ? "active" : "")" @onclick="ToggleMobileMenu">
             <span></span>
