@@ -582,7 +582,7 @@
                             var url = GetPostUrl(p);
                             var categoryName = GetCategoryName(p.Category);
 
-                            <a href="@url" class="related-post-card">
+                            <a href="@url" class="related-post-card" target="_top">
                                 <div class="post-card-image-wrapper">
                                     <img src="@(string.IsNullOrEmpty(p.CoverImageUrl) ? "/img/placeholder.jpg" : p.CoverImageUrl)"
                                          alt="@GetPostTitle(p)"

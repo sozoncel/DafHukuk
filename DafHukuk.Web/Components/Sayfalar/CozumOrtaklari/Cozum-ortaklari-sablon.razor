@@ -27,6 +27,7 @@ else
 
     <section class="partner-hero-detail">
         <div class="hero-detail-pattern"></div>
+        <br />  <br />  <br />
         <div class="partner-hero-grid">
             <div class="partner-logo-area">
                 <div class="logo-frame-wrapper">
@@ -39,19 +40,20 @@ else
 
             <div class="partner-hero-info">
                 <div class="hero-info-content">
-                    <div class="partner-badge">@GetText("solutionPartner")</div>
+                  
+                    @* <div class="partner-badge">@GetText("solutionPartner")</div> *@
                     <h1 class="partner-hero-name">@Partner.Name</h1>
                     <div class="partner-hero-divider"></div>
                     <p class="partner-hero-desc">@GetPartnerDescription(Partner)</p>
 
-                    @if (!string.IsNullOrWhiteSpace(Partner.WebsiteUrl))
+                    @* @if (!string.IsNullOrWhiteSpace(Partner.WebsiteUrl))
                     {
                         <a href="@Partner.WebsiteUrl" target="_blank" rel="noopener" class="partner-website-button">
                             <i class="bi bi-globe"></i>
                             <span>@GetText("visitWebsite")</span>
                             <i class="bi bi-arrow-up-right"></i>
                         </a>
-                    }
+                    } *@
                 </div>
             </div>
         </div>
@@ -177,7 +179,7 @@ else
             ["solutionPartner"] = "Çözüm Ortağı",
             ["visitWebsite"] = "Web Sitesini Ziyaret Et",
             ["overview"] = "Genel Bakış",
-            ["aboutPartner"] = "Ortak Hakkında",
+            ["aboutPartner"] = " ",
             ["servicesHeading"] = "Hizmetlerimiz",
             ["contentBadge"] = "İçerikler",
             ["relatedContentHeading"] = "İlişkili İçerikler",
